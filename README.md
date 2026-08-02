@@ -1,4 +1,4 @@
-/functions-worker.js
+
 export async function onRequestGet() {
   const rssUrl = "https://www.trthaber.com/sondakika_articles.rss";
 
