@@ -12,6 +12,8 @@ export async function onRequestGet() {
       }
     });
   } catch (e) {
-    return new Response("RSS alınamadı.", { status: 500 });
+    return new Response("RSS alınamadı.", {
+      status: 500
+    });
   }
 }
