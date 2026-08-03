@@ -2,18 +2,9 @@
 // Digital Gündem app.js
 // =========================
 
-// Sayfa yüklendiğinde çalışır
 document.addEventListener("DOMContentLoaded", () => {
 
   console.log("Digital Gündem hazır.");
-
-  // Menü linkleri
-  document.querySelectorAll("nav a").forEach(link => {
-    link.addEventListener("click", function(e) {
-      e.preventDefault();
-      alert(this.innerText + " sayfası yakında eklenecek.");
-    });
-  });
 
   // Haber kartları
   document.querySelectorAll(".news-card").forEach(card => {
@@ -45,27 +36,16 @@ topBtn.style.display = "none";
 document.body.appendChild(topBtn);
 
 window.addEventListener("scroll", () => {
-
-  if(window.scrollY > 300){
-
+  if (window.scrollY > 300) {
     topBtn.style.display = "block";
-
-  }else{
-
+  } else {
     topBtn.style.display = "none";
-
   }
-
 });
 
 topBtn.onclick = () => {
-
   window.scrollTo({
-
-    top:0,
-
-    behavior:"smooth"
-
+    top: 0,
+    behavior: "smooth"
   });
-
 };
