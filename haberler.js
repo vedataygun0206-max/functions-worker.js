@@ -1,27 +1,49 @@
-const alan=document.querySelector(".news-grid");
+// ===============================
+// Digital Gündem - haberler.js
+// ===============================
 
-if(alan){
+document.addEventListener("DOMContentLoaded", function () {
 
-alan.innerHTML="";
+    const haberListesi = document.getElementById("haberListesi");
 
-haberler.forEach(h=>{
+    if (!haberListesi) return;
 
-alan.innerHTML+=`
+    // Yönetim panelinden eklenen haberleri al
+    const haberler = JSON.parse(localStorage.getItem("haberler")) || [];
 
-<div class="news-card">
+    // Haber yoksa
+    if (haberler.length === 0) {
+        haberListesi.innerHTML = `
+        <div class="news-card">
+            <img src="https://picsum.photos/600/350" alt="Haber">
+            <span class="etiket">Digital Gündem</span>
+            <h3>Henüz haber eklenmedi</h3>
+            <p>Yönetim panelinden ilk haberinizi ekleyebilirsiniz.</p>
+        </div>`;
+        return;
+    }
 
-<img src="${h.resim}">
+    // Haberleri ekrana yazdır
+    haberListesi.innerHTML = "";
 
-<h3>${h.baslik}</h3>
+    haberler.forEach(haber => {
 
-<p>${h.ozet}</p>
+        haberListesi.innerHTML += `
+        <article class="news-card">
 
-<a href="#">Devamını Oku</a>
+            <img src="${haber.resim || 'https://picsum.photos/600/350'}" alt="${haber.baslik}">
 
-</div>
+            <span class="etiket">${haber.kategori}</span>
 
-`;
+            <h3>${haber.baslik}</h3>
+
+            <p>${haber.ozet}</p>
+
+            <small>${haber.tarih}</small>
+
+        </article>
+        `;
+
+    });
 
 });
-
-}
