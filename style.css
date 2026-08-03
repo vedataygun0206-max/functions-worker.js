@@ -180,3 +180,56 @@ font-size:30px;
 }
 
 }
+/* MANŞET */
+
+.headline{
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:20px;
+max-width:1200px;
+margin:40px auto;
+padding:20px;
+}
+
+.headline-main{
+background:#fff;
+border-radius:12px;
+overflow:hidden;
+box-shadow:0 3px 10px rgba(0,0,0,.1);
+}
+
+.headline-main img{
+width:100%;
+display:block;
+}
+
+.headline-text{
+padding:20px;
+}
+
+.etiket{
+background:#d60000;
+color:#fff;
+padding:5px 10px;
+border-radius:5px;
+font-size:12px;
+}
+
+.headline-side{
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+
+.mini-news{
+background:#fff;
+padding:15px;
+border-radius:10px;
+box-shadow:0 3px 10px rgba(0,0,0,.1);
+}
+
+@media(max-width:768px){
+.headline{
+grid-template-columns:1fr;
+}
+}
