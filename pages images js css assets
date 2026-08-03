@@ -1,7 +1,84 @@
-turkiye.html
-rehber.html
-firmalar.html
-yazarlar.html
-iletisim.html
-hakkimizda.html
-reklam.html
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Türkiye Rehberi | Digital Gündem</title>
+
+<link rel="stylesheet" href="../style.css">
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+<h1>🇹🇷 Digital Gündem</h1>
+<p>Türkiye Rehberi</p>
+</div>
+
+<nav>
+
+<a href="../index.html">Ana Sayfa</a>
+<a href="#">81 İl</a>
+<a href="#">Firmalar</a>
+<a href="#">Yazarlar</a>
+
+</nav>
+
+</header>
+
+<section class="hero">
+
+<h2>81 İl Türkiye Rehberi</h2>
+
+<p>Şehir seçerek haberlere, firmalara ve yerel bilgilere ulaşabilirsiniz.</p>
+
+</section>
+
+<section class="quick-links">
+
+<div class="grid">
+
+<div class="card">Adana</div>
+<div class="card">Adıyaman</div>
+<div class="card">Afyonkarahisar</div>
+<div class="card">Ağrı</div>
+<div class="card">Amasya</div>
+<div class="card">Ankara</div>
+<div class="card">Antalya</div>
+<div class="card">Artvin</div>
+<div class="card">Aydın</div>
+<div class="card">Balıkesir</div>
+<div class="card">Bilecik</div>
+<div class="card">Bingöl</div>
+<div class="card">Bitlis</div>
+<div class="card">Bolu</div>
+<div class="card">Burdur</div>
+<div class="card">Bursa</div>
+<div class="card">Çanakkale</div>
+<div class="card">Çankırı</div>
+<div class="card">Çorum</div>
+<div class="card">Denizli</div>
+<div class="card">Diyarbakır</div>
+<div class="card">Edirne</div>
+<div class="card">Elazığ</div>
+<div class="card">Erzincan</div>
+<div class="card">Erzurum</div>
+<div class="card">Eskişehir</div>
+
+</div>
+
+</section>
+
+<footer>
+
+<h3>Digital Gündem</h3>
+
+<p>Türkiye'nin Dijital Rehberi</p>
+
+</footer>
+
+</body>
+</html>
