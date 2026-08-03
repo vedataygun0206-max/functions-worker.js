@@ -27,6 +27,26 @@ const manset = document.getElementById("mansetHaber");
 
     haberler.forEach(haber => {
 
+    haberListesi.innerHTML += `
+    <article class="news-card">
+
+        <img src="${haber.resim || 'https://picsum.photos/600/350'}" alt="${haber.baslik}">
+
+        <span class="etiket">${haber.kategori}</span>
+
+        <h3>${haber.baslik}</h3>
+
+        <p>${haber.ozet}</p>
+
+        <small>${haber.tarih}</small>
+
+        <a href="#" class="btn">Haberi Oku</a>
+
+    </article>
+    `;
+
+});
+
         haberListesi.innerHTML += `
         <article class="news-card">
 
