@@ -2,7 +2,6 @@
 // Digital Gündem - haberler.js
 // ===============================
 
-
     const haberListesi = document.getElementById("haberListesi");
 const manset = document.getElementById("mansetHaber");
     if (!haberListesi) return;
