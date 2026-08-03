@@ -2,10 +2,9 @@
 // Digital Gündem - haberler.js
 // ===============================
 
-document.addEventListener("DOMContentLoaded", function () {
 
     const haberListesi = document.getElementById("haberListesi");
-
+const manset = document.getElementById("mansetHaber");
     if (!haberListesi) return;
 
     // Yönetim panelinden eklenen haberleri al
