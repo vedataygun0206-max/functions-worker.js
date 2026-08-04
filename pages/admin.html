@@ -22,46 +22,37 @@
 
 <section class="quick-links">
 
-<h2>Yönetim İşlemleri</h2>
+<h2>📰 Yeni Haber</h2>
 
-<div class="grid">
+<input type="text" id="baslik" placeholder="📝 Haber Başlığı">
 
-<div class="card">
-<h3>📰 Haber Yönetimi</h3>
-<p>Yeni haber ekle, düzenle ve sil.</p>
-<button onclick="document.getElementById('haberForm').scrollIntoView({behavior:'smooth'})">
-📰 Haber Ekle
-</button>
-</div>
+<select id="kategori">
+<option>Gündem</option>
+<option>Son Dakika</option>
+<option>Siyaset</option>
+<option>Yerel Haber</option>
+<option>Ekonomi</option>
+<option>Spor</option>
+<option>Teknoloji</option>
+<option>Sağlık</option>
+<option>Kültür Sanat</option>
+<option>Dünya</option>
+</select>
 
-<div class="card">
-<h3>🏢 Firma Yönetimi</h3>
-<p>Firma kayıtlarını yönet.</p>
-<button>Firma Ekle</button>
-</div>
+<textarea id="ozet" rows="3" placeholder="📄 Kısa Haber Özeti"></textarea>
 
-<div class="card">
-<h3>✍️ Yazar Yönetimi</h3>
-<p>Köşe yazarlarını düzenle.</p>
-<button>Yazar Ekle</button>
-</div>
+<textarea id="detay" rows="10" placeholder="📰 Haber Detayı"></textarea>
 
-<div class="card">
-<h3>🎥 Video Yönetimi</h3>
-<p>Video haberlerini yönet.</p>
-<button>Video Ekle</button>
-</div>
+<input type="file" id="haberResim" accept="image/*">
 
-<div class="card">
-<h3>⚙️ Site Ayarları</h3>
-<p>Genel site ayarlarını düzenle.</p>
-<button>Ayarlar</button>
-</div>
+<label>
+<input type="checkbox" id="manset">
+⭐ Manşete Çıkar
+</label>
 
-</div>
+<button type="button">💾 Taslak Kaydet</button>
 
-</section>
-
+<button type="submit">📰 Yayınla</button>
   <section class="quick-links">
 
 <h2>📰 Yeni Haber Ekle</h2>
