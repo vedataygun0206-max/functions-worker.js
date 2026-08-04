@@ -102,5 +102,50 @@
 </div>
 
 </div>
+  <section class="admin-form">
+
+<h2>📰 Yeni Haber Ekle</h2>
+
+<form id="haberForm">
+
+<input type="text" id="baslik" placeholder="Haber Başlığı" required>
+
+<select id="kategori">
+<option>Gündem</option>
+<option>Son Dakika</option>
+<option>Ekonomi</option>
+<option>Spor</option>
+<option>Teknoloji</option>
+<option>Sağlık</option>
+</select>
+
+<textarea id="ozet" rows="3" placeholder="Kısa Haber Özeti"></textarea>
+
+<textarea id="detay" rows="8" placeholder="Haber Detayı"></textarea>
+
+<label>📷 Haber Fotoğrafı</label>
+<input type="file" id="haberResim" accept="image/*">
+
+<label>
+<input type="checkbox" id="manset">
+⭐ Manşete Çıkar
+</label>
+
+<button type="button">💾 Taslak Kaydet</button>
+
+<button type="submit">📰 Haberi Yayınla</button>
+
+</form>
+
+</section>
+
+</main>
+
+</div>
+
+<script src="../admin.js"></script>
+
+</body>
+</html>
 </body>
 </html>
