@@ -2,30 +2,53 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  const form = document.getElementById("haberForm");
+    const form = document.getElementById("haberForm");
+    const resimInput = document.getElementById("haberResim");
 
-  form.addEventListener("submit", function(e){
+    let secilenResim = "";
 
-    e.preventDefault();
+    // Galeriden fotoğraf seç
+    resimInput.addEventListener("change", function () {
 
-    const haber = {
-      baslik: document.getElementById("baslik").value,
-      kategori: document.getElementById("kategori").value,
-      resim: document.getElementById("resim").value,
-      ozet: document.getElementById("ozet").value,
-      tarih: new Date().toLocaleDateString("tr-TR")
-    };
+        const dosya = this.files[0];
 
-    let haberler = JSON.parse(localStorage.getItem("haberler")) || [];
+        if (!dosya) return;
 
-    haberler.unshift(haber);
+        const reader = new FileReader();
 
-    localStorage.setItem("haberler", JSON.stringify(haberler));
+        reader.onload = function (e) {
+            secilenResim = e.target.result;
+        };
 
-    alert("✅ Haber başarıyla kaydedildi.");
+        reader.readAsDataURL(dosya);
 
-    form.reset();
+    });
 
-  });
+    // Haber kaydet
+    form.addEventListener("submit", function (e) {
+
+        e.preventDefault();
+
+        const haber = {
+            baslik: document.getElementById("baslik").value,
+            kategori: document.getElementById("kategori").value,
+            resim: secilenResim,
+            ozet: document.getElementById("ozet").value,
+            tarih: new Date().toLocaleDateString("tr-TR")
+        };
+
+        let haberler = JSON.parse(localStorage.getItem("haberler")) || [];
+
+        haberler.unshift(haber);
+
+        localStorage.setItem("haberler", JSON.stringify(haberler));
+
+        alert("✅ Haber başarıyla kaydedildi.");
+
+        form.reset();
+
+        secilenResim = "";
+
+    });
 
 });
