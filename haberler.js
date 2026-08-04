@@ -2,8 +2,11 @@
 // Digital Gündem - haberler.js
 // ===============================
 
+document.addEventListener("DOMContentLoaded", function () {
+
     const haberListesi = document.getElementById("haberListesi");
-const manset = document.getElementById("mansetHaber");
+    const manset = document.getElementById("mansetHaber");
+
     if (!haberListesi) return;
 
     // Yönetim panelinden eklenen haberleri al
@@ -21,30 +24,35 @@ const manset = document.getElementById("mansetHaber");
         return;
     }
 
-    // Haberleri ekrana yazdır
+    // Manşet Haber
+    if (manset) {
+
+        const ilk = haberler[0];
+
+        manset.innerHTML = `
+        <div class="headline-main">
+
+            <img src="${ilk.resim || 'https://picsum.photos/900/500'}" alt="${ilk.baslik}">
+
+            <div class="headline-text">
+
+                <span class="etiket">${ilk.kategori}</span>
+
+                <h2>${ilk.baslik}</h2>
+
+                <p>${ilk.ozet}</p>
+
+                <small>${ilk.tarih}</small>
+
+            </div>
+
+        </div>`;
+    }
+
+    // Haberleri listele
     haberListesi.innerHTML = "";
 
     haberler.forEach(haber => {
-
-    haberListesi.innerHTML += `
-    <article class="news-card">
-
-        <img src="${haber.resim || 'https://picsum.photos/600/350'}" alt="${haber.baslik}">
-
-        <span class="etiket">${haber.kategori}</span>
-
-        <h3>${haber.baslik}</h3>
-
-        <p>${haber.ozet}</p>
-
-        <small>${haber.tarih}</small>
-
-        <a href="#" class="btn">Haberi Oku</a>
-
-    </article>
-    `;
-
-});
 
         haberListesi.innerHTML += `
         <article class="news-card">
@@ -59,9 +67,9 @@ const manset = document.getElementById("mansetHaber");
 
             <small>${haber.tarih}</small>
 
-        </article>
-        `;
+            <a href="#" class="btn">Haberi Oku</a>
 
+        </article>`;
     });
 
 });
