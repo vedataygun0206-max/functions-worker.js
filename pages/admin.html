@@ -9,84 +9,98 @@
 
 <body>
 
-<header>
+<header class="admin-header">
+
 <div class="logo">
-<h1>🔐 Yönetim Paneli</h1>
-<p>Digital Gündem Yönetim Sistemi</p>
+<h1>📰 Digital Gündem</h1>
+<p>Profesyonel Yönetim Paneli</p>
 </div>
 
-<nav>
-<a href="../index.html">🏠 Siteye Dön</a>
-</nav>
+<div class="admin-user">
+👤 Yönetici
+<a href="../index.html" class="btn">Siteyi Gör</a>
+</div>
+
 </header>
 
-<section class="quick-links">
+<div class="admin-container">
 
-<h2>📰 Yeni Haber</h2>
+<aside class="sidebar">
 
-<input type="text" id="baslik" placeholder="📝 Haber Başlığı">
+<h3>Yönetim</h3>
 
-<select id="kategori">
-<option>Gündem</option>
-<option>Son Dakika</option>
-<option>Siyaset</option>
-<option>Yerel Haber</option>
-<option>Ekonomi</option>
-<option>Spor</option>
-<option>Teknoloji</option>
-<option>Sağlık</option>
-<option>Kültür Sanat</option>
-<option>Dünya</option>
-</select>
+<ul>
 
-<textarea id="ozet" rows="3" placeholder="📄 Kısa Haber Özeti"></textarea>
+<li><a href="#">🏠 Dashboard</a></li>
 
-<textarea id="detay" rows="10" placeholder="📰 Haber Detayı"></textarea>
+<li><a href="#">📰 Haberler</a></li>
 
-<input type="file" id="haberResim" accept="image/*">
+<li><a href="#">📂 Kategoriler</a></li>
 
-<label>
-<input type="checkbox" id="manset">
-⭐ Manşete Çıkar
-</label>
+<li><a href="#">🏢 Firma Rehberi</a></li>
 
-<button type="button">💾 Taslak Kaydet</button>
+<li><a href="#">✍️ Köşe Yazarları</a></li>
 
-<button type="submit">📰 Yayınla</button>
-  <section class="quick-links">
+<li><a href="#">🎥 Video Haberleri</a></li>
 
-<h2>📰 Yeni Haber Ekle</h2>
+<li><a href="#">📷 Foto Galeri</a></li>
 
-<form id="haberForm">
+<li><a href="#">💬 Yorumlar</a></li>
 
-<input type="text" id="baslik" placeholder="Haber Başlığı" required>
+<li><a href="#">👥 Kullanıcılar</a></li>
 
-<select id="kategori">
-<option>Gündem</option>
-<option>Son Dakika</option>
-<option>Ekonomi</option>
-<option>Spor</option>
-<option>Teknoloji</option>
-<option>Sağlık</option>
-</select>
+<li><a href="#">📊 İstatistikler</a></li>
 
-<label>📷 Fotoğraf Seç</label>
+<li><a href="#">⚙️ Site Ayarları</a></li>
 
-<input type="file" id="haberResim" accept="image/*" capture="environment">
-<textarea id="ozet" rows="5" placeholder="Haber Özeti"></textarea>
+<li><a href="../index.html">🚪 Siteye Dön</a></li>
 
-<button type="submit">📰 Haberi Yayınla</button>
+</ul>
 
-</form>
+</aside>
 
-  </section>
+<main class="content">
 
-<footer>
-<p>© 2026 Digital Gündem</p>
-<p>Tarafsız bakar, doğruyu yayınlar.</p>
-</footer>
-  
-<script src="../admin.js"></script>
-  
+<h2>📊 Dashboard</h2>
+
+<div class="dashboard-grid">
+
+<div class="dash-card">
+<h3>📰 Haber</h3>
+<h1 id="haberSayisi">0</h1>
+<p>Toplam Haber</p>
+</div>
+
+<div class="dash-card">
+<h3>⭐ Manşet</h3>
+<h1>0</h1>
+<p>Öne Çıkan Haber</p>
+</div>
+
+<div class="dash-card">
+<h3>🏢 Firmalar</h3>
+<h1>0</h1>
+<p>Kayıtlı Firma</p>
+</div>
+
+<div class="dash-card">
+<h3>✍️ Yazarlar</h3>
+<h1>0</h1>
+<p>Köşe Yazarı</p>
+</div>
+
+<div class="dash-card">
+<h3>🎥 Videolar</h3>
+<h1>0</h1>
+<p>Video Haber</p>
+</div>
+
+<div class="dash-card">
+<h3>👁️ Ziyaret</h3>
+<h1>0</h1>
+<p>Bugünkü Görüntülenme</p>
+</div>
+
+</div>
 </body>
 </html>
