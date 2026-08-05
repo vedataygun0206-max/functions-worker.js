@@ -2,53 +2,85 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    const form = document.getElementById("haberForm");
-    const resimInput = document.getElementById("haberResim");
+const form=document.getElementById("haberForm");
+const resimInput=document.getElementById("haberResim");
 
-    let secilenResim = "";
+const taslakBtn=document.querySelector('button[type="button"]');
 
-    // Galeriden fotoğraf seç
-    resimInput.addEventListener("change", function () {
+let secilenResim="";
 
-        const dosya = this.files[0];
+resimInput.addEventListener("change",function(){
 
-        if (!dosya) return;
+const dosya=this.files[0];
 
-        const reader = new FileReader();
+if(!dosya) return;
 
-        reader.onload = function (e) {
-            secilenResim = e.target.result;
-        };
+const reader=new FileReader();
 
-        reader.readAsDataURL(dosya);
+reader.onload=function(e){
 
-    });
+secilenResim=e.target.result;
 
-    // Haber kaydet
-    form.addEventListener("submit", function (e) {
+};
 
-        e.preventDefault();
+reader.readAsDataURL(dosya);
 
-        const haber = {
-            baslik: document.getElementById("baslik").value,
-            kategori: document.getElementById("kategori").value,
-            resim: secilenResim,
-            ozet: document.getElementById("ozet").value,
-            tarih: new Date().toLocaleDateString("tr-TR")
-        };
+});
 
-        let haberler = JSON.parse(localStorage.getItem("haberler")) || [];
+// HABER YAYINLA
 
-        haberler.unshift(haber);
+form.addEventListener("submit",function(e){
 
-        localStorage.setItem("haberler", JSON.stringify(haberler));
+e.preventDefault();
 
-        alert("✅ Haber başarıyla kaydedildi.");
+kaydet("yayin");
 
-        form.reset();
+});
 
-        secilenResim = "";
+// TASLAK
 
-    });
+taslakBtn.addEventListener("click",function(){
+
+kaydet("taslak");
+
+});
+
+function kaydet(durum){
+
+const haber={
+
+id:Date.now(),
+
+baslik:document.getElementById("baslik").value,
+
+kategori:document.getElementById("kategori").value,
+
+ozet:document.getElementById("ozet").value,
+
+detay:document.getElementById("detay").value,
+
+resim:secilenResim,
+
+manset:document.getElementById("manset").checked,
+
+durum:durum,
+
+tarih:new Date().toLocaleDateString("tr-TR")
+
+};
+
+let haberler=JSON.parse(localStorage.getItem("haberler"))||[];
+
+haberler.unshift(haber);
+
+localStorage.setItem("haberler",JSON.stringify(haberler));
+
+alert(durum==="taslak" ? "💾 Taslak kaydedildi." : "📰 Haber yayınlandı.");
+
+form.reset();
+
+secilenResim="";
+
+}
 
 });
