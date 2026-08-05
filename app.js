@@ -1,51 +1,83 @@
-// =========================
-// Digital Gündem app.js
-// =========================
-
 document.addEventListener("DOMContentLoaded", () => {
 
-  console.log("Digital Gündem hazır.");
+    let haberler = JSON.parse(localStorage.getItem("haberler")) || [];
 
-  // Haber kartları
-  document.querySelectorAll(".news-card").forEach(card => {
-    card.addEventListener("click", () => {
-      alert("Bu haberin detay sayfası yakında aktif olacak.");
-    });
-  });
+    const liste = document.getElementById("haberListesi");
+
+    if(liste){
+
+        liste.innerHTML = "";
+
+        haberler.forEach((haber,index)=>{
+
+            liste.innerHTML += `
+            <article class="news-card">
+
+                <img src="${haber.resim || 'https://picsum.photos/600/350'}">
+
+                <span class="etiket">${haber.kategori}</span>
+
+                <h3>${haber.baslik}</h3>
+
+                <p>${haber.ozet}</p>
+
+                <small>${haber.tarih}</small>
+
+                <br><br>
+
+                <a href="#" onclick="haberDetay(${index})">Haberi Oku</a>
+
+            </article>
+            `;
+
+        });
+
+    }
 
 });
 
-// Sayfa başına dön butonu
-const topBtn = document.createElement("button");
+function haberDetay(id){
 
-topBtn.innerHTML = "⬆";
+    localStorage.setItem("aktifHaber",id);
 
-topBtn.style.position = "fixed";
-topBtn.style.right = "20px";
-topBtn.style.bottom = "20px";
-topBtn.style.width = "50px";
-topBtn.style.height = "50px";
-topBtn.style.border = "none";
-topBtn.style.borderRadius = "50%";
-topBtn.style.background = "#d60000";
-topBtn.style.color = "#fff";
-topBtn.style.fontSize = "22px";
-topBtn.style.cursor = "pointer";
-topBtn.style.display = "none";
+    alert("Haber detay sayfasını bir sonraki adımda oluşturacağız.");
+
+}
+
+// Yukarı çık butonu
+
+const topBtn=document.createElement("button");
+
+topBtn.innerHTML="⬆";
+
+topBtn.style.position="fixed";
+topBtn.style.right="20px";
+topBtn.style.bottom="20px";
+topBtn.style.width="50px";
+topBtn.style.height="50px";
+topBtn.style.border="none";
+topBtn.style.borderRadius="50%";
+topBtn.style.background="#d60000";
+topBtn.style.color="#fff";
+topBtn.style.fontSize="22px";
+topBtn.style.display="none";
 
 document.body.appendChild(topBtn);
 
-window.addEventListener("scroll", () => {
-  if (window.scrollY > 300) {
-    topBtn.style.display = "block";
-  } else {
-    topBtn.style.display = "none";
-  }
+window.addEventListener("scroll",()=>{
+
+topBtn.style.display=window.scrollY>300?"block":"none";
+
 });
 
-topBtn.onclick = () => {
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
+topBtn.onclick=()=>{
+
+window.scrollTo({
+
+top:0,
+
+behavior:"smooth"
+
+});
+
 };
