@@ -3,17 +3,24 @@ export default {
     const url = new URL(request.url);
 
     if (url.pathname === "/api/test") {
-      const result = await env.DB
-        .prepare("SELECT 1 AS test")
-        .first();
+      try {
+        const result = await env.DB
+          .prepare("SELECT 1 AS test")
+          .first();
 
-      return Response.json({
-        success: true,
-        database: "D1 bağlantısı çalışıyor",
-        result
-      });
+        return Response.json({
+          success: true,
+          database: "connected",
+          result
+        });
+      } catch (error) {
+        return Response.json({
+          success: false,
+          error: error.message
+        }, { status: 500 });
+      }
     }
 
-    return new Response("Digital Gündem API çalışıyor.");
+    return new Response("Digital Gündem Worker çalışıyor.");
   }
 };
