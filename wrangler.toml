@@ -1,1 +1,8 @@
 
+name = "functions-worker-js"
+compatibility_date = "2026-08-05"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "digital-gundem-db"
+database_id = "00000005-00000000-000050c0-0af469d6673fe9177aa0f250077b0463"
