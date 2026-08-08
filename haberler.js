@@ -1,119 +1,130 @@
-// ===============================
-// DIGITAL GÜNDEM - HABERLER
-// D1 API bağlantısı
-// ===============================
+// ========================================
+// DIGITAL GÜNDEM - D1 HABER SİSTEMİ
+// ========================================
 
-document.addEventListener("DOMContentLoaded", async () => {
-
-    console.log("Digital Gündem haber sistemi başlatıldı.");
+document.addEventListener("DOMContentLoaded", () => {
 
     const haberListesi = document.getElementById("haberListesi");
     const manset = document.getElementById("mansetHaber");
+    const arama = document.getElementById("haberArama");
 
-    if (!haberListesi) {
-        console.log("haberListesi bulunamadı.");
-        return;
-    }
+    let tumHaberler = [];
 
-    try {
 
-        // ===============================
-        // D1 API'DEN HABERLERİ AL
-        // ===============================
+    // ========================================
+    // D1'DEN HABERLERİ AL
+    // ========================================
 
-        const response = await fetch(
-            "https://functions-worker-js.vedataygun0206.workers.dev/api/haberler"
-        );
+    async function haberleriGetir() {
 
-        const data = await response.json();
+        try {
 
-        console.log("API sonucu:", data);
+            const cevap = await fetch("/api/haberler");
 
-        if (!data.success) {
-            throw new Error(
-                data.error || "Haberler alınamadı."
-            );
+            const veri = await cevap.json();
+
+            console.log("Digital Gündem API:", veri);
+
+            if (!veri.success) {
+
+                throw new Error(veri.error || "Haberler alınamadı.");
+
+            }
+
+            tumHaberler = veri.haberler || [];
+
+            haberleriGoster(tumHaberler);
+
+        } catch (error) {
+
+            console.error("Haber API hatası:", error);
+
+            if (haberListesi) {
+
+                haberListesi.innerHTML = `
+                    <article class="news-card">
+                        <h3>Haberler yüklenemedi.</h3>
+                        <p>${error.message}</p>
+                    </article>
+                `;
+
+            }
+
         }
 
-        const haberler = data.haberler || [];
+    }
 
-        // ===============================
-        // HABER YOK
-        // ===============================
 
+    // ========================================
+    // HABERLERİ GÖSTER
+    // ========================================
+
+    function haberleriGoster(haberler) {
+
+        if (!haberListesi) return;
+
+
+        // Haber yok
         if (haberler.length === 0) {
 
             haberListesi.innerHTML = `
                 <article class="news-card">
-
-                    <img
-                        src="https://picsum.photos/600/350"
-                        alt="Digital Gündem"
-                    >
-
-                    <span class="etiket">
-                        Digital Gündem
-                    </span>
-
-                    <h3>
-                        Henüz haber eklenmedi
-                    </h3>
-
-                    <p>
-                        Yönetim panelinden ilk haberinizi
-                        ekleyebilirsiniz.
-                    </p>
-
+                    <h3>Henüz haber bulunmuyor.</h3>
+                    <p>Yönetim panelinden haber ekleyebilirsiniz.</p>
                 </article>
             `;
 
+            if (manset) {
+                manset.innerHTML = "";
+            }
+
             return;
+
         }
 
-        // ===============================
+
+        // ========================================
         // MANŞET
-        // ===============================
+        // ========================================
+
+        const mansetHaber =
+            haberler.find(haber => Number(haber.manset) === 1)
+            || haberler[0];
+
 
         if (manset) {
 
-            const ilk = haberler.find(
-                haber => Number(haber.manset) === 1
-            ) || haberler[0];
-
-            const index = haberler.findIndex(
-                haber => haber.id === ilk.id
-            );
-
             manset.innerHTML = `
+
                 <div class="headline-main">
 
                     <img
-                        src="${ilk.resim || 'https://picsum.photos/900/500'}"
-                        alt="${ilk.baslik || ''}"
+                        src="${mansetHaber.resim || 'https://picsum.photos/900/500'}"
+                        alt="${mansetHaber.baslik || 'Haber'}"
                     >
 
                     <div class="headline-text">
 
                         <span class="etiket">
-                            ${ilk.kategori || 'Gündem'}
+                            ${mansetHaber.kategori || 'Gündem'}
                         </span>
 
                         <h2>
-                            ${ilk.baslik || ''}
+                            ${mansetHaber.baslik || ''}
                         </h2>
 
                         <p>
-                            ${ilk.ozet || ''}
+                            ${mansetHaber.ozet || ''}
                         </p>
 
                         <small>
-                            ${ilk.tarih || ''}
+                            ${mansetHaber.tarih || ''}
                         </small>
 
                         <br><br>
 
                         <a
-                            href="haber.html?id=${index}"
+                            href="haber.html?id=${mansetHaber.id}"
                             class="btn"
                         >
                             Haberi Oku →
@@ -122,16 +133,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                     </div>
 
                 </div>
+
             `;
+
         }
 
-        // ===============================
-        // HABER LİSTESİ
-        // ===============================
+
+        // ========================================
+        // HABER KARTLARI
+        // ========================================
 
         haberListesi.innerHTML = "";
 
-        haberler.forEach((haber, index) => {
+        haberler.forEach(haber => {
 
             haberListesi.innerHTML += `
 
@@ -139,7 +153,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                     <img
                         src="${haber.resim || 'https://picsum.photos/600/350'}"
-                        alt="${haber.baslik || ''}"
+                        alt="${haber.baslik || 'Haber'}"
                     >
 
                     <span class="etiket">
@@ -160,7 +174,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                     <br><br>
 
-                    <a href="haber.html?id=${index}">
+                    <a href="haber.html?id=${haber.id}">
                         Devamını Oku →
                     </a>
 
@@ -170,74 +184,68 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         });
 
-        console.log(
-            `${haberler.length} haber başarıyla yüklendi.`
-        );
+    }
 
-    } catch (error) {
 
-        console.error(
-            "Haberler yüklenirken hata:",
-            error
-        );
+    // ========================================
+    // ARAMA
+    // ========================================
 
-        haberListesi.innerHTML = `
-            <article class="news-card">
+    if (arama) {
 
-                <h3>
-                    Haberler yüklenemedi
-                </h3>
+        arama.addEventListener("input", () => {
 
-                <p>
-                    Sunucu bağlantısında bir sorun oluştu.
-                </p>
+            const kelime =
+                arama.value
+                    .toLocaleLowerCase("tr-TR")
+                    .trim();
 
-            </article>
-        `;
+
+            if (!kelime) {
+
+                haberleriGoster(tumHaberler);
+
+                return;
+
+            }
+
+
+            const sonuc = tumHaberler.filter(haber => {
+
+                return (
+
+                    (haber.baslik || "")
+                        .toLocaleLowerCase("tr-TR")
+                        .includes(kelime)
+
+                    ||
+
+                    (haber.ozet || "")
+                        .toLocaleLowerCase("tr-TR")
+                        .includes(kelime)
+
+                    ||
+
+                    (haber.kategori || "")
+                        .toLocaleLowerCase("tr-TR")
+                        .includes(kelime)
+
+                );
+
+            });
+
+
+            haberleriGoster(sonuc);
+
+        });
 
     }
 
-});
 
+    // ========================================
+    // BAŞLAT
+    // ========================================
 
-// ===============================
-// YUKARI ÇIK BUTONU
-// ===============================
-
-const topBtn = document.createElement("button");
-
-topBtn.innerHTML = "⬆";
-
-topBtn.style.position = "fixed";
-topBtn.style.right = "20px";
-topBtn.style.bottom = "20px";
-topBtn.style.width = "50px";
-topBtn.style.height = "50px";
-topBtn.style.border = "none";
-topBtn.style.borderRadius = "50%";
-topBtn.style.background = "#d60000";
-topBtn.style.color = "#fff";
-topBtn.style.fontSize = "22px";
-topBtn.style.cursor = "pointer";
-topBtn.style.display = "none";
-topBtn.style.zIndex = "9999";
-
-document.body.appendChild(topBtn);
-
-window.addEventListener("scroll", () => {
-
-    topBtn.style.display =
-        window.scrollY > 300
-            ? "block"
-            : "none";
+    haberleriGetir();
 
 });
-
-topBtn.onclick = () => {
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-
-};
