@@ -1,37 +1,41 @@
 // ===============================
-// Digital Gündem - Haber Sistemi
-// D1 API bağlantılı
+// DIGITAL GÜNDEM - HABERLER
+// D1 API bağlantısı
 // ===============================
-
-const API_URL = "https://functions-worker-js.vedataygun0206.workers.dev/api/haberler";
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-    console.log("Digital Gündem hazır.");
+    console.log("Digital Gündem haber sistemi başlatıldı.");
 
     const haberListesi = document.getElementById("haberListesi");
     const manset = document.getElementById("mansetHaber");
 
-    if (!haberListesi) return;
+    if (!haberListesi) {
+        console.log("haberListesi bulunamadı.");
+        return;
+    }
 
     try {
 
-        // D1 VERİTABANINDAN HABERLERİ AL
-        const response = await fetch(API_URL);
+        // ===============================
+        // D1 API'DEN HABERLERİ AL
+        // ===============================
 
-        if (!response.ok) {
-            throw new Error("Haber API bağlantısı başarısız.");
-        }
+        const response = await fetch(
+            "https://functions-worker-js.vedataygun0206.workers.dev/api/haberler"
+        );
 
         const data = await response.json();
 
+        console.log("API sonucu:", data);
+
         if (!data.success) {
-            throw new Error(data.error || "Haberler alınamadı.");
+            throw new Error(
+                data.error || "Haberler alınamadı."
+            );
         }
 
         const haberler = data.haberler || [];
-
-        console.log("D1'den gelen haberler:", haberler);
 
         // ===============================
         // HABER YOK
@@ -41,7 +45,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             haberListesi.innerHTML = `
                 <article class="news-card">
-                    <img 
+
+                    <img
                         src="https://picsum.photos/600/350"
                         alt="Digital Gündem"
                     >
@@ -55,14 +60,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                     </h3>
 
                     <p>
-                        Yönetim panelinden ilk haberinizi ekleyebilirsiniz.
+                        Yönetim panelinden ilk haberinizi
+                        ekleyebilirsiniz.
                     </p>
+
                 </article>
             `;
-
-            if (manset) {
-                manset.innerHTML = "";
-            }
 
             return;
         }
@@ -73,46 +76,44 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (manset) {
 
-            // Manset olarak işaretlenen haberi bul
-            let ilk = haberler.find(
+            const ilk = haberler.find(
                 haber => Number(haber.manset) === 1
-            );
+            ) || haberler[0];
 
-            // Manset yoksa ilk haberi kullan
-            if (!ilk) {
-                ilk = haberler[0];
-            }
+            const index = haberler.findIndex(
+                haber => haber.id === ilk.id
+            );
 
             manset.innerHTML = `
                 <div class="headline-main">
 
                     <img
                         src="${ilk.resim || 'https://picsum.photos/900/500'}"
-                        alt="${escapeHTML(ilk.baslik)}"
+                        alt="${ilk.baslik || ''}"
                     >
 
                     <div class="headline-text">
 
                         <span class="etiket">
-                            ${escapeHTML(ilk.kategori)}
+                            ${ilk.kategori || 'Gündem'}
                         </span>
 
                         <h2>
-                            ${escapeHTML(ilk.baslik)}
+                            ${ilk.baslik || ''}
                         </h2>
 
                         <p>
-                            ${escapeHTML(ilk.ozet || "")}
+                            ${ilk.ozet || ''}
                         </p>
 
                         <small>
-                            ${escapeHTML(ilk.tarih || "")}
+                            ${ilk.tarih || ''}
                         </small>
 
                         <br><br>
 
                         <a
-                            href="haber.html?id=${ilk.id}"
+                            href="haber.html?id=${index}"
                             class="btn"
                         >
                             Haberi Oku →
@@ -125,77 +126,53 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         // ===============================
-        // HABERLER
+        // HABER LİSTESİ
         // ===============================
 
         haberListesi.innerHTML = "";
 
-        haberler.forEach(haber => {
+        haberler.forEach((haber, index) => {
 
             haberListesi.innerHTML += `
 
-                <article
-                    class="news-card"
-                    data-id="${haber.id}"
-                >
+                <article class="news-card">
 
                     <img
                         src="${haber.resim || 'https://picsum.photos/600/350'}"
-                        alt="${escapeHTML(haber.baslik)}"
-                        loading="lazy"
+                        alt="${haber.baslik || ''}"
                     >
 
                     <span class="etiket">
-                        ${escapeHTML(haber.kategori)}
+                        ${haber.kategori || 'Gündem'}
                     </span>
 
                     <h3>
-                        ${escapeHTML(haber.baslik)}
+                        ${haber.baslik || ''}
                     </h3>
 
                     <p>
-                        ${escapeHTML(haber.ozet || "")}
+                        ${haber.ozet || ''}
                     </p>
 
                     <small>
-                        ${escapeHTML(haber.tarih || "")}
+                        ${haber.tarih || ''}
                     </small>
 
                     <br><br>
 
-                    <a href="haber.html?id=${haber.id}">
+                    <a href="haber.html?id=${index}">
                         Devamını Oku →
                     </a>
 
                 </article>
+
             `;
+
         });
 
-        // ===============================
-        // HABER KARTI
-        // ===============================
-
-        document
-            .querySelectorAll(".news-card")
-            .forEach(card => {
-
-                card.addEventListener("click", event => {
-
-                    // Linke basıldıysa ayrıca işlem yapma
-                    if (event.target.closest("a")) {
-                        return;
-                    }
-
-                    const id = card.dataset.id;
-
-                    if (id) {
-                        window.location.href =
-                            `haber.html?id=${id}`;
-                    }
-
-                });
-
-            });
+        console.log(
+            `${haberler.length} haber başarıyla yüklendi.`
+        );
 
     } catch (error) {
 
@@ -207,47 +184,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         haberListesi.innerHTML = `
             <article class="news-card">
 
-                <span class="etiket">
-                    Digital Gündem
-                </span>
-
                 <h3>
                     Haberler yüklenemedi
                 </h3>
 
                 <p>
-                    Haber servisine şu anda ulaşılamıyor.
-                    Lütfen daha sonra tekrar deneyin.
+                    Sunucu bağlantısında bir sorun oluştu.
                 </p>
 
             </article>
         `;
+
     }
 
 });
 
 
 // ===============================
-// HTML GÜVENLİK
-// ===============================
-
-function escapeHTML(value) {
-
-    if (value === null || value === undefined) {
-        return "";
-    }
-
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-
-// ===============================
-// SAYFANIN BAŞINA DÖN
+// YUKARI ÇIK BUTONU
 // ===============================
 
 const topBtn = document.createElement("button");
