@@ -32,12 +32,9 @@ export default {
 
 
     // =========================
-    // HABERLER - GET
+    // HABERLER API
     // =========================
-    if (
-      url.pathname === "/api/haberler" &&
-      request.method === "GET"
-    ) {
+    if (url.pathname === "/api/haberler") {
 
       try {
 
@@ -45,6 +42,7 @@ export default {
           .prepare(`
             SELECT *
             FROM haberler
+            WHERE durum = 'yayinda'
             ORDER BY id DESC
           `)
           .all();
@@ -67,85 +65,39 @@ export default {
 
 
     // =========================
-    // HABER EKLE - POST
-    // =========================
-    if (
-      url.pathname === "/api/haberler" &&
-      request.method === "POST"
-    ) {
-
-      try {
-
-        const data = await request.json();
-
-        const baslik = data.baslik || "";
-        const ozet = data.ozet || "";
-        const icerik = data.icerik || "";
-        const kategori = data.kategori || "Gündem";
-        const resim = data.resim || "";
-        const tarih = data.tarih || new Date().toLocaleDateString("tr-TR");
-        const durum = data.durum || "yayinda";
-        const manset = data.manset ? 1 : 0;
-
-        if (!baslik.trim()) {
-
-          return Response.json({
-            success: false,
-            error: "Haber başlığı boş olamaz."
-          }, { status: 400 });
-
-        }
-
-        const result = await env.DB
-          .prepare(`
-            INSERT INTO haberler
-            (
-              baslik,
-              ozet,
-              icerik,
-              kategori,
-              resim,
-              tarih,
-              durum,
-              manset
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-          `)
-          .bind(
-            baslik,
-            ozet,
-            icerik,
-            kategori,
-            resim,
-            tarih,
-            durum,
-            manset
-          )
-          .run();
-
-        return Response.json({
-          success: true,
-          message: "Haber başarıyla eklendi.",
-          id: result.meta.last_row_id
-        });
-
-      } catch (error) {
-
-        return Response.json({
-          success: false,
-          error: error.message
-        }, { status: 500 });
-
-      }
-    }
-
-
-    // =========================
-    // ANA WORKER
+    // ANA SAYFA
     // =========================
 
     return new Response(
-      "Digital Gündem Worker çalışıyor."
+      `<!DOCTYPE html>
+      <html lang="tr">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Digital Gündem</title>
+      </head>
+
+      <body>
+
+        <h1>Digital Gündem</h1>
+
+        <p>Türkiye'nin Dijital Rehberi</p>
+
+        <p>Worker ve D1 bağlantısı aktif.</p>
+
+        <p>
+          <a href="/api/haberler">
+            Haber API'sini görüntüle
+          </a>
+        </p>
+
+      </body>
+      </html>`,
+      {
+        headers: {
+          "content-type": "text/html; charset=UTF-8"
+        }
+      }
     );
 
   }
