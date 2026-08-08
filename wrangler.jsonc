@@ -3,15 +3,12 @@
   "name": "functions-worker-js",
   "main": "index.js",
   "compatibility_date": "2026-08-05",
-
   "compatibility_flags": [
     "nodejs_compat"
   ],
-
   "assets": {
     "directory": "."
   },
-
   "d1_databases": [
     {
       "binding": "DB",
