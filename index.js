@@ -1,15 +1,12 @@
 export default {
   async fetch(request, env) {
-
     const url = new URL(request.url);
 
     // =========================
     // D1 TEST
     // =========================
     if (url.pathname === "/api/test") {
-
       try {
-
         const result = await env.DB
           .prepare("SELECT 1 AS test")
           .first();
@@ -19,25 +16,19 @@ export default {
           database: "connected",
           result
         });
-
       } catch (error) {
-
         return Response.json({
           success: false,
           error: error.message
         }, { status: 500 });
-
       }
     }
-
 
     // =========================
     // HABERLER API
     // =========================
     if (url.pathname === "/api/haberler") {
-
       try {
-
         const result = await env.DB
           .prepare(`
             SELECT *
@@ -52,53 +43,62 @@ export default {
           toplam: result.results.length,
           haberler: result.results
         });
-
       } catch (error) {
-
         return Response.json({
           success: false,
           error: error.message
         }, { status: 500 });
-
       }
     }
 
-
     // =========================
-    // ANA SAYFA
+    // TEK HABER API
     // =========================
+    if (url.pathname === "/api/haber") {
+      try {
+        const id = url.searchParams.get("id");
 
-    return new Response(
-      `<!DOCTYPE html>
-      <html lang="tr">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Digital Gündem</title>
-      </head>
-
-      <body>
-
-        <h1>Digital Gündem</h1>
-
-        <p>Türkiye'nin Dijital Rehberi</p>
-
-        <p>Worker ve D1 bağlantısı aktif.</p>
-
-        <p>
-          <a href="/api/haberler">
-            Haber API'sini görüntüle
-          </a>
-        </p>
-
-      </body>
-      </html>`,
-      {
-        headers: {
-          "content-type": "text/html; charset=UTF-8"
+        if (!id) {
+          return Response.json({
+            success: false,
+            error: "Haber ID belirtilmedi."
+          }, { status: 400 });
         }
-      }
-    );
 
+        const haber = await env.DB
+          .prepare(`
+            SELECT *
+            FROM haberler
+            WHERE id = ?
+            AND durum = 'yayinda'
+            LIMIT 1
+          `)
+          .bind(id)
+          .first();
+
+        if (!haber) {
+          return Response.json({
+            success: false,
+            error: "Haber bulunamadı."
+          }, { status: 404 });
+        }
+
+        return Response.json({
+          success: true,
+          haber
+        });
+
+      } catch (error) {
+        return Response.json({
+          success: false,
+          error: error.message
+        }, { status: 500 });
+      }
+    }
+
+    // =========================
+    // STATİK SİTE
+    // =========================
+    return env.ASSETS.fetch(request);
   }
 };
