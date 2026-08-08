@@ -1,8 +1,11 @@
 // ===============================
 // Digital Gündem - Haber Sistemi
+// D1 API bağlantılı
 // ===============================
 
-document.addEventListener("DOMContentLoaded", () => {
+const API_URL = "https://functions-worker-js.vedataygun0206.workers.dev/api/haberler";
+
+document.addEventListener("DOMContentLoaded", async () => {
 
     console.log("Digital Gündem hazır.");
 
@@ -11,103 +14,240 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!haberListesi) return;
 
-    const haberler = JSON.parse(localStorage.getItem("haberler")) || [];
+    try {
 
-    // Haber yoksa
-    if (haberler.length === 0) {
+        // D1 VERİTABANINDAN HABERLERİ AL
+        const response = await fetch(API_URL);
 
-        haberListesi.innerHTML = `
-        <article class="news-card">
-            <img src="https://picsum.photos/600/350" alt="">
-            <span class="etiket">Digital Gündem</span>
-            <h3>Henüz haber eklenmedi</h3>
-            <p>Yönetim panelinden ilk haberinizi ekleyebilirsiniz.</p>
-        </article>`;
+        if (!response.ok) {
+            throw new Error("Haber API bağlantısı başarısız.");
+        }
 
-        return;
-    }
+        const data = await response.json();
 
-    // ===================
-    // MANŞET
-    // ===================
+        if (!data.success) {
+            throw new Error(data.error || "Haberler alınamadı.");
+        }
 
-    if (manset) {
+        const haberler = data.haberler || [];
 
-        const ilk = haberler[0];
+        console.log("D1'den gelen haberler:", haberler);
 
-        manset.innerHTML = `
-        <div class="headline-main">
+        // ===============================
+        // HABER YOK
+        // ===============================
 
-            <img src="${ilk.resim || 'https://picsum.photos/900/500'}" alt="${ilk.baslik}">
+        if (haberler.length === 0) {
 
-            <div class="headline-text">
+            haberListesi.innerHTML = `
+                <article class="news-card">
+                    <img 
+                        src="https://picsum.photos/600/350"
+                        alt="Digital Gündem"
+                    >
 
-                <span class="etiket">${ilk.kategori}</span>
+                    <span class="etiket">
+                        Digital Gündem
+                    </span>
 
-                <h2>${ilk.baslik}</h2>
+                    <h3>
+                        Henüz haber eklenmedi
+                    </h3>
 
-                <p>${ilk.ozet}</p>
+                    <p>
+                        Yönetim panelinden ilk haberinizi ekleyebilirsiniz.
+                    </p>
+                </article>
+            `;
 
-                <small>${ilk.tarih}</small><br><br>
+            if (manset) {
+                manset.innerHTML = "";
+            }
 
-                <a href="haber.html?id=0" class="btn">
-                    Haberi Oku →
-                </a>
+            return;
+        }
 
-            </div>
+        // ===============================
+        // MANŞET
+        // ===============================
 
-        </div>`;
-    }
+        if (manset) {
 
-    // ===================
-    // HABERLER
-    // ===================
+            // Manset olarak işaretlenen haberi bul
+            let ilk = haberler.find(
+                haber => Number(haber.manset) === 1
+            );
 
-    haberListesi.innerHTML = "";
+            // Manset yoksa ilk haberi kullan
+            if (!ilk) {
+                ilk = haberler[0];
+            }
 
-    haberler.forEach((haber, index) => {
+            manset.innerHTML = `
+                <div class="headline-main">
 
-        haberListesi.innerHTML += `
+                    <img
+                        src="${ilk.resim || 'https://picsum.photos/900/500'}"
+                        alt="${escapeHTML(ilk.baslik)}"
+                    >
 
-        <article class="news-card">
+                    <div class="headline-text">
 
-            <img src="${haber.resim || 'https://picsum.photos/600/350'}" alt="${haber.baslik}">
+                        <span class="etiket">
+                            ${escapeHTML(ilk.kategori)}
+                        </span>
 
-            <span class="etiket">${haber.kategori}</span>
+                        <h2>
+                            ${escapeHTML(ilk.baslik)}
+                        </h2>
 
-            <h3>${haber.baslik}</h3>
+                        <p>
+                            ${escapeHTML(ilk.ozet || "")}
+                        </p>
 
-            <p>${haber.ozet}</p>
+                        <small>
+                            ${escapeHTML(ilk.tarih || "")}
+                        </small>
 
-            <small>${haber.tarih}</small>
+                        <br><br>
 
-            <br><br>
+                        <a
+                            href="haber.html?id=${ilk.id}"
+                            class="btn"
+                        >
+                            Haberi Oku →
+                        </a>
 
-            <a href="haber.html?id=${index}">
-                Devamını Oku →
-            </a>
+                    </div>
 
-        </article>
+                </div>
+            `;
+        }
 
-        `;
+        // ===============================
+        // HABERLER
+        // ===============================
 
-    });
+        haberListesi.innerHTML = "";
 
-    // Haber kartı tıklama
-    document.querySelectorAll(".news-card").forEach(card => {
+        haberler.forEach(haber => {
 
-        card.addEventListener("click", () => {
+            haberListesi.innerHTML += `
 
-            console.log("Haber açılıyor...");
+                <article
+                    class="news-card"
+                    data-id="${haber.id}"
+                >
 
+                    <img
+                        src="${haber.resim || 'https://picsum.photos/600/350'}"
+                        alt="${escapeHTML(haber.baslik)}"
+                        loading="lazy"
+                    >
+
+                    <span class="etiket">
+                        ${escapeHTML(haber.kategori)}
+                    </span>
+
+                    <h3>
+                        ${escapeHTML(haber.baslik)}
+                    </h3>
+
+                    <p>
+                        ${escapeHTML(haber.ozet || "")}
+                    </p>
+
+                    <small>
+                        ${escapeHTML(haber.tarih || "")}
+                    </small>
+
+                    <br><br>
+
+                    <a href="haber.html?id=${haber.id}">
+                        Devamını Oku →
+                    </a>
+
+                </article>
+            `;
         });
 
-    });
+        // ===============================
+        // HABER KARTI
+        // ===============================
+
+        document
+            .querySelectorAll(".news-card")
+            .forEach(card => {
+
+                card.addEventListener("click", event => {
+
+                    // Linke basıldıysa ayrıca işlem yapma
+                    if (event.target.closest("a")) {
+                        return;
+                    }
+
+                    const id = card.dataset.id;
+
+                    if (id) {
+                        window.location.href =
+                            `haber.html?id=${id}`;
+                    }
+
+                });
+
+            });
+
+    } catch (error) {
+
+        console.error(
+            "Haberler yüklenirken hata:",
+            error
+        );
+
+        haberListesi.innerHTML = `
+            <article class="news-card">
+
+                <span class="etiket">
+                    Digital Gündem
+                </span>
+
+                <h3>
+                    Haberler yüklenemedi
+                </h3>
+
+                <p>
+                    Haber servisine şu anda ulaşılamıyor.
+                    Lütfen daha sonra tekrar deneyin.
+                </p>
+
+            </article>
+        `;
+    }
 
 });
 
+
 // ===============================
-// Sayfanın başına dön
+// HTML GÜVENLİK
+// ===============================
+
+function escapeHTML(value) {
+
+    if (value === null || value === undefined) {
+        return "";
+    }
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+// ===============================
+// SAYFANIN BAŞINA DÖN
 // ===============================
 
 const topBtn = document.createElement("button");
@@ -132,26 +272,18 @@ document.body.appendChild(topBtn);
 
 window.addEventListener("scroll", () => {
 
-    if (window.scrollY > 300) {
-
-        topBtn.style.display = "block";
-
-    } else {
-
-        topBtn.style.display = "none";
-
-    }
+    topBtn.style.display =
+        window.scrollY > 300
+            ? "block"
+            : "none";
 
 });
 
 topBtn.onclick = () => {
 
     window.scrollTo({
-
         top: 0,
-
         behavior: "smooth"
-
     });
 
 };
