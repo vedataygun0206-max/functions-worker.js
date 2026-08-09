@@ -183,77 +183,259 @@ body {
 .hata a {
     display: inline-block;
     margin-top: 15px;
+<style>
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+body {
+    background: #f4f5f7;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #171717;
+}
+
+/* ÜST BAŞLIK */
+.haber-header {
+    width: 100%;
+    background: #111827;
+    color: #fff;
+    padding: 12px 15px;
+}
+
+.haber-header-inner {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.haber-logo {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.geri-btn {
+    display: inline-block;
+    color: #fff;
     background: #e50914;
-    color: white;
-    padding: 11px 18px;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* ANA ALAN */
+.haber-wrapper {
+    width: 100%;
+    max-width: 900px;
+    margin: 12px auto;
+    padding: 0 8px;
+}
+
+/* HABER KARTI */
+.haber-detay {
+    width: 100%;
+    background: #fff;
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: 0 3px 15px rgba(0,0,0,.06);
+}
+
+/* KATEGORİ */
+.haber-kategori {
+    display: inline-block;
+    background: #e50914;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+}
+
+/* BAŞLIK */
+.haber-baslik {
+    margin: 0 0 8px 0;
+    padding: 0;
+    font-size: 32px;
+    line-height: 1.2;
+    color: #111827;
+}
+
+/* TARİH */
+.haber-tarih {
+    display: block;
+    color: #777;
+    font-size: 13px;
+    margin: 0 0 15px 0;
+}
+
+/* RESİM */
+.haber-resim {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 600px;
+    object-fit: cover;
     border-radius: 8px;
+    margin: 0 0 15px 0;
+}
+
+/* ÖZET */
+.haber-ozet {
+    margin: 0 0 15px 0;
+    padding: 0;
+    font-size: 18px;
+    line-height: 1.6;
+    font-weight: 600;
+    color: #333;
+}
+
+/* İÇERİK */
+.haber-icerik {
+    margin: 0;
+    padding: 0;
+    font-size: 17px;
+    line-height: 1.7;
+    color: #222;
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+}
+
+.haber-icerik p {
+    margin: 0 0 14px 0;
+}
+
+/* KAYNAK */
+.haber-kaynak {
+    margin-top: 20px;
+    padding-top: 12px;
+    border-top: 1px solid #ddd;
+    color: #777;
+    font-size: 13px;
+}
+
+/* YÜKLENİYOR */
+.yukleniyor {
+    background: #fff;
+    border-radius: 10px;
+    padding: 30px 20px;
+    text-align: center;
+}
+
+/* HATA */
+.hata {
+    background: #fff;
+    border-radius: 10px;
+    padding: 30px 20px;
+    text-align: center;
+}
+
+.hata h2 {
+    color: #e50914;
+}
+
+.hata a {
+    display: inline-block;
+    margin-top: 12px;
+    background: #e50914;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 7px;
     text-decoration: none;
 }
 
 /* ALT */
-
 .site-footer {
     text-align: center;
     color: #777;
-    padding: 25px 15px;
-    font-size: 13px;
+    padding: 18px 10px;
+    font-size: 12px;
 }
 
-/* ========================================
+/* ================================
    MOBİL
-======================================== */
+================================ */
 
 @media (max-width: 700px) {
 
     .haber-header {
-        padding: 14px 12px;
-    }
-
-    .haber-header-inner {
-        align-items: center;
+        padding: 10px 10px;
     }
 
     .haber-logo {
-        font-size: 18px;
+        font-size: 17px;
     }
 
     .geri-btn {
-        font-size: 13px;
-        padding: 8px 11px;
+        font-size: 12px;
+        padding: 7px 9px;
     }
 
     .haber-wrapper {
-        margin: 12px auto;
-        padding: 0 8px;
+        margin: 6px auto;
+        padding: 0 5px;
     }
 
     .haber-detay {
-        padding: 17px;
-        border-radius: 10px;
+        padding: 14px;
+        border-radius: 8px;
+    }
+
+    .haber-kategori {
+        font-size: 12px;
+        padding: 5px 8px;
+        margin-bottom: 8px;
     }
 
     .haber-baslik {
-        font-size: 28px;
-        line-height: 1.25;
+        font-size: 26px;
+        line-height: 1.2;
+        margin-bottom: 7px;
     }
 
-    .haber-ozet {
-        font-size: 17px;
-        line-height: 1.6;
-    }
-
-    .haber-icerik {
-        font-size: 17px;
-        line-height: 1.75;
+    .haber-tarih {
+        font-size: 12px;
+        margin-bottom: 12px;
     }
 
     .haber-resim {
+        width: 100%;
         max-height: 420px;
-        border-radius: 8px;
-        margin-bottom: 20px;
+        border-radius: 6px;
+        margin-bottom: 12px;
+    }
+
+    .haber-ozet {
+        font-size: 16px;
+        line-height: 1.55;
+        margin-bottom: 12px;
+    }
+
+    .haber-icerik {
+        font-size: 16px;
+        line-height: 1.65;
+    }
+
+    .haber-kaynak {
+        margin-top: 15px;
+        padding-top: 10px;
+    }
+
+    .site-footer {
+        padding: 14px 8px;
     }
 }
-
 </style>
 </head>
 
