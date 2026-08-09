@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let tumHaberler = [];
 
-
     // ========================================
     // D1'DEN HABERLERİ AL
     // ========================================
@@ -26,9 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log("Digital Gündem API:", veri);
 
             if (!veri.success) {
-
                 throw new Error(veri.error || "Haberler alınamadı.");
-
             }
 
             tumHaberler = veri.haberler || [];
@@ -54,7 +51,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-
     // ========================================
     // HABERLERİ GÖSTER
     // ========================================
@@ -62,7 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function haberleriGoster(haberler) {
 
         if (!haberListesi) return;
-
 
         // Haber yok
         if (haberler.length === 0) {
@@ -79,9 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             return;
-
         }
-
 
         // ========================================
         // MANŞET
@@ -90,7 +83,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const mansetHaber =
             haberler.find(haber => Number(haber.manset) === 1)
             || haberler[0];
-
 
         if (manset) {
 
@@ -124,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <br><br>
 
                         <a
-                            href="haber.html?id=${mansetHaber.id}"
+                            href="/pages/haber.html?id=${mansetHaber.id}"
                             class="btn"
                         >
                             Haberi Oku →
@@ -135,9 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
 
             `;
-
         }
-
 
         // ========================================
         // HABER KARTLARI
@@ -174,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     <br><br>
 
-                    <a href="haber.html?id=${haber.id}">
+                    <a href="/pages/haber.html?id=${haber.id}">
                         Devamını Oku →
                     </a>
 
@@ -185,7 +175,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
     }
-
 
     // ========================================
     // ARAMA
@@ -200,15 +189,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     .toLocaleLowerCase("tr-TR")
                     .trim();
 
-
             if (!kelime) {
 
                 haberleriGoster(tumHaberler);
 
                 return;
-
             }
-
 
             const sonuc = tumHaberler.filter(haber => {
 
@@ -234,13 +220,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             });
 
-
             haberleriGoster(sonuc);
 
         });
 
     }
-
 
     // ========================================
     // BAŞLAT
