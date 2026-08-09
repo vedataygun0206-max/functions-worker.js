@@ -1,1 +1,1180 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Özel Reklam Yönetimi | Digital Gündem</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #f3f4f6;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #111827;
+}
+
+.header {
+    background: #111827;
+    color: white;
+    padding: 18px 20px;
+}
+
+.header-inner {
+    max-width: 1100px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo {
+    font-size: 21px;
+    font-weight: bold;
+}
+
+.geri {
+    color: white;
+    background: #e50914;
+    text-decoration: none;
+    padding: 9px 14px;
+    border-radius: 7px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 25px auto;
+    padding: 0 15px;
+}
+
+.baslik {
+    margin-bottom: 20px;
+}
+
+.baslik h1 {
+    margin: 0 0 5px;
+    font-size: 28px;
+}
+
+.baslik p {
+    margin: 0;
+    color: #6b7280;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 15px rgba(0,0,0,.06);
+}
+
+.card h2 {
+    margin-top: 0;
+    font-size: 20px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    font-size: 15px;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #e50914;
+}
+
+.buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+button {
+    border: 0;
+    border-radius: 7px;
+    padding: 11px 17px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-kaydet {
+    background: #e50914;
+    color: white;
+}
+
+.btn-temizle {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.btn-duzenle {
+    background: #2563eb;
+    color: white;
+}
+
+.btn-pasif {
+    background: #f59e0b;
+    color: white;
+}
+
+.btn-sil {
+    background: #dc2626;
+    color: white;
+}
+
+.mesaj {
+    display: none;
+    padding: 12px;
+    border-radius: 7px;
+    margin-bottom: 15px;
+}
+
+.mesaj.basari {
+    display: block;
+    background: #dcfce7;
+    color: #166534;
+}
+
+.mesaj.hata {
+    display: block;
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.reklam-liste {
+    display: grid;
+    gap: 15px;
+}
+
+.reklam {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 16px;
+}
+
+.reklam-ust {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.reklam h3 {
+    margin: 0 0 7px;
+}
+
+.reklam-bilgi {
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.reklam-resim {
+    width: 180px;
+    max-height: 90px;
+    object-fit: contain;
+    border-radius: 6px;
+    border: 1px solid #eee;
+    margin-top: 10px;
+}
+
+.durum {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.durum-aktif {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.durum-pasif {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.reklam-islem {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.bos {
+    text-align: center;
+    padding: 30px;
+    color: #777;
+}
+
+@media (max-width: 700px) {
+
+    .header-inner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+
+    .reklam-ust {
+        flex-direction: column;
+    }
+
+    .reklam-resim {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="header-inner">
+
+        <div class="logo">
+            📢 Digital Gündem — Özel Reklam
+        </div>
+
+        <a class="geri" href="/pages/admin.html">
+            ← Yönetim Paneli
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+    <div class="baslik">
+
+        <h1>📢 Özel Reklam Yönetimi</h1>
+
+        <p>
+            Talep eden firmaların reklamlarını buradan yönetebilirsiniz.
+        </p>
+
+    </div>
+
+
+    <div id="mesaj" class="mesaj"></div>
+
+
+    <!-- =========================
+         REKLAM FORMU
+    ========================== -->
+
+    <section class="card">
+
+        <h2 id="formBaslik">
+            ➕ Yeni Reklam Ekle
+        </h2>
+
+        <input type="hidden" id="reklamId">
+
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label for="firmaAdi">
+                    Firma / Reklamveren
+                </label>
+
+                <input
+                    type="text"
+                    id="firmaAdi"
+                    placeholder="Örn: Cide Belediyesi"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="konum">
+                    Reklam Konumu
+                </label>
+
+                <select id="konum">
+
+                    <option value="anasayfa">
+                        Ana Sayfa
+                    </option>
+
+                    <option value="haberler">
+                        Haberler
+                    </option>
+
+                    <option value="haber-detay">
+                        Haber Detay
+                    </option>
+
+                    <option value="ust">
+                        Üst Alan
+                    </option>
+
+                    <option value="yan">
+                        Yan Alan
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group full">
+
+                <label for="resim">
+                    Reklam Görseli
+                </label>
+
+                <input
+                    type="text"
+                    id="resim"
+                    placeholder="Görsel URL'si"
+                >
+
+            </div>
+
+
+            <div class="form-group full">
+
+                <label for="link">
+                    Tıklama Bağlantısı
+                </label>
+
+                <input
+                    type="url"
+                    id="link"
+                    placeholder="https://..."
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="baslangic">
+                    Başlangıç Tarihi
+                </label>
+
+                <input
+                    type="datetime-local"
+                    id="baslangic"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="bitis">
+                    Bitiş Tarihi
+                </label>
+
+                <input
+                    type="datetime-local"
+                    id="bitis"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="durum">
+                    Durum
+                </label>
+
+                <select id="durum">
+
+                    <option value="aktif">
+                        🟢 Aktif
+                    </option>
+
+                    <option value="pasif">
+                        🔴 Pasif
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div class="buttons">
+
+            <button
+                class="btn-kaydet"
+                onclick="reklamKaydet()"
+            >
+                💾 Reklamı Kaydet
+            </button>
+
+
+            <button
+                class="btn-temizle"
+                onclick="formTemizle()"
+            >
+                Temizle
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         REKLAM LİSTESİ
+    ========================== -->
+
+    <section class="card">
+
+        <h2>
+            📋 Reklamlar
+        </h2>
+
+        <div id="reklamListe" class="reklam-liste">
+
+            <div class="bos">
+                Reklamlar yükleniyor...
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script>
+
+const API = "/api";
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    reklamlarGetir
+);
+
+
+/* =========================
+   REKLAMLARI GETİR
+========================= */
+
+async function reklamlarGetir() {
+
+    const liste =
+        document.getElementById("reklamListe");
+
+    try {
+
+        const cevap =
+            await fetch(API + "/reklamlar");
+
+        const veri =
+            await cevap.json();
+
+        if (!cevap.ok || !veri.success) {
+
+            throw new Error(
+                veri.error ||
+                "Reklamlar alınamadı."
+            );
+
+        }
+
+        if (
+            !veri.reklamlar ||
+            veri.reklamlar.length === 0
+        ) {
+
+            liste.innerHTML = `
+                <div class="bos">
+                    📢 Henüz reklam bulunmuyor.
+                </div>
+            `;
+
+            return;
+        }
+
+
+        liste.innerHTML =
+            veri.reklamlar
+                .map(reklamHTML)
+                .join("");
+
+
+    } catch (error) {
+
+        liste.innerHTML = `
+            <div class="bos">
+                ❌ ${escapeHTML(error.message)}
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* =========================
+   REKLAM HTML
+========================= */
+
+function reklamHTML(reklam) {
+
+    const resim =
+        reklam.resim
+        ? `
+            <img
+                class="reklam-resim"
+                src="${escapeHTML(reklam.resim)}"
+                alt="${escapeHTML(reklam.firma_adi)}"
+                onerror="this.style.display='none'"
+            >
+          `
+        : "";
+
+
+    const durumClass =
+        reklam.durum === "aktif"
+        ? "durum-aktif"
+        : "durum-pasif";
+
+
+    return `
+
+        <div class="reklam">
+
+            <div class="reklam-ust">
+
+                <div>
+
+                    <h3>
+                        ${escapeHTML(reklam.firma_adi)}
+                    </h3>
+
+                    <span class="durum ${durumClass}">
+                        ${reklam.durum === "aktif"
+                            ? "🟢 Aktif"
+                            : "🔴 Pasif"}
+                    </span>
+
+                    <div class="reklam-bilgi">
+
+                        📍 Konum:
+                        ${escapeHTML(reklam.konum)}
+
+                        <br>
+
+                        📅 Başlangıç:
+                        ${escapeHTML(reklam.baslangic)}
+
+                        <br>
+
+                        📅 Bitiş:
+                        ${escapeHTML(reklam.bitis)}
+
+                    </div>
+
+                    ${resim}
+
+                </div>
+
+            </div>
+
+
+            <div class="reklam-islem">
+
+                <button
+                    class="btn-duzenle"
+                    onclick="reklamDuzenle(${reklam.id})"
+                >
+                    ✏️ Düzenle
+                </button>
+
+
+                <button
+                    class="btn-pasif"
+                    onclick="durumDegistir(
+                        ${reklam.id},
+                        '${reklam.durum}'
+                    )"
+                >
+                    ${reklam.durum === "aktif"
+                        ? "⏸️ Pasif Yap"
+                        : "▶️ Aktif Yap"}
+                </button>
+
+
+                <button
+                    class="btn-sil"
+                    onclick="reklamSil(${reklam.id})"
+                >
+                    🗑️ Sil
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================
+   REKLAM EKLE
+========================= */
+
+async function reklamKaydet() {
+
+    const id =
+        document.getElementById("reklamId").value;
+
+    const veri = {
+
+        firma_adi:
+            document.getElementById("firmaAdi").value.trim(),
+
+        resim:
+            document.getElementById("resim").value.trim(),
+
+        link:
+            document.getElementById("link").value.trim(),
+
+        konum:
+            document.getElementById("konum").value,
+
+        baslangic:
+            document.getElementById("baslangic").value,
+
+        bitis:
+            document.getElementById("bitis").value,
+
+        durum:
+            document.getElementById("durum").value
+
+    };
+
+
+    if (!veri.firma_adi) {
+
+        mesajGoster(
+            "Firma / reklamveren adı gerekli.",
+            true
+        );
+
+        return;
+    }
+
+
+    if (!veri.baslangic || !veri.bitis) {
+
+        mesajGoster(
+            "Başlangıç ve bitiş tarihi gerekli.",
+            true
+        );
+
+        return;
+    }
+
+
+    try {
+
+        const url =
+            id
+            ? API + "/reklam?id=" +
+              encodeURIComponent(id)
+            : API + "/reklam";
+
+
+        const method =
+            id ? "PUT" : "POST";
+
+
+        const cevap =
+            await fetch(url, {
+
+                method,
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify(veri)
+
+            });
+
+
+        const sonuc =
+            await cevap.json();
+
+
+        if (!cevap.ok || !sonuc.success) {
+
+            throw new Error(
+                sonuc.error ||
+                "İşlem başarısız."
+            );
+
+        }
+
+
+        mesajGoster(
+            sonuc.message ||
+            "Reklam kaydedildi."
+        );
+
+
+        formTemizle();
+
+        reklamlarGetir();
+
+
+    } catch (error) {
+
+        mesajGoster(
+            error.message,
+            true
+        );
+
+    }
+
+}
+
+
+/* =========================
+   REKLAM DÜZENLE
+========================= */
+
+async function reklamDuzenle(id) {
+
+    try {
+
+        const cevap =
+            await fetch(
+                API +
+                "/reklam?id=" +
+                encodeURIComponent(id)
+            );
+
+
+        const veri =
+            await cevap.json();
+
+
+        if (!cevap.ok || !veri.success) {
+
+            throw new Error(
+                veri.error ||
+                "Reklam alınamadı."
+            );
+
+        }
+
+
+        const reklam =
+            veri.reklam;
+
+
+        document.getElementById(
+            "reklamId"
+        ).value = reklam.id;
+
+
+        document.getElementById(
+            "firmaAdi"
+        ).value = reklam.firma_adi || "";
+
+
+        document.getElementById(
+            "resim"
+        ).value = reklam.resim || "";
+
+
+        document.getElementById(
+            "link"
+        ).value = reklam.link || "";
+
+
+        document.getElementById(
+            "konum"
+        ).value = reklam.konum || "anasayfa";
+
+
+        document.getElementById(
+            "baslangic"
+        ).value = tarihInput(
+            reklam.baslangic
+        );
+
+
+        document.getElementById(
+            "bitis"
+        ).value = tarihInput(
+            reklam.bitis
+        );
+
+
+        document.getElementById(
+            "durum"
+        ).value = reklam.durum || "aktif";
+
+
+        document.getElementById(
+            "formBaslik"
+        ).textContent =
+            "✏️ Reklam Düzenle";
+
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+
+    } catch (error) {
+
+        mesajGoster(
+            error.message,
+            true
+        );
+
+    }
+
+}
+
+
+/* =========================
+   DURUM DEĞİŞTİR
+========================= */
+
+async function durumDegistir(
+    id,
+    mevcut
+) {
+
+    try {
+
+        const cevap =
+            await fetch(
+                API +
+                "/reklam?id=" +
+                encodeURIComponent(id)
+            );
+
+
+        const veri =
+            await cevap.json();
+
+
+        if (!cevap.ok || !veri.success) {
+
+            throw new Error(
+                veri.error ||
+                "Reklam alınamadı."
+            );
+
+        }
+
+
+        const reklam =
+            veri.reklam;
+
+
+        reklam.durum =
+            mevcut === "aktif"
+            ? "pasif"
+            : "aktif";
+
+
+        const guncelle =
+            await fetch(
+                API +
+                "/reklam?id=" +
+                encodeURIComponent(id),
+                {
+
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(reklam)
+
+                }
+            );
+
+
+        const sonuc =
+            await guncelle.json();
+
+
+        if (
+            !guncelle.ok ||
+            !sonuc.success
+        ) {
+
+            throw new Error(
+                sonuc.error ||
+                "Durum değiştirilemedi."
+            );
+
+        }
+
+
+        mesajGoster(
+            "Reklam durumu değiştirildi."
+        );
+
+
+        reklamlarGetir();
+
+
+    } catch (error) {
+
+        mesajGoster(
+            error.message,
+            true
+        );
+
+    }
+
+}
+
+
+/* =========================
+   REKLAM SİL
+========================= */
+
+async function reklamSil(id) {
+
+    if (
+        !confirm(
+            "Bu reklamı silmek istediğinize emin misiniz?"
+        )
+    ) {
+        return;
+    }
+
+
+    try {
+
+        const cevap =
+            await fetch(
+                API +
+                "/reklam?id=" +
+                encodeURIComponent(id),
+                {
+                    method: "DELETE"
+                }
+            );
+
+
+        const veri =
+            await cevap.json();
+
+
+        if (!cevap.ok || !veri.success) {
+
+            throw new Error(
+                veri.error ||
+                "Reklam silinemedi."
+            );
+
+        }
+
+
+        mesajGoster(
+            "Reklam başarıyla silindi."
+        );
+
+
+        reklamlarGetir();
+
+
+    } catch (error) {
+
+        mesajGoster(
+            error.message,
+            true
+        );
+
+    }
+
+}
+
+
+/* =========================
+   FORM TEMİZLE
+========================= */
+
+function formTemizle() {
+
+    document.getElementById(
+        "reklamId"
+    ).value = "";
+
+
+    document.getElementById(
+        "firmaAdi"
+    ).value = "";
+
+
+    document.getElementById(
+        "resim"
+    ).value = "";
+
+
+    document.getElementById(
+        "link"
+    ).value = "";
+
+
+    document.getElementById(
+        "konum"
+    ).value = "anasayfa";
+
+
+    document.getElementById(
+        "baslangic"
+    ).value = "";
+
+
+    document.getElementById(
+        "bitis"
+    ).value = "";
+
+
+    document.getElementById(
+        "durum"
+    ).value = "aktif";
+
+
+    document.getElementById(
+        "formBaslik"
+    ).textContent =
+        "➕ Yeni Reklam Ekle";
+
+}
+
+
+/* =========================
+   MESAJ
+========================= */
+
+function mesajGoster(
+    metin,
+    hata = false
+) {
+
+    const mesaj =
+        document.getElementById("mesaj");
+
+
+    mesaj.textContent = metin;
+
+    mesaj.className =
+        "mesaj " +
+        (hata ? "hata" : "basari");
+
+
+    setTimeout(() => {
+
+        mesaj.className = "mesaj";
+
+    }, 4000);
+
+}
+
+
+/* =========================
+   TARİH FORMAT
+========================= */
+
+function tarihInput(tarih) {
+
+    if (!tarih) {
+        return "";
+    }
+
+
+    return String(tarih)
+        .replace(" ", "T")
+        .slice(0, 16);
+
+}
+
+
+/* =========================
+   HTML GÜVENLİĞİ
+========================= */
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+</script>
+
+</body>
+  </html>
