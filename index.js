@@ -16,6 +16,7 @@ export default {
           database: "connected",
           result
         });
+
       } catch (error) {
         return Response.json({
           success: false,
@@ -24,10 +25,14 @@ export default {
       }
     }
 
+
     // =========================
-    // TÜM HABERLER
+    // TÜM YAYINDAKİ HABERLER
     // =========================
-    if (url.pathname === "/api/haberler" && request.method === "GET") {
+    if (
+      url.pathname === "/api/haberler" &&
+      request.method === "GET"
+    ) {
       try {
         const result = await env.DB
           .prepare(`
@@ -43,6 +48,7 @@ export default {
           toplam: result.results.length,
           haberler: result.results
         });
+
       } catch (error) {
         return Response.json({
           success: false,
@@ -51,10 +57,15 @@ export default {
       }
     }
 
+
     // =========================
     // TEK HABER
+    // /api/haber?id=4
     // =========================
-    if (url.pathname === "/api/haber" && request.method === "GET") {
+    if (
+      url.pathname === "/api/haber" &&
+      request.method === "GET"
+    ) {
       try {
         const id = url.searchParams.get("id");
 
@@ -96,10 +107,14 @@ export default {
       }
     }
 
+
     // =========================
     // HABER EKLE
     // =========================
-    if (url.pathname === "/api/haber" && request.method === "POST") {
+    if (
+      url.pathname === "/api/haber" &&
+      request.method === "POST"
+    ) {
       try {
         const data = await request.json();
 
@@ -108,7 +123,9 @@ export default {
         const icerik = data.icerik || "";
         const kategori = data.kategori || "Gündem";
         const resim = data.resim || "";
-        const tarih = data.tarih || new Date().toLocaleDateString("tr-TR");
+        const tarih =
+          data.tarih ||
+          new Date().toLocaleDateString("tr-TR");
         const durum = data.durum || "yayinda";
         const manset = data.manset ? 1 : 0;
 
@@ -122,7 +139,16 @@ export default {
         const result = await env.DB
           .prepare(`
             INSERT INTO haberler
-            (baslik, ozet, icerik, kategori, resim, tarih, durum, manset)
+            (
+              baslik,
+              ozet,
+              icerik,
+              kategori,
+              resim,
+              tarih,
+              durum,
+              manset
+            )
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
           `)
           .bind(
@@ -151,10 +177,14 @@ export default {
       }
     }
 
+
     // =========================
     // HABER DÜZENLE
     // =========================
-    if (url.pathname === "/api/haber" && request.method === "PUT") {
+    if (
+      url.pathname === "/api/haber" &&
+      request.method === "PUT"
+    ) {
       try {
         const id = url.searchParams.get("id");
 
@@ -213,7 +243,7 @@ export default {
         return Response.json({
           success: true,
           message: "Haber başarıyla güncellendi.",
-          id,
+          id: id,
           changes: result.meta.changes
         });
 
@@ -225,10 +255,14 @@ export default {
       }
     }
 
+
     // =========================
     // HABER SİL
     // =========================
-    if (url.pathname === "/api/haber" && request.method === "DELETE") {
+    if (
+      url.pathname === "/api/haber" &&
+      request.method === "DELETE"
+    ) {
       try {
         const id = url.searchParams.get("id");
 
@@ -257,7 +291,7 @@ export default {
         return Response.json({
           success: true,
           message: "Haber başarıyla silindi.",
-          id
+          id: id
         });
 
       } catch (error) {
@@ -268,18 +302,30 @@ export default {
       }
     }
 
+
     // =========================
     // HABER SAYFASI
     // /haber.html?id=4
     // =========================
-    if (url.pathname === "/haber.html") {
-      const yeniUrl = new URL(request.url);
-      yeniUrl.pathname = "/pages/haber.html";
+    if (
+      url.pathname === "/haber.html" ||
+      url.pathname === "/pages/haber.html"
+    ) {
+      const haberUrl = new URL(request.url);
 
-      return env.ASSETS.fetch(
-        new Request(yeniUrl.toString(), request)
+      haberUrl.pathname = "/pages/haber.html";
+
+      const haberRequest = new Request(
+        haberUrl.toString(),
+        {
+          method: "GET",
+          headers: request.headers
+        }
       );
+
+      return env.ASSETS.fetch(haberRequest);
     }
+
 
     // =========================
     // WEB SİTESİ
