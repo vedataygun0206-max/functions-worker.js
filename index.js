@@ -25,7 +25,7 @@ export default {
     }
 
     // =========================
-    // TÜM YAYINDAKİ HABERLER
+    // TÜM HABERLER
     // =========================
     if (url.pathname === "/api/haberler" && request.method === "GET") {
       try {
@@ -53,6 +53,7 @@ export default {
 
     // =========================
     // TEK HABER
+    // GET /api/haber?id=4
     // =========================
     if (url.pathname === "/api/haber" && request.method === "GET") {
       try {
@@ -98,6 +99,7 @@ export default {
 
     // =========================
     // HABER EKLE
+    // POST /api/haber
     // =========================
     if (url.pathname === "/api/haber" && request.method === "POST") {
       try {
@@ -108,7 +110,9 @@ export default {
         const icerik = data.icerik || "";
         const kategori = data.kategori || "Gündem";
         const resim = data.resim || "";
-        const tarih = data.tarih || new Date().toLocaleDateString("tr-TR");
+        const tarih =
+          data.tarih ||
+          new Date().toLocaleDateString("tr-TR");
         const durum = data.durum || "yayinda";
         const manset = data.manset ? 1 : 0;
 
@@ -149,6 +153,136 @@ export default {
           error: error.message
         }, { status: 500 });
       }
+    }
+
+    // =========================
+    // HABER DÜZENLE
+    // PUT /api/haber?id=4
+    // =========================
+    if (url.pathname === "/api/haber" && request.method === "PUT") {
+      try {
+        const id = url.searchParams.get("id");
+
+        if (!id) {
+          return Response.json({
+            success: false,
+            error: "Haber ID belirtilmedi."
+          }, { status: 400 });
+        }
+
+        const data = await request.json();
+
+        const baslik = data.baslik || "";
+        const ozet = data.ozet || "";
+        const icerik = data.icerik || "";
+        const kategori = data.kategori || "Gündem";
+        const resim = data.resim || "";
+        const tarih = data.tarih || "";
+        const durum = data.durum || "yayinda";
+        const manset = data.manset ? 1 : 0;
+
+        if (!baslik.trim()) {
+          return Response.json({
+            success: false,
+            error: "Haber başlığı boş olamaz."
+          }, { status: 400 });
+        }
+
+        const result = await env.DB
+          .prepare(`
+            UPDATE haberler
+            SET
+              baslik = ?,
+              ozet = ?,
+              icerik = ?,
+              kategori = ?,
+              resim = ?,
+              tarih = ?,
+              durum = ?,
+              manset = ?
+            WHERE id = ?
+          `)
+          .bind(
+            baslik,
+            ozet,
+            icerik,
+            kategori,
+            resim,
+            tarih,
+            durum,
+            manset,
+            id
+          )
+          .run();
+
+        return Response.json({
+          success: true,
+          message: "Haber başarıyla güncellendi.",
+          id,
+          changes: result.meta.changes
+        });
+
+      } catch (error) {
+        return Response.json({
+          success: false,
+          error: error.message
+        }, { status: 500 });
+      }
+    }
+
+    // =========================
+    // HABER SİL
+    // DELETE /api/haber?id=4
+    // =========================
+    if (url.pathname === "/api/haber" && request.method === "DELETE") {
+      try {
+        const id = url.searchParams.get("id");
+
+        if (!id) {
+          return Response.json({
+            success: false,
+            error: "Haber ID belirtilmedi."
+          }, { status: 400 });
+        }
+
+        const result = await env.DB
+          .prepare(`
+            DELETE FROM haberler
+            WHERE id = ?
+          `)
+          .bind(id)
+          .run();
+
+        if (result.meta.changes === 0) {
+          return Response.json({
+            success: false,
+            error: "Silinecek haber bulunamadı."
+          }, { status: 404 });
+        }
+
+        return Response.json({
+          success: true,
+          message: "Haber başarıyla silindi.",
+          id
+        });
+
+      } catch (error) {
+        return Response.json({
+          success: false,
+          error: error.message
+        }, { status: 500 });
+      }
+    }
+
+    // =========================
+    // SAYFA YÖNLENDİRMELERİ
+    // =========================
+
+    // /haber.html?id=4
+    // adresini pages/haber.html dosyasına yönlendir
+    if (url.pathname === "/haber.html") {
+      url.pathname = "/pages/haber.html";
+      return Response.redirect(url.toString(), 302);
     }
 
     // =========================
