@@ -25,9 +25,9 @@ export default {
     }
 
     // =========================
-    // HABERLER
+    // TÜM YAYINDAKİ HABERLER
     // =========================
-    if (url.pathname === "/api/haberler") {
+    if (url.pathname === "/api/haberler" && request.method === "GET") {
       try {
         const result = await env.DB
           .prepare(`
@@ -54,7 +54,7 @@ export default {
     // =========================
     // TEK HABER
     // =========================
-    if (url.pathname === "/api/haber") {
+    if (url.pathname === "/api/haber" && request.method === "GET") {
       try {
         const id = url.searchParams.get("id");
 
@@ -87,6 +87,62 @@ export default {
           success: true,
           haber
         });
+
+      } catch (error) {
+        return Response.json({
+          success: false,
+          error: error.message
+        }, { status: 500 });
+      }
+    }
+
+    // =========================
+    // HABER EKLE
+    // =========================
+    if (url.pathname === "/api/haber" && request.method === "POST") {
+      try {
+        const data = await request.json();
+
+        const baslik = data.baslik || "";
+        const ozet = data.ozet || "";
+        const icerik = data.icerik || "";
+        const kategori = data.kategori || "Gündem";
+        const resim = data.resim || "";
+        const tarih = data.tarih || new Date().toLocaleDateString("tr-TR");
+        const durum = data.durum || "yayinda";
+        const manset = data.manset ? 1 : 0;
+
+        if (!baslik.trim()) {
+          return Response.json({
+            success: false,
+            error: "Haber başlığı boş olamaz."
+          }, { status: 400 });
+        }
+
+        const result = await env.DB
+          .prepare(`
+            INSERT INTO haberler
+            (baslik, ozet, icerik, kategori, resim, tarih, durum, manset)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+          `)
+          .bind(
+            baslik,
+            ozet,
+            icerik,
+            kategori,
+            resim,
+            tarih,
+            durum,
+            manset
+          )
+          .run();
+
+        return Response.json({
+          success: true,
+          message: "Haber başarıyla kaydedildi.",
+          id: result.meta.last_row_id
+        });
+
       } catch (error) {
         return Response.json({
           success: false,
