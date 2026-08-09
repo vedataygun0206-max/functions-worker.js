@@ -14,9 +14,7 @@ if (url.pathname === "/api/reklamlar" && request.method === "GET") {
         SELECT *
         FROM reklamlar
         WHERE durum = 'aktif'
-        AND datetime('now') >= datetime(baslangic)
-        AND datetime('now') <= datetime(bitis)
-        ORDER BY id DESC
+ORDER BY id DESC
       `)
       .all();
 
