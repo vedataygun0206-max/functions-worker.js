@@ -14,7 +14,7 @@ if (url.pathname === "/api/reklamlar" && request.method === "GET") {
         SELECT *
         FROM reklamlar
         WHERE durum = 'aktif'
-ORDER BY id DESC
+        ORDER BY id DESC
       `)
       .all();
 
