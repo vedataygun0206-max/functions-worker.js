@@ -25,7 +25,7 @@ export default {
     }
 
     // =========================
-    // HABERLER API
+    // HABERLER
     // =========================
     if (url.pathname === "/api/haberler") {
       try {
@@ -52,7 +52,7 @@ export default {
     }
 
     // =========================
-    // TEK HABER API
+    // TEK HABER
     // =========================
     if (url.pathname === "/api/haber") {
       try {
@@ -87,7 +87,6 @@ export default {
           success: true,
           haber
         });
-
       } catch (error) {
         return Response.json({
           success: false,
@@ -97,7 +96,7 @@ export default {
     }
 
     // =========================
-    // STATİK SİTE
+    // WEB SİTESİ
     // =========================
     return env.ASSETS.fetch(request);
   }
