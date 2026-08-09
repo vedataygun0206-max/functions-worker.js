@@ -53,7 +53,6 @@ export default {
 
     // =========================
     // TEK HABER
-    // GET /api/haber?id=4
     // =========================
     if (url.pathname === "/api/haber" && request.method === "GET") {
       try {
@@ -99,7 +98,6 @@ export default {
 
     // =========================
     // HABER EKLE
-    // POST /api/haber
     // =========================
     if (url.pathname === "/api/haber" && request.method === "POST") {
       try {
@@ -110,9 +108,7 @@ export default {
         const icerik = data.icerik || "";
         const kategori = data.kategori || "Gündem";
         const resim = data.resim || "";
-        const tarih =
-          data.tarih ||
-          new Date().toLocaleDateString("tr-TR");
+        const tarih = data.tarih || new Date().toLocaleDateString("tr-TR");
         const durum = data.durum || "yayinda";
         const manset = data.manset ? 1 : 0;
 
@@ -157,7 +153,6 @@ export default {
 
     // =========================
     // HABER DÜZENLE
-    // PUT /api/haber?id=4
     // =========================
     if (url.pathname === "/api/haber" && request.method === "PUT") {
       try {
@@ -232,7 +227,6 @@ export default {
 
     // =========================
     // HABER SİL
-    // DELETE /api/haber?id=4
     // =========================
     if (url.pathname === "/api/haber" && request.method === "DELETE") {
       try {
@@ -275,14 +269,16 @@ export default {
     }
 
     // =========================
-    // SAYFA YÖNLENDİRMELERİ
-    // =========================
-
+    // HABER SAYFASI
     // /haber.html?id=4
-    // adresini pages/haber.html dosyasına yönlendir
+    // =========================
     if (url.pathname === "/haber.html") {
-      url.pathname = "/pages/haber.html";
-      return Response.redirect(url.toString(), 302);
+      const yeniUrl = new URL(request.url);
+      yeniUrl.pathname = "/pages/haber.html";
+
+      return env.ASSETS.fetch(
+        new Request(yeniUrl.toString(), request)
+      );
     }
 
     // =========================
