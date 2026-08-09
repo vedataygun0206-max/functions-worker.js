@@ -3,43 +3,174 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Haberler | Digital Gündem</title>
+
+<title>Haber | Digital Gündem</title>
+
 <link rel="stylesheet" href="../style.css">
 </head>
+
 <body>
 
-<header class="admin-header">
-<h1>📰 Haber Yönetimi</h1>
-<a href="admin.html" class="btn">← Dashboard</a>
+<header>
+
+<div class="logo">
+<h1>Digital <span>Gündem</span></h1>
+<p>Türkiye'nin Dijital Rehberi</p>
+</div>
+
+<nav>
+<a href="../index.html">🏠 Ana Sayfa</a>
+<a href="sondakika.html">📰 Son Dakika</a>
+<a href="turkiye.html">🇹🇷 Türkiye</a>
+<a href="rehber.html">📍 Rehber</a>
+<a href="firmalar.html">🏢 Firmalar</a>
+<a href="yazarlar.html">✍️ Yazarlar</a>
+<a href="video.html">🎥 Video</a>
+<a href="iletisim.html">📞 İletişim</a>
+</nav>
+
 </header>
 
 <main class="content">
 
-<h2>📰 Tüm Haberler</h2>
+<div id="haberDetay">
 
-<div id="haberListesi" class="news-grid"></div>
+    <p>Haber yükleniyor...</p>
 
-<script src="../haberler.js"></script>
-<input type="text" placeholder="Haber Ara...">
-
-<table>
-<tr>
-<th>Başlık</th>
-<th>Kategori</th>
-<th>Tarih</th>
-<th>Durum</th>
-<th>İşlem</th>
-</tr>
-
-<tbody id="haberTablosu">
-
-</tbody>
-
-</table>
+</div>
 
 </main>
 
-<script src="../haberler.js"></script>
+<footer>
+
+<h2>Digital Gündem</h2>
+
+<p>Türkiye'nin Dijital Rehberi</p>
+
+<p>Tarafsız bakar, doğruyu yayınlar.</p>
+
+<p>© 2026 Digital Gündem</p>
+
+</footer>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+    const alan = document.getElementById("haberDetay");
+
+    const params = new URLSearchParams(window.location.search);
+
+    const id = params.get("id");
+
+    if (!id) {
+
+        alan.innerHTML = `
+            <h2>Haber bulunamadı</h2>
+            <p>Haber ID belirtilmedi.</p>
+            <a href="../index.html" class="btn">
+                ← Ana Sayfaya Dön
+            </a>
+        `;
+
+        return;
+    }
+
+    try {
+
+        const cevap = await fetch("/api/haber?id=" + encodeURIComponent(id));
+
+        const veri = await cevap.json();
+
+        console.log("Haber Detay API:", veri);
+
+        if (!veri.success || !veri.haber) {
+
+            throw new Error(
+                veri.error || "Haber bulunamadı."
+            );
+
+        }
+
+        const haber = veri.haber;
+
+        alan.innerHTML = `
+
+            <article class="news-detail">
+
+                <span class="etiket">
+                    ${haber.kategori || "Gündem"}
+                </span>
+
+                <h1>
+                    ${haber.baslik || ""}
+                </h1>
+
+                <small>
+                    ${haber.tarih || ""}
+                </small>
+
+                <br><br>
+
+                ${
+                    haber.resim
+                    ? `
+                    <img
+                        src="${haber.resim}"
+                        alt="${haber.baslik || "Haber"}"
+                        class="haber-detay-resim"
+                    >
+                    `
+                    : ""
+                }
+
+                <p class="haber-ozet">
+                    ${haber.ozet || ""}
+                </p>
+
+                <div class="haber-icerik">
+                    ${haber.icerik || ""}
+                </div>
+
+                <br>
+
+                <a href="../index.html" class="btn">
+                    ← Haberlere Dön
+                </a>
+
+            </article>
+
+        `;
+
+        document.title =
+            (haber.baslik || "Haber") +
+            " | Digital Gündem";
+
+    } catch (error) {
+
+        console.error("Haber detay hatası:", error);
+
+        alan.innerHTML = `
+
+            <article class="news-card">
+
+                <h2>Haber yüklenemedi</h2>
+
+                <p>${error.message}</p>
+
+                <a href="../index.html" class="btn">
+                    ← Ana Sayfaya Dön
+                </a>
+
+            </article>
+
+        `;
+
+    }
+
+});
+
+</script>
 
 </body>
 </html>
