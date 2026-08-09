@@ -6,85 +6,354 @@
 
 <title>Haber | Digital Gündem</title>
 
+<meta name="description" content="Digital Gündem haber detayı">
+
 <link rel="stylesheet" href="../style.css">
+
+<style>
+
+/* ========================================
+   HABER DETAY SAYFASI
+======================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: #f4f5f7;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #171717;
+}
+
+/* ÜST BAŞLIK */
+
+.haber-header {
+    width: 100%;
+    background: #111827;
+    color: white;
+    padding: 18px 20px;
+}
+
+.haber-header-inner {
+    max-width: 900px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.haber-logo {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.geri-btn {
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+    background: #e50914;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+/* ANA ALAN */
+
+.haber-wrapper {
+    width: 100%;
+    max-width: 900px;
+    margin: 25px auto;
+    padding: 0 15px;
+}
+
+/* HABER */
+
+.haber-detay {
+    background: white;
+    border-radius: 14px;
+    padding: 25px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+}
+
+/* KATEGORİ */
+
+.haber-kategori {
+    display: inline-block;
+    background: #e50914;
+    color: white;
+    padding: 8px 13px;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+/* BAŞLIK */
+
+.haber-baslik {
+    font-size: 38px;
+    line-height: 1.2;
+    margin: 0 0 15px 0;
+    color: #111827;
+}
+
+/* TARİH */
+
+.haber-tarih {
+    display: block;
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* ANA RESİM */
+
+.haber-resim {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: 600px;
+    object-fit: cover;
+    display: block;
+    border-radius: 12px;
+    margin: 0 0 25px 0;
+}
+
+/* ÖZET */
+
+.haber-ozet {
+    font-size: 19px;
+    line-height: 1.7;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 22px;
+}
+
+/* İÇERİK */
+
+.haber-icerik {
+    font-size: 18px;
+    line-height: 1.85;
+    color: #222;
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+}
+
+.haber-icerik p {
+    margin: 0 0 18px 0;
+}
+
+/* KAYNAK */
+
+.haber-kaynak {
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
+    color: #777;
+    font-size: 14px;
+}
+
+/* YÜKLENİYOR */
+
+.yukleniyor {
+    background: white;
+    border-radius: 14px;
+    padding: 40px 25px;
+    text-align: center;
+    font-size: 18px;
+}
+
+/* HATA */
+
+.hata {
+    background: white;
+    border-radius: 14px;
+    padding: 35px 25px;
+    text-align: center;
+}
+
+.hata h2 {
+    color: #e50914;
+}
+
+.hata a {
+    display: inline-block;
+    margin-top: 15px;
+    background: #e50914;
+    color: white;
+    padding: 11px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+/* ALT */
+
+.site-footer {
+    text-align: center;
+    color: #777;
+    padding: 25px 15px;
+    font-size: 13px;
+}
+
+/* ========================================
+   MOBİL
+======================================== */
+
+@media (max-width: 700px) {
+
+    .haber-header {
+        padding: 14px 12px;
+    }
+
+    .haber-header-inner {
+        align-items: center;
+    }
+
+    .haber-logo {
+        font-size: 18px;
+    }
+
+    .geri-btn {
+        font-size: 13px;
+        padding: 8px 11px;
+    }
+
+    .haber-wrapper {
+        margin: 12px auto;
+        padding: 0 8px;
+    }
+
+    .haber-detay {
+        padding: 17px;
+        border-radius: 10px;
+    }
+
+    .haber-baslik {
+        font-size: 28px;
+        line-height: 1.25;
+    }
+
+    .haber-ozet {
+        font-size: 17px;
+        line-height: 1.6;
+    }
+
+    .haber-icerik {
+        font-size: 17px;
+        line-height: 1.75;
+    }
+
+    .haber-resim {
+        max-height: 420px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+}
+
+</style>
 </head>
 
 <body>
 
-<header>
+<!-- ========================================
+     ÜST KISIM
+======================================== -->
 
-<div class="logo">
-<h1>Digital <span>Gündem</span></h1>
-<p>Türkiye'nin Dijital Rehberi</p>
-</div>
+<header class="haber-header">
 
-<nav>
-<a href="../index.html">🏠 Ana Sayfa</a>
-<a href="sondakika.html">📰 Son Dakika</a>
-<a href="turkiye.html">🇹🇷 Türkiye</a>
-<a href="rehber.html">📍 Rehber</a>
-<a href="firmalar.html">🏢 Firmalar</a>
-<a href="yazarlar.html">✍️ Yazarlar</a>
-<a href="video.html">🎥 Video</a>
-<a href="iletisim.html">📞 İletişim</a>
-</nav>
+    <div class="haber-header-inner">
+
+        <div class="haber-logo">
+            📰 Digital Gündem
+        </div>
+
+        <a href="/" class="geri-btn">
+            ← Ana Sayfa
+        </a>
+
+    </div>
 
 </header>
 
-<main class="content">
 
-<div id="haberDetay">
+<!-- ========================================
+     HABER
+======================================== -->
 
-    <p>Haber yükleniyor...</p>
+<main class="haber-wrapper">
 
-</div>
+    <div id="haberAlani">
+
+        <div class="yukleniyor">
+            Haber yükleniyor...
+        </div>
+
+    </div>
 
 </main>
 
-<footer>
 
-<h2>Digital Gündem</h2>
-
-<p>Türkiye'nin Dijital Rehberi</p>
-
-<p>Tarafsız bakar, doğruyu yayınlar.</p>
-
-<p>© 2026 Digital Gündem</p>
-
+<footer class="site-footer">
+    © 2026 Digital Gündem • Türkiye'nin Dijital Gündemi
 </footer>
+
 
 <script>
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", async function () {
 
-    const alan = document.getElementById("haberDetay");
+    const haberAlani = document.getElementById("haberAlani");
 
-    const params = new URLSearchParams(window.location.search);
+    /* URL'DEN ID AL */
 
-    const id = params.get("id");
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get("id");
+
+
+    /* ID YOKSA */
 
     if (!id) {
 
-        alan.innerHTML = `
-            <h2>Haber bulunamadı</h2>
-            <p>Haber ID belirtilmedi.</p>
-            <a href="../index.html" class="btn">
-                ← Ana Sayfaya Dön
-            </a>
+        haberAlani.innerHTML = `
+            <div class="hata">
+                <h2>Haber bulunamadı</h2>
+                <p>Haber ID belirtilmedi.</p>
+                <a href="/">Ana Sayfaya Dön</a>
+            </div>
         `;
 
         return;
     }
 
+
+    /* HABERİ API'DEN AL */
+
     try {
 
-        const cevap = await fetch("/api/haber?id=" + encodeURIComponent(id));
+        const cevap = await fetch(
+            "/api/haber?id=" + encodeURIComponent(id),
+            {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json"
+                }
+            }
+        );
+
 
         const veri = await cevap.json();
 
-        console.log("Haber Detay API:", veri);
 
-        if (!veri.success || !veri.haber) {
+        console.log("Digital Gündem Haber:", veri);
+
+
+        /* API HATASI */
+
+        if (!cevap.ok || !veri.success || !veri.haber) {
 
             throw new Error(
                 veri.error || "Haber bulunamadı."
@@ -92,83 +361,150 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         }
 
+
         const haber = veri.haber;
 
-        alan.innerHTML = `
 
-            <article class="news-detail">
-
-                <span class="etiket">
-                    ${haber.kategori || "Gündem"}
-                </span>
-
-                <h1>
-                    ${haber.baslik || ""}
-                </h1>
-
-                <small>
-                    ${haber.tarih || ""}
-                </small>
-
-                <br><br>
-
-                ${
-                    haber.resim
-                    ? `
-                    <img
-                        src="${haber.resim}"
-                        alt="${haber.baslik || "Haber"}"
-                        class="haber-detay-resim"
-                    >
-                    `
-                    : ""
-                }
-
-                <p class="haber-ozet">
-                    ${haber.ozet || ""}
-                </p>
-
-                <div class="haber-icerik">
-                    ${haber.icerik || ""}
-                </div>
-
-                <br>
-
-                <a href="../index.html" class="btn">
-                    ← Haberlere Dön
-                </a>
-
-            </article>
-
-        `;
+        /* SAYFA BAŞLIĞI */
 
         document.title =
             (haber.baslik || "Haber") +
             " | Digital Gündem";
 
+
+        /* VERİLER */
+
+        const baslik =
+            haber.baslik || "Başlıksız Haber";
+
+        const kategori =
+            haber.kategori || "Gündem";
+
+        const tarih =
+            haber.tarih || "";
+
+        const ozet =
+            haber.ozet || "";
+
+        const icerik =
+            haber.icerik || "";
+
+        const resim =
+            haber.resim || "";
+
+
+        /* RESİM */
+
+        let resimHTML = "";
+
+        if (resim.trim() !== "") {
+
+            resimHTML = `
+                <img
+                    class="haber-resim"
+                    src="${escapeHTML(resim)}"
+                    alt="${escapeHTML(baslik)}"
+                    onerror="this.style.display='none';"
+                >
+            `;
+
+        }
+
+
+        /* HABERİ GÖSTER */
+
+        haberAlani.innerHTML = `
+
+            <article class="haber-detay">
+
+                <span class="haber-kategori">
+                    ${escapeHTML(kategori)}
+                </span>
+
+                <h1 class="haber-baslik">
+                    ${escapeHTML(baslik)}
+                </h1>
+
+                <small class="haber-tarih">
+                    ${escapeHTML(tarih)}
+                </small>
+
+                ${resimHTML}
+
+                ${
+                    ozet.trim()
+                    ? `
+                        <div class="haber-ozet">
+                            ${escapeHTML(ozet)}
+                        </div>
+                    `
+                    : ""
+                }
+
+                ${
+                    icerik.trim()
+                    ? `
+                        <div class="haber-icerik">
+                            ${escapeHTML(icerik)}
+                        </div>
+                    `
+                    : ""
+                }
+
+                <div class="haber-kaynak">
+                    Digital Gündem
+                </div>
+
+            </article>
+
+        `;
+
+
     } catch (error) {
 
-        console.error("Haber detay hatası:", error);
+        console.error(
+            "Haber yükleme hatası:",
+            error
+        );
 
-        alan.innerHTML = `
 
-            <article class="news-card">
+        haberAlani.innerHTML = `
+
+            <div class="hata">
 
                 <h2>Haber yüklenemedi</h2>
 
-                <p>${error.message}</p>
+                <p>
+                    ${escapeHTML(error.message)}
+                </p>
 
-                <a href="../index.html" class="btn">
-                    ← Ana Sayfaya Dön
+                <a href="/">
+                    Ana Sayfaya Dön
                 </a>
 
-            </article>
+            </div>
 
         `;
 
     }
 
 });
+
+
+/* ========================================
+   HTML GÜVENLİK
+======================================== */
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
 
 </script>
 
