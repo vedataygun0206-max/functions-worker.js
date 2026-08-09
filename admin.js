@@ -1,86 +1,173 @@
-// Digital Gündem Yönetim Paneli
+// ========================================
+// DIGITAL GÜNDEM - D1 YÖNETİM PANELİ
+// ========================================
 
 document.addEventListener("DOMContentLoaded", () => {
 
-const form=document.getElementById("haberForm");
-const resimInput=document.getElementById("haberResim");
+    const form = document.getElementById("haberForm");
+    const resimInput = document.getElementById("haberResim");
+    const taslakBtn = document.querySelector('button[type="button"]');
 
-const taslakBtn=document.querySelector('button[type="button"]');
+    let secilenResim = "";
 
-let secilenResim="";
+    // ==============================
+    // FOTOĞRAF SEÇ
+    // ==============================
 
-resimInput.addEventListener("change",function(){
+    if (resimInput) {
 
-const dosya=this.files[0];
+        resimInput.addEventListener("change", function () {
 
-if(!dosya) return;
+            const dosya = this.files[0];
 
-const reader=new FileReader();
+            if (!dosya) {
+                secilenResim = "";
+                return;
+            }
 
-reader.onload=function(e){
+            const reader = new FileReader();
 
-secilenResim=e.target.result;
+            reader.onload = function (e) {
+                secilenResim = e.target.result;
+            };
 
-};
+            reader.readAsDataURL(dosya);
 
-reader.readAsDataURL(dosya);
+        });
 
-});
+    }
 
-// HABER YAYINLA
+    // ==============================
+    // HABER YAYINLA
+    // ==============================
 
-form.addEventListener("submit",function(e){
+    if (form) {
 
-e.preventDefault();
+        form.addEventListener("submit", async function (e) {
 
-kaydet("yayin");
+            e.preventDefault();
 
-});
+            await kaydet("yayinda");
 
-// TASLAK
+        });
 
-taslakBtn.addEventListener("click",function(){
+    }
 
-kaydet("taslak");
+    // ==============================
+    // TASLAK
+    // ==============================
 
-});
+    if (taslakBtn) {
 
-function kaydet(durum){
+        taslakBtn.addEventListener("click", async function () {
 
-const haber={
+            await kaydet("taslak");
 
-id:Date.now(),
+        });
 
-baslik:document.getElementById("baslik").value,
+    }
 
-kategori:document.getElementById("kategori").value,
+    // ==============================
+    // D1'E KAYDET
+    // ==============================
 
-ozet:document.getElementById("ozet").value,
+    async function kaydet(durum) {
 
-detay:document.getElementById("detay").value,
+        const haber = {
 
-resim:secilenResim,
+            baslik:
+                document.getElementById("baslik").value.trim(),
 
-manset:document.getElementById("manset").checked,
+            kategori:
+                document.getElementById("kategori").value,
 
-durum:durum,
+            ozet:
+                document.getElementById("ozet").value.trim(),
 
-tarih:new Date().toLocaleDateString("tr-TR")
+            icerik:
+                document.getElementById("detay").value.trim(),
 
-};
+            resim:
+                secilenResim,
 
-let haberler=JSON.parse(localStorage.getItem("haberler"))||[];
+            manset:
+                document.getElementById("manset").checked,
 
-haberler.unshift(haber);
+            durum:
+                durum,
 
-localStorage.setItem("haberler",JSON.stringify(haberler));
+            tarih:
+                new Date().toLocaleDateString("tr-TR")
 
-alert(durum==="taslak" ? "💾 Taslak kaydedildi." : "📰 Haber yayınlandı.");
+        };
 
-form.reset();
+        // Başlık kontrolü
 
-secilenResim="";
+        if (!haber.baslik) {
 
-}
+            alert("⚠️ Lütfen haber başlığı girin.");
+
+            return;
+
+        }
+
+        try {
+
+            const cevap = await fetch("/api/haber", {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(haber)
+
+            });
+
+            const sonuc = await cevap.json();
+
+            console.log("D1 Haber Sonucu:", sonuc);
+
+            if (!sonuc.success) {
+
+                throw new Error(
+                    sonuc.error || "Haber kaydedilemedi."
+                );
+
+            }
+
+            if (durum === "yayinda") {
+
+                alert(
+                    "📰 Haber başarıyla yayınlandı!\n\n" +
+                    "Haber ID: " + sonuc.id
+                );
+
+            } else {
+
+                alert(
+                    "💾 Taslak D1'e kaydedildi.\n\n" +
+                    "Haber ID: " + sonuc.id
+                );
+
+            }
+
+            form.reset();
+
+            secilenResim = "";
+
+        } catch (error) {
+
+            console.error("Haber kayıt hatası:", error);
+
+            alert(
+                "❌ Haber kaydedilemedi.\n\n" +
+                error.message
+            );
+
+        }
+
+    }
 
 });
