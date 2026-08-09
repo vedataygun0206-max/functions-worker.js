@@ -1,8 +1,0 @@
-name = "functions-worker-js"
-main = "index.js"
-compatibility_date = "2026-08-05"
-
-[[d1_databases]]
-binding = "DB"
-database_name = "digital-gundem-db"
-database_id = "00000001-00000000-000050c0-5acbc3d69a543b3ae0faf1582603d052"
