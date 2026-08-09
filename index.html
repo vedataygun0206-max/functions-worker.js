@@ -137,7 +137,107 @@ Yakında 81 il rehberi, firma rehberi ve köşe yazarları yayında olacak.
 
 <section class="ads">
 
-<h2>Reklam Alanı</h2>
+<div id="reklamAlani">
+
+    <h2>Reklam Alanı</h2>
+
+    <div id="reklamIcerik">
+        Reklam yükleniyor...
+    </div>
+
+</div>
+
+<script>
+async function reklamGetir() {
+
+    const alan =
+        document.getElementById("reklamIcerik");
+
+    try {
+
+        const cevap =
+            await fetch("/api/reklamlar");
+
+        const veri =
+            await cevap.json();
+
+        if (
+            !cevap.ok ||
+            !veri.success ||
+            !veri.reklamlar ||
+            veri.reklamlar.length === 0
+        ) {
+            alan.innerHTML = "";
+            return;
+        }
+
+        const reklam = veri.reklamlar[0];
+
+        alan.innerHTML = `
+            <div style="
+                width:100%;
+                max-width:728px;
+                margin:15px auto;
+                text-align:center;
+            ">
+
+                ${
+                    reklam.link
+                    ? `<a href="${reklam.link}" target="_blank" rel="noopener">`
+                    : ""
+                }
+
+                ${
+                    reklam.resim
+                    ? `
+                    <img
+                        src="${reklam.resim}"
+                        alt="${reklam.firma_adi}"
+                        style="
+                            width:100%;
+                            max-width:728px;
+                            max-height:250px;
+                            object-fit:contain;
+                            border-radius:8px;
+                        "
+                    >
+                    `
+                    : `
+                    <div style="
+                        padding:25px;
+                        border:1px solid #ddd;
+                        border-radius:8px;
+                        background:#f5f5f5;
+                        font-weight:bold;
+                    ">
+                        📢 ${reklam.firma_adi}
+                    </div>
+                    `
+                }
+
+                ${
+                    reklam.link
+                    ? `</a>`
+                    : ""
+                }
+
+            </div>
+        `;
+
+    } catch (error) {
+
+        console.error(
+            "Reklam yüklenemedi:",
+            error
+        );
+
+        alan.innerHTML = "";
+
+    }
+}
+
+reklamGetir();
+</script>
 
 <div class="banner">
 728 × 90 Google AdSense
