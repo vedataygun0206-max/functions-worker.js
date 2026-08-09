@@ -302,31 +302,22 @@ export default {
       }
     }
 
+// =========================
+// ESKİ HABER ADRESİ
+// /pages/haber.html?id=4
+// =========================
+if (url.pathname === "/pages/haber.html") {
 
-    // =========================
-    // HABER SAYFASI
-    // /haber.html?id=4
-    // =========================
-    if (
-      url.pathname === "/haber.html" ||
-      url.pathname === "/pages/haber.html"
-    ) {
-      const haberUrl = new URL(request.url);
+  const yeniUrl = new URL(request.url);
 
-      haberUrl.pathname = "/pages/haber.html";
+  yeniUrl.pathname = "/haber.html";
 
-      const haberRequest = new Request(
-        haberUrl.toString(),
-        {
-          method: "GET",
-          headers: request.headers
-        }
-      );
-
-      return env.ASSETS.fetch(haberRequest);
-    }
-
-
+  return Response.redirect(
+    yeniUrl.toString(),
+    301
+  );
+}
+    
     // =========================
     // WEB SİTESİ
     // =========================
