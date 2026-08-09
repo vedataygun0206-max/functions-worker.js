@@ -306,15 +306,15 @@ export default {
 // ESKİ HABER ADRESİ
 // /pages/haber.html?id=4
 // =========================
-if (url.pathname === "/pages/haber.html") {
-
+if (
+  url.pathname === "/haber.html" ||
+  url.pathname === "/pages/haber.html"
+) {
   const yeniUrl = new URL(request.url);
+  yeniUrl.pathname = "/pages/haber.html";
 
-  yeniUrl.pathname = "/haber.html";
-
-  return Response.redirect(
-    yeniUrl.toString(),
-    301
+  return env.ASSETS.fetch(
+    new Request(yeniUrl.toString(), request)
   );
 }
     
