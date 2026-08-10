@@ -2,6 +2,51 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     // =========================
+// AA RSS TEST
+// =========================
+
+if (
+  url.pathname === "/api/aa-test" &&
+  request.method === "GET"
+) {
+  try {
+
+    const rssUrl =
+      "https://www.aa.com.tr/tr/ayrimcilikhatti/rss/news?cat=ayrimcilik";
+
+    const cevap = await fetch(rssUrl, {
+      headers: {
+        "User-Agent": "Digital-Gundem/1.0"
+      }
+    });
+
+    const xml = await cevap.text();
+
+    return new Response(
+      JSON.stringify({
+        success: cevap.ok,
+        status: cevap.status,
+        kaynak: rssUrl,
+        uzunluk: xml.length,
+        baslangic: xml.substring(0, 500)
+      }),
+      {
+        headers: {
+          "Content-Type": "application/json; charset=UTF-8"
+        }
+      }
+    );
+
+  } catch (error) {
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+
+  }
+}
+    // =========================
 // ADMIN SECRET TEST
 // =========================
 
