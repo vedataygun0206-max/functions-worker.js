@@ -274,3 +274,133 @@ async function haberIstatistikleriniGetir() {
 }
 
 haberIstatistikleriniGetir();
+// =========================
+// ZİYARETÇİ İSTATİSTİKLERİ
+// =========================
+
+async function ziyaretIstatistikleriniGetir() {
+  try {
+    const cevap = await fetch("/api/ziyaret-istatistik");
+    const veri = await cevap.json();
+
+    if (!veri.success) return;
+
+    const bugun =
+      document.getElementById("bugunkuZiyaretci");
+
+    const toplam =
+      document.getElementById("toplamZiyaretci");
+
+    if (bugun) {
+      bugun.textContent =
+        veri.bugunku_ziyaretci || 0;
+    }
+
+    if (toplam) {
+      toplam.textContent =
+        veri.toplam_ziyaretci || 0;
+    }
+
+  } catch (error) {
+    console.error(
+      "Ziyaret istatistikleri:",
+      error
+    );
+  }
+}
+
+
+// =========================
+// EN ÇOK OKUNAN 5 HABER
+// =========================
+
+async function enCokOkunanHaberleriGetir() {
+
+  const alan =
+    document.getElementById(
+      "enCokOkunanHaberler"
+    );
+
+  if (!alan) return;
+
+  try {
+
+    const cevap =
+      await fetch("/api/haberler");
+
+    const veri =
+      await cevap.json();
+
+    if (
+      !veri.success ||
+      !veri.haberler
+    ) {
+      alan.innerHTML =
+        "Haberler alınamadı.";
+      return;
+    }
+
+    const haberler =
+      veri.haberler
+        .sort(
+          (a, b) =>
+            (b.okunma || 0) -
+            (a.okunma || 0)
+        )
+        .slice(0, 5);
+
+    if (!haberler.length) {
+      alan.innerHTML =
+        "Henüz haber bulunmuyor.";
+      return;
+    }
+
+    alan.innerHTML =
+      haberler.map(
+        (haber, index) => `
+          <div style="
+            padding:12px;
+            border-bottom:1px solid #ddd;
+          ">
+            <strong>
+              ${index + 1}. ${haber.baslik}
+            </strong>
+
+            <span style="
+              float:right;
+              font-weight:bold;
+            ">
+              👁️ ${haber.okunma || 0}
+            </span>
+
+            <div style="
+              font-size:13px;
+              color:#777;
+              margin-top:4px;
+            ">
+              ${haber.kategori || "Gündem"}
+            </div>
+          </div>
+        `
+      )
+      .join("");
+
+  } catch (error) {
+
+    console.error(
+      "En çok okunan haberler:",
+      error
+    );
+
+    alan.innerHTML =
+      "İstatistikler alınamadı.";
+  }
+}
+
+
+// =========================
+// BAŞLAT
+// =========================
+
+ziyaretIstatistikleriniGetir();
+enCokOkunanHaberleriGetir();
