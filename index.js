@@ -4,7 +4,50 @@ export default {
     // =========================
 // ZİYARETÇİ İSTATİSTİKLERİ
 // =========================
+// =========================
+// ZİYARETÇİ KAYDI
+// =========================
 
+if (
+  request.method === "GET" &&
+  !url.pathname.startsWith("/api/") &&
+  !url.pathname.startsWith("/admin-giris")
+) {
+  try {
+
+    const tarih = new Date()
+      .toLocaleDateString("tr-TR");
+
+    const ip =
+      request.headers.get("CF-Connecting-IP") || "";
+
+    const userAgent =
+      request.headers.get("User-Agent") || "";
+
+    await env.DB
+      .prepare(`
+        INSERT INTO ziyaretler
+        (
+          tarih,
+          ip,
+          user_agent
+        )
+        VALUES (?, ?, ?)
+      `)
+      .bind(
+        tarih,
+        ip,
+        userAgent
+      )
+      .run();
+
+  } catch (error) {
+    console.error(
+      "Ziyaretçi kayıt hatası:",
+      error
+    );
+  }
+}
 if (
   url.pathname === "/api/ziyaret-istatistik" &&
   request.method === "GET"
