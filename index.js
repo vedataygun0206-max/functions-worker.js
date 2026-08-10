@@ -917,7 +917,71 @@ haber.okunma =
         }, { status: 500 });
       }
     }
+// =========================
+// HABER İSTATİSTİKLERİ
+// SADECE YÖNETİCİ
+// =========================
 
+if (
+  url.pathname === "/api/haber-istatistik" &&
+  request.method === "GET"
+) {
+
+  const auth = cookieOku(
+    request,
+    ADMIN_COOKIE
+  );
+
+  if (auth !== "ok") {
+
+    return Response.json({
+      success: false,
+      error: "Yetkisiz erişim."
+    }, {
+      status: 401
+    });
+
+  }
+
+  try {
+
+    const result = await env.DB
+      .prepare(`
+        SELECT
+          id,
+          baslik,
+          kategori,
+          tarih,
+          okunma
+        FROM haberler
+        ORDER BY okunma DESC, id DESC
+      `)
+      .all();
+
+    const toplam = result.results.reduce(
+      (toplam, haber) =>
+        toplam + (haber.okunma || 0),
+      0
+    );
+
+    return Response.json({
+      success: true,
+      toplam_okunma: toplam,
+      haberler: result.results
+    });
+
+  } catch (error) {
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, {
+      status: 500
+    });
+
+  }
+
+}
 // =========================
 // ESKİ HABER ADRESİ
 // /pages/haber.html?id=4
