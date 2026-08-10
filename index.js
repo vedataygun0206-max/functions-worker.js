@@ -2,6 +2,52 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     // =========================
+// ZİYARETÇİ İSTATİSTİKLERİ
+// =========================
+
+if (
+  url.pathname === "/api/ziyaret-istatistik" &&
+  request.method === "GET"
+) {
+  try {
+
+    const bugun = new Date()
+      .toLocaleDateString("tr-TR");
+
+    const toplam = await env.DB
+      .prepare(`
+        SELECT COUNT(*) AS toplam
+        FROM ziyaretler
+      `)
+      .first();
+
+    const bugunku = await env.DB
+      .prepare(`
+        SELECT COUNT(*) AS toplam
+        FROM ziyaretler
+        WHERE tarih = ?
+      `)
+      .bind(bugun)
+      .first();
+
+    return Response.json({
+      success: true,
+      bugunku_ziyaretci:
+        bugunku?.toplam || 0,
+      toplam_ziyaretci:
+        toplam?.toplam || 0
+    });
+
+  } catch (error) {
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+
+  }
+}
+    // =========================
 // AA RSS TEST
 // =========================
 
