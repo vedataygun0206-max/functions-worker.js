@@ -1,418 +1,466 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Digital Gündem | Türkiye'nin Dijital Rehberi</title>
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
-<meta
-    name="description"
-    content="Türkiye'nin Dijital Rehberi. Gündem, şehir rehberi, firma rehberi ve köşe yazarları."
->
+<title>
+Digital Gündem | Türkiye'nin Dijital Rehberi
+</title>
+
+<meta name="description"
+      content="Digital Gündem - Türkiye'nin Dijital Rehberi. Güncel haberler, Türkiye gündemi, firmalar, rehber ve daha fazlası.">
 
 <link rel="stylesheet" href="style.css">
 
 <style>
-/* =========================
-   API HABER ALANI
-========================= */
+
+/* =========================================
+   API HABER SİSTEMİ
+========================================= */
 
 .api-yukleniyor{
+    padding:40px;
     text-align:center;
-    padding:30px;
-    color:#777;
+    background:#fff;
+    border-radius:12px;
+    color:#666;
 }
 
 .api-hata{
+    padding:25px;
     text-align:center;
-    padding:30px;
-    color:#b00000;
-    background:#fff;
+    background:#fff1f2;
+    color:#b91c1c;
+    border:1px solid #fecdd3;
     border-radius:12px;
 }
 
-.haber-bos{
+.bos-haber{
+    padding:35px;
     text-align:center;
-    padding:30px;
+    background:#fff;
+    border-radius:12px;
     color:#777;
-    background:#fff;
-    border-radius:12px;
 }
 
-/* Manşet */
 
-.manset-api{
+/* =========================================
+   MANŞET
+========================================= */
+
+.headline{
+    max-width:1200px;
+    margin:30px auto;
+    padding:0 20px;
+}
+
+.headline-main{
     background:#fff;
     border-radius:18px;
     overflow:hidden;
-    box-shadow:0 10px 30px rgba(0,0,0,.12);
+    box-shadow:0 8px 25px rgba(0,0,0,.10);
 }
 
-.manset-api img{
+.headline-main img{
     width:100%;
-    height:360px;
+    height:420px;
     object-fit:cover;
     display:block;
 }
 
-.manset-api .headline-text{
+.headline-text{
     padding:25px;
 }
 
-.manset-api h2{
+.headline-text h2{
     font-size:32px;
     margin:15px 0;
+    line-height:1.25;
 }
 
-.manset-api p{
+.headline-text p{
     color:#555;
     line-height:1.7;
 }
 
-/* Haber kartları */
+.etiket{
+    display:inline-block;
+    background:#d60000;
+    color:#fff;
+    padding:6px 11px;
+    border-radius:6px;
+    font-size:12px;
+    font-weight:bold;
+}
 
-.api-haber-card{
+.haber-tarih{
+    color:#777;
+    font-size:13px;
+    margin-top:10px;
+}
+
+
+/* =========================================
+   HABERLER
+========================================= */
+
+.news{
+    max-width:1200px;
+    margin:40px auto;
+    padding:0 20px;
+}
+
+.news h2{
+    margin-bottom:20px;
+}
+
+.news-grid{
+    display:grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(280px,1fr));
+    gap:20px;
+}
+
+.news-card{
     background:#fff;
-    padding:0;
     border-radius:12px;
     overflow:hidden;
     box-shadow:0 4px 15px rgba(0,0,0,.08);
     transition:.3s;
 }
 
-.api-haber-card:hover{
-    transform:translateY(-5px);
+.news-card:hover{
+    transform:translateY(-4px);
 }
 
-.api-haber-card img{
+.news-card img{
     width:100%;
     height:190px;
     object-fit:cover;
     display:block;
 }
 
-.api-haber-icerik{
+.news-card-content{
     padding:18px;
 }
 
-.api-haber-icerik h3{
+.news-card h3{
     margin:10px 0;
+    line-height:1.35;
 }
 
-.api-haber-icerik p{
+.news-card p{
     color:#666;
+    line-height:1.6;
 }
 
-.api-haber-icerik a{
+.news-card a{
     display:inline-block;
     margin-top:12px;
     color:#d60000;
     font-weight:bold;
 }
 
-.haber-tarih{
-    color:#888;
-    font-size:13px;
-    margin-top:8px;
+
+/* =========================================
+   ARAMA
+========================================= */
+
+.search{
+    max-width:1200px;
+    margin:25px auto;
+    padding:0 20px;
 }
 
-.haber-resimsiz{
-    height:190px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:#eee;
-    font-size:42px;
+.search input{
+    width:100%;
+    padding:15px 18px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    font-size:16px;
+    outline:none;
 }
 
-/* Mobil */
+.search input:focus{
+    border-color:#d60000;
+}
+
+
+/* =========================================
+   REKLAM
+========================================= */
+
+.ads{
+    max-width:1200px;
+    margin:40px auto;
+    padding:0 20px;
+}
+
+#reklamAlani h2{
+    margin-bottom:15px;
+}
+
+#reklamIcerik{
+    min-height:20px;
+}
+
+
+/* =========================================
+   MOBİL
+========================================= */
 
 @media(max-width:768px){
 
-    .manset-api img{
+    .headline{
+        margin:20px auto;
+    }
+
+    .headline-main img{
         height:220px;
     }
 
-    .manset-api h2{
+    .headline-text{
+        padding:18px;
+    }
+
+    .headline-text h2{
         font-size:24px;
     }
 
+    .news-card img{
+        height:180px;
+    }
+
 }
+
 </style>
 
 </head>
 
+
 <body>
 
-<!-- =========================
+
+<!-- =========================================
      ÜST BAR
-========================= -->
+========================================= -->
 
 <div class="topbar">
 
-    <marquee behavior="scroll" direction="left">
+<marquee behavior="scroll"
+         direction="left">
 
-        📢 SON DAKİKA •
-        Digital Gündem yayında •
-        Türkiye Rehberi hazırlanıyor •
-        Firma Rehberi yakında •
-        Köşe Yazarları çok yakında...
+📢 SON DAKİKA • Digital Gündem yayında •
+Türkiye Rehberi hazırlanıyor •
+Firma Rehberi yakında •
+Köşe Yazarları çok yakında...
 
-    </marquee>
+</marquee>
 
 </div>
 
 
-<!-- =========================
+<!-- =========================================
      HEADER
-========================= -->
+========================================= -->
 
 <header>
 
-    <div class="logo">
+<div class="logo">
 
-        <h1>
-            Digital <span>Gündem</span>
-        </h1>
+<h1>
+Digital <span>Gündem</span>
+</h1>
 
-        <p>
-            Türkiye'nin Dijital Rehberi
-        </p>
+<p>
+Türkiye'nin Dijital Rehberi
+</p>
 
-    </div>
+</div>
 
 
-    <nav>
+<nav>
 
-        <a href="index.html">
-            🏠 Ana Sayfa
-        </a>
+<a href="index.html">
+🏠 Ana Sayfa
+</a>
 
-        <a href="pages/sondakika.html">
-            📰 Son Dakika
-        </a>
+<a href="pages/sondakika.html">
+📰 Son Dakika
+</a>
 
-        <a href="pages/turkiye.html">
-            🇹🇷 Türkiye
-        </a>
+<a href="pages/turkiye.html">
+🇹🇷 Türkiye
+</a>
 
-        <a href="pages/rehber.html">
-            📍 Rehber
-        </a>
+<a href="pages/rehber.html">
+📍 Rehber
+</a>
 
-        <a href="pages/firmalar.html">
-            🏢 Firmalar
-        </a>
+<a href="pages/firmalar.html">
+🏢 Firmalar
+</a>
 
-        <a href="pages/yazarlar.html">
-            ✍️ Yazarlar
-        </a>
+<a href="pages/yazarlar.html">
+✍️ Yazarlar
+</a>
 
-        <a href="pages/video.html">
-            🎥 Video
-        </a>
+<a href="pages/video.html">
+🎥 Video
+</a>
 
-        <a href="pages/iletisim.html">
-            📞 İletişim
-        </a>
+<a href="pages/iletisim.html">
+📞 İletişim
+</a>
 
-        <a href="pages/admin.html">
-            🔐 Yönetim
-        </a>
+<a href="pages/admin.html">
+🔐 Yönetim
+</a>
 
-    </nav>
+</nav>
 
 </header>
 
 
-<!-- =========================
-     OTOMATİK MANŞET
-========================= -->
+
+<!-- =========================================
+     MANŞET
+========================================= -->
 
 <section class="headline">
 
-    <div id="mansetHaber">
+<div id="mansetHaber">
 
-        <div class="api-yukleniyor">
-            📰 Manşet yükleniyor...
-        </div>
+<div class="api-yukleniyor">
+📰 Haberler yükleniyor...
+</div>
 
-    </div>
+</div>
 
 </section>
 
 
-<!-- =========================
+
+<!-- =========================================
      ARAMA
-========================= -->
+========================================= -->
 
 <section class="search">
 
-    <input
-        type="text"
-        id="haberArama"
-        placeholder="Haber, il veya firma ara..."
-    >
+<input
+    type="text"
+    id="haberArama"
+    placeholder="Haber, il veya firma ara..."
+>
 
 </section>
 
 
-<!-- =========================
-     KATEGORİLER
-========================= -->
 
-<section class="categories">
-
-    <div class="category">
-        📰 Son Dakika
-    </div>
-
-    <div class="category">
-        🇹🇷 Türkiye
-    </div>
-
-    <div class="category">
-        🏢 Firmalar
-    </div>
-
-    <div class="category">
-        💰 Ekonomi
-    </div>
-
-    <div class="category">
-        ⚽ Spor
-    </div>
-
-    <div class="category">
-        💻 Teknoloji
-    </div>
-
-    <div class="category">
-        🏥 Sağlık
-    </div>
-
-    <div class="category">
-        🎥 Video
-    </div>
-
-</section>
-
-
-<!-- =========================
-     HABERLER
-========================= -->
+<!-- =========================================
+     ÖNE ÇIKAN HABERLER
+========================================= -->
 
 <section class="news">
 
-    <h2>
-        📰 Öne Çıkan Haberler
-    </h2>
+<h2>
+📰 Öne Çıkan Haberler
+</h2>
 
 
-    <div
-        class="news-grid"
-        id="haberListesi"
-    >
+<div
+    class="news-grid"
+    id="haberListesi"
+>
 
-        <div class="api-yukleniyor">
-            📰 Haberler yükleniyor...
-        </div>
+<div class="api-yukleniyor">
+📰 Haberler yükleniyor...
+</div>
 
-    </div>
+</div>
 
 </section>
 
 
-<!-- =========================
+
+<!-- =========================================
      REKLAMLAR
-========================= -->
+========================================= -->
 
 <section class="ads">
 
-    <div id="reklamAlani">
+<div id="reklamAlani">
 
-        <h2>
-            Reklam Alanı
-        </h2>
-
-
-        <div id="reklamIcerik">
-
-            Reklam yükleniyor...
-
-        </div>
-
-    </div>
+<h2>
+📢 Reklam Alanı
+</h2>
 
 
-    <div class="banner">
+<div id="reklamIcerik">
 
-        728 × 90 Google AdSense
+Reklam yükleniyor...
 
-    </div>
+</div>
+
+</div>
+
+
+<div class="banner">
+
+728 × 90 Google AdSense
+
+</div>
 
 </section>
 
 
-<!-- =========================
+
+<!-- =========================================
      FOOTER
-========================= -->
+========================================= -->
 
 <footer>
 
-    <h2>
-        Digital Gündem
-    </h2>
+<h2>
+Digital Gündem
+</h2>
 
-    <p>
-        Türkiye'nin Dijital Rehberi
-    </p>
+<p>
+Türkiye'nin Dijital Rehberi
+</p>
 
-    <p>
-        Tarafsız bakar, doğruyu yayınlar.
-    </p>
+<p>
+Tarafsız bakar, doğruyu yayınlar.
+</p>
 
-    <p>
-        © 2026 Digital Gündem
-    </p>
+<p>
+© 2026 Digital Gündem
+</p>
 
 </footer>
 
 
-<!-- =========================
-     HABER API
-========================= -->
 
 <script>
+
+/* =========================================
+   API ADRESİ
+========================================= */
 
 const HABER_API = "/api/haberler";
 
 
+/* =========================================
+   HABERLERİ GETİR
+========================================= */
+
 let tumHaberler = [];
 
-
-/* =========================
-   SAYFA AÇILINCA
-========================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function(){
-
-        haberleriGetir();
-
-        reklamGetir();
-
-        aramaHazirla();
-
-    }
-);
-
-
-/* =========================
-   HABERLERİ GETİR
-========================= */
 
 async function haberleriGetir(){
 
@@ -433,6 +481,7 @@ async function haberleriGetir(){
             await fetch(
                 HABER_API,
                 {
+                    method:"GET",
                     cache:"no-store"
                 }
             );
@@ -456,7 +505,11 @@ async function haberleriGetir(){
 
 
         tumHaberler =
-            veri.haberler || [];
+            Array.isArray(
+                veri.haberler
+            )
+            ? veri.haberler
+            : [];
 
 
         if(
@@ -464,15 +517,15 @@ async function haberleriGetir(){
         ){
 
             manset.innerHTML = `
-                <div class="haber-bos">
+                <div class="bos-haber">
                     📰 Henüz yayınlanmış haber bulunmuyor.
                 </div>
             `;
 
 
             liste.innerHTML = `
-                <div class="haber-bos">
-                    📰 Henüz haber bulunmuyor.
+                <div class="bos-haber">
+                    📰 Henüz yayınlanmış haber bulunmuyor.
                 </div>
             `;
 
@@ -481,53 +534,31 @@ async function haberleriGetir(){
         }
 
 
-        /* =====================
-           MANŞETİ BUL
-        ===================== */
+        /* =========================
+           MANŞET
+        ========================= */
 
         const mansetHaber =
-            tumHaberler.find(
-                haber =>
-                    Number(haber.manset) === 1
-            );
+            tumHaberler[0];
 
 
-        if(mansetHaber){
-
-            mansetOlustur(
+        manset.innerHTML =
+            mansetHTML(
                 mansetHaber
             );
 
-        }else{
 
-            manset.innerHTML = `
-                <div class="haber-bos">
-                    ⭐ Şu anda öne çıkarılmış manşet haber yok.
-                </div>
-            `;
-
-        }
-
-
-        /* =====================
-           HABERLER
-        ===================== */
-
-        const digerHaberler =
-            tumHaberler.filter(
-                haber =>
-                    !mansetHaber ||
-                    Number(haber.id) !==
-                    Number(mansetHaber.id)
-            );
-
+        /* =========================
+           HABER LİSTESİ
+        ========================= */
 
         haberleriListele(
-            digerHaberler
+            tumHaberler
         );
 
 
-    }catch(error){
+    }
+    catch(error){
 
         console.error(
             "Haber API hatası:",
@@ -537,14 +568,32 @@ async function haberleriGetir(){
 
         manset.innerHTML = `
             <div class="api-hata">
+
                 ❌ Haberler yüklenemedi.
+
+                <br>
+
+                <small>
+                ${escapeHTML(
+                    error.message
+                )}
+                </small>
+
             </div>
         `;
 
 
         liste.innerHTML = `
             <div class="api-hata">
+
                 ❌ Haberler yüklenemedi.
+
+                <br>
+
+                <small>
+                API bağlantısını kontrol edin.
+                </small>
+
             </div>
         `;
 
@@ -553,79 +602,81 @@ async function haberleriGetir(){
 }
 
 
-/* =========================
-   MANŞET OLUŞTUR
-========================= */
 
-function mansetOlustur(
-    haber
-){
+/* =========================================
+   MANŞET HTML
+========================================= */
 
-    const alan =
-        document.getElementById(
-            "mansetHaber"
-        );
-
+function mansetHTML(haber){
 
     const resim =
-        haber.resim
-        ? `
+        haber.resim &&
+        haber.resim.trim()
+        ? haber.resim
+        : "https://picsum.photos/1200/500";
+
+
+    const baslik =
+        haber.baslik ||
+        "Başlıksız Haber";
+
+
+    const ozet =
+        haber.ozet ||
+        "";
+
+
+    const kategori =
+        haber.kategori ||
+        "Gündem";
+
+
+    const tarih =
+        haber.tarih ||
+        "";
+
+
+    return `
+
+        <article
+            class="headline-main"
+        >
+
             <img
-                src="${escapeHTML(haber.resim)}"
-                alt="${escapeHTML(haber.baslik)}"
-                onerror="this.style.display='none'"
+                src="${escapeHTML(resim)}"
+                alt="${escapeHTML(baslik)}"
+                onerror="
+                    this.src='https://picsum.photos/1200/500'
+                "
             >
-        `
-        : `
-            <div class="haber-resimsiz">
-                📰
-            </div>
-        `;
 
-
-    alan.innerHTML = `
-
-        <div class="manset-api">
-
-            ${resim}
 
             <div class="headline-text">
 
                 <span class="etiket">
-
-                    ${escapeHTML(
-                        haber.kategori ||
-                        "Gündem"
-                    )}
-
+                    ${escapeHTML(kategori)}
                 </span>
 
 
                 <h2>
-
-                    ${escapeHTML(
-                        haber.baslik
-                    )}
-
+                    ${escapeHTML(baslik)}
                 </h2>
 
 
                 <p>
-
-                    ${escapeHTML(
-                        haber.ozet || ""
-                    )}
-
+                    ${escapeHTML(ozet)}
                 </p>
 
 
-                <div class="haber-tarih">
-
-                    📅 ${escapeHTML(
-                        haber.tarih || ""
-                    )}
-
-                </div>
+                ${
+                    tarih
+                    ? `
+                    <div class="haber-tarih">
+                        📅 ${escapeHTML(tarih)}
+                    </div>
+                    `
+                    : ""
+                }
 
 
                 <a
@@ -637,16 +688,17 @@ function mansetOlustur(
 
             </div>
 
-        </div>
+        </article>
 
     `;
 
 }
 
 
-/* =========================
+
+/* =========================================
    HABER LİSTESİ
-========================= */
+========================================= */
 
 function haberleriListele(
     haberler
@@ -663,8 +715,8 @@ function haberleriListele(
     ){
 
         liste.innerHTML = `
-            <div class="haber-bos">
-                📰 Gösterilecek başka haber bulunmuyor.
+            <div class="bos-haber">
+                Haber bulunamadı.
             </div>
         `;
 
@@ -675,201 +727,172 @@ function haberleriListele(
 
     liste.innerHTML =
         haberler
-            .map(
-                haberKartHTML
-            )
+            .map(haber => {
+
+                const resim =
+                    haber.resim &&
+                    haber.resim.trim()
+                    ? haber.resim
+                    : "https://picsum.photos/600/350";
+
+
+                return `
+
+                    <article
+                        class="news-card"
+                    >
+
+                        <img
+                            src="${escapeHTML(resim)}"
+                            alt="${escapeHTML(
+                                haber.baslik ||
+                                "Haber"
+                            )}"
+                            onerror="
+                                this.src='https://picsum.photos/600/350'
+                            "
+                        >
+
+
+                        <div
+                            class="news-card-content"
+                        >
+
+                            <span class="etiket">
+
+                                ${escapeHTML(
+                                    haber.kategori ||
+                                    "Gündem"
+                                )}
+
+                            </span>
+
+
+                            <h3>
+
+                                ${escapeHTML(
+                                    haber.baslik ||
+                                    "Başlıksız Haber"
+                                )}
+
+                            </h3>
+
+
+                            <p>
+
+                                ${escapeHTML(
+                                    haber.ozet ||
+                                    ""
+                                )}
+
+                            </p>
+
+
+                            <div class="haber-tarih">
+
+                                ${
+                                    haber.tarih
+                                    ? "📅 " +
+                                      escapeHTML(
+                                          haber.tarih
+                                      )
+                                    : ""
+                                }
+
+                            </div>
+
+
+                            <a
+                                href="pages/haber.html?id=${encodeURIComponent(haber.id)}"
+                            >
+
+                                Devamını Oku →
+
+                            </a>
+
+                        </div>
+
+                    </article>
+
+                `;
+
+            })
             .join("");
 
 }
 
 
-/* =========================
-   HABER KARTI
-========================= */
 
-function haberKartHTML(
-    haber
-){
-
-    const resim =
-        haber.resim
-        ? `
-            <img
-                src="${escapeHTML(haber.resim)}"
-                alt="${escapeHTML(haber.baslik)}"
-                onerror="this.style.display='none'"
-            >
-        `
-        : `
-            <div class="haber-resimsiz">
-                📰
-            </div>
-        `;
-
-
-    return `
-
-        <article
-            class="api-haber-card"
-            data-baslik="${escapeHTML(
-                haber.baslik
-            )}"
-            data-ozet="${escapeHTML(
-                haber.ozet || ""
-            )}"
-            data-kategori="${escapeHTML(
-                haber.kategori || ""
-            )}"
-        >
-
-            ${resim}
-
-
-            <div class="api-haber-icerik">
-
-                <span class="etiket">
-
-                    ${escapeHTML(
-                        haber.kategori ||
-                        "Gündem"
-                    )}
-
-                </span>
-
-
-                <h3>
-
-                    ${escapeHTML(
-                        haber.baslik
-                    )}
-
-                </h3>
-
-
-                <p>
-
-                    ${escapeHTML(
-                        haber.ozet || ""
-                    )}
-
-                </p>
-
-
-                <div class="haber-tarih">
-
-                    📅 ${escapeHTML(
-                        haber.tarih || ""
-                    )}
-
-                </div>
-
-
-                <a
-                    href="pages/haber.html?id=${encodeURIComponent(haber.id)}"
-                >
-                    Devamını Oku →
-                </a>
-
-            </div>
-
-        </article>
-
-    `;
-
-}
-
-
-/* =========================
+/* =========================================
    HABER ARAMA
-========================= */
+========================================= */
 
-function aramaHazirla(){
-
-    const arama =
-        document.getElementById(
-            "haberArama"
-        );
-
-
-    arama.addEventListener(
+document
+    .getElementById("haberArama")
+    .addEventListener(
         "input",
         function(){
 
-            const kelime =
+            const arama =
                 this.value
-                    .trim()
-                    .toLowerCase();
+                    .toLocaleLowerCase(
+                        "tr-TR"
+                    )
+                    .trim();
 
 
-            const filtreli =
-                tumHaberler.filter(
-                    haber =>
+            if(!arama){
 
-                        String(
-                            haber.baslik || ""
-                        )
-                        .toLowerCase()
-                        .includes(kelime)
-
-                        ||
-
-                        String(
-                            haber.ozet || ""
-                        )
-                        .toLowerCase()
-                        .includes(kelime)
-
-                        ||
-
-                        String(
-                            haber.kategori || ""
-                        )
-                        .toLowerCase()
-                        .includes(kelime)
-
+                haberleriListele(
+                    tumHaberler
                 );
 
-
-            const manset =
-                filtreli.find(
-                    haber =>
-                        Number(
-                            haber.manset
-                        ) === 1
-                );
-
-
-            const liste =
-                filtreli.filter(
-                    haber =>
-                        !manset ||
-                        Number(haber.id) !==
-                        Number(manset.id)
-                );
-
-
-            if(manset){
-
-                mansetOlustur(
-                    manset
-                );
+                return;
 
             }
 
 
+            const filtre =
+                tumHaberler.filter(
+                    haber => {
+
+                        const metin = `
+
+                            ${haber.baslik || ""}
+
+                            ${haber.ozet || ""}
+
+                            ${haber.icerik || ""}
+
+                            ${haber.kategori || ""}
+
+                        `
+                        .toLocaleLowerCase(
+                            "tr-TR"
+                        );
+
+
+                        return metin
+                            .includes(
+                                arama
+                            );
+
+                    }
+                );
+
+
             haberleriListele(
-                liste
+                filtre
             );
 
         }
     );
 
-}
 
 
-/* =========================
-   REKLAM GETİR
-========================= */
+/* =========================================
+   REKLAM SİSTEMİ
+========================================= */
 
 async function reklamGetir(){
 
@@ -885,6 +908,7 @@ async function reklamGetir(){
             await fetch(
                 "/api/reklamlar",
                 {
+                    method:"GET",
                     cache:"no-store"
                 }
             );
@@ -908,12 +932,16 @@ async function reklamGetir(){
         }
 
 
+        /*
+         * Sadece ANA SAYFA reklamını göster.
+         */
+
         const reklam =
             veri.reklamlar.find(
                 r =>
-                    r.konum === "anasayfa"
-            )
-            ||
+                    r.konum ===
+                    "anasayfa"
+            ) ||
             veri.reklamlar[0];
 
 
@@ -928,33 +956,41 @@ async function reklamGetir(){
 
         alan.innerHTML = `
 
-            <div style="
-                width:100%;
-                max-width:728px;
-                margin:15px auto;
-                text-align:center;
-            ">
+            <div
+                style="
+                    width:100%;
+                    max-width:728px;
+                    margin:15px auto;
+                    text-align:center;
+                "
+            >
 
                 ${
                     reklam.link
-                    ?
-                    `<a
-                        href="${escapeHTML(reklam.link)}"
+                    ? `
+                    <a
+                        href="${escapeHTML(
+                            reklam.link
+                        )}"
                         target="_blank"
-                        rel="noopener noreferrer"
-                    >`
-                    :
-                    ""
+                        rel="noopener"
+                    >
+                    `
+                    : ""
                 }
 
 
                 ${
                     reklam.resim
-                    ?
-                    `
+                    ? `
+
                     <img
-                        src="${escapeHTML(reklam.resim)}"
-                        alt="${escapeHTML(reklam.firma_adi)}"
+                        src="${escapeHTML(
+                            reklam.resim
+                        )}"
+                        alt="${escapeHTML(
+                            reklam.firma_adi
+                        )}"
                         style="
                             width:100%;
                             max-width:728px;
@@ -962,39 +998,47 @@ async function reklamGetir(){
                             object-fit:contain;
                             border-radius:8px;
                         "
+                        onerror="
+                            this.style.display='none'
+                        "
                     >
+
                     `
-                    :
-                    `
-                    <div style="
-                        padding:25px;
-                        border:1px solid #ddd;
-                        border-radius:8px;
-                        background:#f5f5f5;
-                        font-weight:bold;
-                    ">
-                        📢 ${escapeHTML(
+                    : `
+
+                    <div
+                        style="
+                            padding:25px;
+                            border:1px solid #ddd;
+                            border-radius:8px;
+                            background:#f5f5f5;
+                            font-weight:bold;
+                        "
+                    >
+
+                        📢
+                        ${escapeHTML(
                             reklam.firma_adi
                         )}
+
                     </div>
+
                     `
                 }
 
 
                 ${
                     reklam.link
-                    ?
-                    `</a>`
-                    :
-                    ""
+                    ? "</a>"
+                    : ""
                 }
 
             </div>
 
         `;
 
-
-    }catch(error){
+    }
+    catch(error){
 
         console.error(
             "Reklam yüklenemedi:",
@@ -1008,9 +1052,10 @@ async function reklamGetir(){
 }
 
 
-/* =========================
+
+/* =========================================
    HTML GÜVENLİĞİ
-========================= */
+========================================= */
 
 function escapeHTML(
     value
@@ -1047,19 +1092,26 @@ function escapeHTML(
 
 }
 
+
+
+/* =========================================
+   BAŞLAT
+========================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        haberleriGetir();
+
+        reklamGetir();
+
+    }
+);
+
 </script>
 
 
-<!-- =========================
-     MEVCUT JS DOSYALARI
-========================= -->
-
-<script src="data.js"></script>
-
-<script src="haberler.js"></script>
-
-<script src="app.js"></script>
-
-
 </body>
+
 </html>
