@@ -437,3 +437,91 @@ width:100%;
     transition:0.3s;
     box-shadow:0 10px 25px rgba(0,0,0,.2);
 }
+/* ===== DIGITAL GÜNDEM ÜST KARŞILAMA ===== */
+
+.site-header{
+    background:#fff;
+    padding:25px 30px 15px;
+    display:block;
+    text-align:center;
+    box-shadow:0 3px 15px rgba(0,0,0,.10);
+}
+
+.logo-area{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-bottom:18px;
+}
+
+.site-logo{
+    display:inline-block;
+}
+
+.site-logo h1{
+    margin:0;
+    font-size:42px;
+    font-weight:800;
+    letter-spacing:-1px;
+    color:#d60000;
+}
+
+.site-logo h1 span{
+    color:#222;
+}
+
+.site-logo p{
+    margin-top:4px;
+    color:#666;
+    font-size:16px;
+    font-weight:500;
+}
+
+.main-nav{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    border-top:1px solid #eee;
+    padding-top:14px;
+}
+
+.main-nav a{
+    display:inline-block;
+    padding:9px 12px;
+    border-radius:7px;
+    font-weight:bold;
+    color:#222;
+    transition:.25s;
+}
+
+.main-nav a:hover{
+    background:#d60000;
+    color:#fff;
+}
+
+@media(max-width:768px){
+
+    .site-header{
+        padding:20px 12px 12px;
+    }
+
+    .site-logo h1{
+        font-size:34px;
+    }
+
+    .site-logo p{
+        font-size:14px;
+    }
+
+    .main-nav{
+        gap:5px;
+    }
+
+    .main-nav a{
+        padding:8px 9px;
+        font-size:14px;
+    }
+
+}
