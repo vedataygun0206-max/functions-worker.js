@@ -171,3 +171,106 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 });
+// =========================
+// HABER OKUNMA İSTATİSTİKLERİ
+// =========================
+
+async function haberIstatistikleriniGetir() {
+
+    const tablo =
+        document.getElementById("istatistikTablo");
+
+    const toplam =
+        document.getElementById("toplamOkunma");
+
+    const durum =
+        document.getElementById("istatistikDurum");
+
+    // Bu elemanlar yoksa hiçbir şey yapma
+    if (!tablo || !toplam) {
+        return;
+    }
+
+    try {
+
+        const cevap = await fetch(
+            "/api/haber-istatistik",
+            {
+                method: "GET",
+                credentials: "include"
+            }
+        );
+
+        const veri = await cevap.json();
+
+        if (!cevap.ok || !veri.success) {
+
+            durum.textContent =
+                "❌ İstatistikler alınamadı.";
+
+            return;
+        }
+
+        // TOPLAM OKUNMA
+        toplam.textContent =
+            veri.toplam_okunma || 0;
+
+        // TABLOYU TEMİZLE
+        tablo.innerHTML = "";
+
+        // HABERLERİ TABLOYA EKLE
+        veri.haberler.forEach(
+            function(haber, index) {
+
+                const satir =
+                    document.createElement("tr");
+
+                satir.innerHTML = `
+                    <td style="padding:12px;">
+                        ${index + 1}
+                    </td>
+
+                    <td style="padding:12px;">
+                        <strong>
+                            ${haber.baslik}
+                        </strong>
+                    </td>
+
+                    <td style="padding:12px;">
+                        ${haber.kategori || "-"}
+                    </td>
+
+                    <td style="
+                        padding:12px;
+                        text-align:center;
+                        font-weight:bold;
+                    ">
+                        👁️ ${haber.okunma || 0}
+                    </td>
+                `;
+
+                tablo.appendChild(satir);
+
+            }
+        );
+
+        durum.textContent =
+            "✅ İstatistikler güncel.";
+
+    } catch (error) {
+
+        console.error(
+            "İstatistik hatası:",
+            error
+        );
+
+        if (durum) {
+            durum.textContent =
+                "❌ İstatistikler yüklenemedi.";
+        }
+
+    }
+
+}
+
+haberIstatistikleriniGetir();
