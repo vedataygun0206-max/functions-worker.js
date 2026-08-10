@@ -250,6 +250,34 @@ Tekrar Dene
   });
 
 }
+    // =========================
+// 🔐 ADMIN API KONTROLÜ
+// =========================
+// GET işlemleri açık kalır.
+// POST / PUT / DELETE işlemleri sadece
+// yönetici giriş yaptıysa çalışır.
+
+if (
+  url.pathname.startsWith("/api/") &&
+  ["POST", "PUT", "DELETE"].includes(request.method)
+) {
+
+  const auth = cookieOku(
+    request,
+    ADMIN_COOKIE
+  );
+
+  if (auth !== "ok") {
+
+    return Response.json({
+      success: false,
+      error: "Yetkisiz erişim. Yönetici girişi gerekli."
+    }, {
+      status: 401
+    });
+
+  }
+}
 // =========================
 // ÖZEL REKLAMLAR
 // =========================
