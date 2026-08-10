@@ -1,6 +1,255 @@
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    // =========================
+// YÖNETİM PANELİ GÜVENLİĞİ
+// =========================
+
+const ADMIN_COOKIE = "dg_admin_auth";
+
+function cookieOku(request, isim) {
+
+  const cookie =
+    request.headers.get("Cookie") || "";
+
+  const parcalar =
+    cookie.split(";");
+
+  for (const parca of parcalar) {
+
+    const [anahtar, ...deger] =
+      parca.trim().split("=");
+
+    if (anahtar === isim) {
+
+      return decodeURIComponent(
+        deger.join("=")
+      );
+
+    }
+
+  }
+
+  return null;
+}
+
+
+// YÖNETİM GİRİŞ SAYFASI
+if (
+  url.pathname === "/admin-giris" &&
+  request.method === "GET"
+) {
+
+  return new Response(`
+
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>Digital Gündem | Yönetim Girişi</title>
+
+<style>
+
+body{
+    margin:0;
+    background:#111827;
+    font-family:Arial,sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+}
+
+.kutu{
+    width:90%;
+    max-width:400px;
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 10px 40px rgba(0,0,0,.3);
+}
+
+h1{
+    margin-top:0;
+    color:#d60000;
+}
+
+input{
+    width:100%;
+    padding:13px;
+    box-sizing:border-box;
+    border:1px solid #ddd;
+    border-radius:8px;
+    margin:10px 0;
+    font-size:16px;
+}
+
+button{
+    width:100%;
+    padding:13px;
+    background:#d60000;
+    color:white;
+    border:0;
+    border-radius:8px;
+    font-weight:bold;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.hata{
+    color:#b00000;
+    margin-bottom:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="kutu">
+
+<h1>🔐 Digital Gündem</h1>
+
+<p>
+Yönetim paneline giriş
+</p>
+
+<form method="POST"
+action="/admin-giris">
+
+<input
+type="password"
+name="password"
+placeholder="Yönetim şifresi"
+autocomplete="current-password"
+required
+>
+
+<button type="submit">
+Giriş Yap
+</button>
+
+</form>
+
+</div>
+
+</body>
+
+</html>
+
+`, {
+    headers:{
+        "Content-Type":
+        "text/html; charset=UTF-8"
+    }
+  });
+
+}
+
+
+// YÖNETİM GİRİŞ KONTROLÜ
+if (
+  url.pathname === "/admin-giris" &&
+  request.method === "POST"
+) {
+
+  const form =
+    await request.formData();
+
+  const password =
+    String(
+      form.get("password") || ""
+    );
+
+
+  if (
+    !env.ADMIN_PASSWORD ||
+    password !== env.ADMIN_PASSWORD
+  ) {
+
+    return new Response(`
+
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>Hatalı Şifre</title>
+
+<style>
+
+body{
+    font-family:Arial;
+    background:#111827;
+    color:white;
+    text-align:center;
+    padding-top:100px;
+}
+
+a{
+    color:white;
+    background:#d60000;
+    padding:12px 20px;
+    border-radius:7px;
+    text-decoration:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>❌ Şifre hatalı</h2>
+
+<p>Yönetim şifresi doğru değil.</p>
+
+<a href="/admin-giris">
+Tekrar Dene
+</a>
+
+</body>
+
+</html>
+
+`, {
+      status:401,
+      headers:{
+        "Content-Type":
+        "text/html; charset=UTF-8"
+      }
+    });
+
+  }
+
+
+  return new Response(null, {
+
+    status:302,
+
+    headers:{
+      "Location":
+      "/pages/admin.html",
+
+      "Set-Cookie":
+      `${ADMIN_COOKIE}=ok; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=3600`
+    }
+
+  });
+
+}
 // =========================
 // ÖZEL REKLAMLAR
 // =========================
