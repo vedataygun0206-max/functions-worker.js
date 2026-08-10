@@ -695,7 +695,21 @@ if (url.pathname === "/api/reklam" && request.method === "DELETE") {
             error: "Haber bulunamadı."
           }, { status: 404 });
         }
+// =========================
+// OKUNMA SAYISINI +1 ARTIR
+// =========================
 
+await env.DB
+  .prepare(`
+    UPDATE haberler
+    SET okunma = COALESCE(okunma, 0) + 1
+    WHERE id = ?
+  `)
+  .bind(id)
+  .run();
+
+haber.okunma =
+  (haber.okunma || 0) + 1;
         return Response.json({
           success: true,
           haber
