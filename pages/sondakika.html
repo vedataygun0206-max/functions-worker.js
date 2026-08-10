@@ -1,1 +1,376 @@
-functions-worker-js.vedataygun0206.workers.dev
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Son Dakika | Digital Gündem</title>
+
+<meta name="description"
+content="Digital Gündem son dakika haberleri. Türkiye gündeminden güncel gelişmeler.">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f5f5f5;
+    color:#222;
+}
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+.topbar{
+    background:#d60000;
+    color:white;
+    padding:10px;
+    font-weight:bold;
+}
+
+header{
+    background:white;
+    padding:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+
+.logo h1{
+    color:#d60000;
+    font-size:32px;
+}
+
+.logo span{
+    color:#222;
+}
+
+.logo p{
+    color:#666;
+    margin-top:5px;
+}
+
+nav{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+nav a{
+    padding:9px 12px;
+    border-radius:6px;
+    font-weight:bold;
+}
+
+nav a:hover{
+    background:#d60000;
+    color:white;
+}
+
+.container{
+    max-width:1200px;
+    margin:30px auto;
+    padding:0 20px;
+}
+
+.baslik{
+    background:white;
+    padding:20px;
+    border-left:6px solid #d60000;
+    border-radius:10px;
+    margin-bottom:25px;
+}
+
+.baslik h2{
+    color:#d60000;
+}
+
+.haberler{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:20px;
+}
+
+.haber{
+    background:white;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.haber:hover{
+    transform:translateY(-4px);
+}
+
+.haber img{
+    width:100%;
+    height:200px;
+    object-fit:cover;
+    display:block;
+}
+
+.haber-icerik{
+    padding:20px;
+}
+
+.etiket{
+    display:inline-block;
+    background:#d60000;
+    color:white;
+    padding:5px 9px;
+    border-radius:5px;
+    font-size:12px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.haber h3{
+    font-size:21px;
+    margin-bottom:10px;
+}
+
+.haber p{
+    color:#666;
+    line-height:1.6;
+}
+
+.oku{
+    display:inline-block;
+    margin-top:15px;
+    color:#d60000;
+    font-weight:bold;
+}
+
+.yukleniyor{
+    text-align:center;
+    padding:40px;
+    background:white;
+    border-radius:12px;
+}
+
+.hata{
+    background:#fff;
+    padding:30px;
+    border-radius:12px;
+    color:#b00000;
+    text-align:center;
+}
+
+footer{
+    margin-top:50px;
+    background:#222;
+    color:white;
+    text-align:center;
+    padding:40px 20px;
+}
+
+@media(max-width:768px){
+
+    header{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    nav{
+        justify-content:center;
+        margin-top:15px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+<marquee>
+📢 SON DAKİKA • Digital Gündem • Türkiye'nin Dijital Rehberi
+</marquee>
+</div>
+
+<header>
+
+<div class="logo">
+<h1>Digital <span>Gündem</span></h1>
+<p>Türkiye'nin Dijital Rehberi</p>
+</div>
+
+<nav>
+<a href="../index.html">🏠 Ana Sayfa</a>
+<a href="sondakika.html">📰 Son Dakika</a>
+<a href="turkiye.html">🇹🇷 Türkiye</a>
+<a href="rehber.html">📍 Rehber</a>
+<a href="firmalar.html">🏢 Firmalar</a>
+<a href="yazarlar.html">✍️ Yazarlar</a>
+<a href="video.html">🎥 Video</a>
+<a href="iletisim.html">📞 İletişim</a>
+</nav>
+
+</header>
+
+<main class="container">
+
+<div class="baslik">
+
+<h2>📰 Son Dakika Haberleri</h2>
+
+<p>
+Digital Gündem'de yayınlanan güncel haberler
+</p>
+
+</div>
+
+<div id="haberler" class="haberler">
+
+<div class="yukleniyor">
+Haberler yükleniyor...
+</div>
+
+</div>
+
+</main>
+
+<footer>
+
+<h2>Digital Gündem</h2>
+
+<p>Türkiye'nin Dijital Rehberi</p>
+
+<p>Tarafsız bakar, doğruyu yayınlar.</p>
+
+<p>© 2026 Digital Gündem</p>
+
+</footer>
+
+<script>
+
+const API =
+"https://functions-worker-js.vedataygun0206.workers.dev/api/haberler";
+
+async function haberleriGetir(){
+
+    const alan =
+        document.getElementById("haberler");
+
+    try{
+
+        const cevap =
+            await fetch(API);
+
+        if(!cevap.ok){
+
+            throw new Error(
+                "API bağlantısı başarısız: " +
+                cevap.status
+            );
+
+        }
+
+        const veri =
+            await cevap.json();
+
+        if(
+            !veri.success ||
+            !veri.haberler ||
+            veri.haberler.length === 0
+        ){
+
+            alan.innerHTML = `
+                <div class="yukleniyor">
+                    Henüz yayınlanmış haber bulunmuyor.
+                </div>
+            `;
+
+            return;
+        }
+
+        alan.innerHTML =
+            veri.haberler.map(haber => {
+
+                const resim =
+                    haber.resim &&
+                    haber.resim.trim() !== ""
+                    ? haber.resim
+                    : "https://picsum.photos/600/350?random=" + haber.id;
+
+                return `
+
+                <article class="haber">
+
+                    <img
+                        src="${resim}"
+                        alt="${haber.baslik || 'Haber'}"
+                        onerror="this.src='https://picsum.photos/600/350?random=${haber.id}'"
+                    >
+
+                    <div class="haber-icerik">
+
+                        <span class="etiket">
+                            ${haber.kategori || "Gündem"}
+                        </span>
+
+                        <h3>
+                            ${haber.baslik || ""}
+                        </h3>
+
+                        <p>
+                            ${haber.ozet || ""}
+                        </p>
+
+                        <a
+                            class="oku"
+                            href="haber.html?id=${haber.id}"
+                        >
+                            Haberi Oku →
+                        </a>
+
+                    </div>
+
+                </article>
+
+                `;
+
+            }).join("");
+
+    }catch(error){
+
+        console.error(
+            "Haberler alınamadı:",
+            error
+        );
+
+        alan.innerHTML = `
+
+            <div class="hata">
+
+                <h3>❌ Haberler yüklenemedi</h3>
+
+                <p>
+                    Haber servisine şu anda ulaşılamıyor.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+haberleriGetir();
+
+</script>
+
+</body>
+</html>
