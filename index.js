@@ -2,6 +2,21 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     // =========================
+// ADMIN SECRET TEST
+// =========================
+
+if (
+  url.pathname === "/api/admin-test" &&
+  request.method === "GET"
+) {
+
+  return Response.json({
+    success: true,
+    admin_password_var: !!env.ADMIN_PASSWORD
+  });
+
+}
+    // =========================
 // YÖNETİM PANELİ GÜVENLİĞİ
 // =========================
 
