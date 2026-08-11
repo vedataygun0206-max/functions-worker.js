@@ -135,7 +135,7 @@ if (
 
   }
 }
- // =========================
+// =========================
 // TÜRKİYE GÜNDEM API
 // /api/gundem
 // =========================
@@ -167,8 +167,7 @@ if (
 
         const cevap = await fetch(kaynak.url, {
           headers: {
-            "User-Agent":
-              "Digital-Gundem/1.0"
+            "User-Agent": "Mozilla/5.0 Digital-Gundem/1.0"
           }
         });
 
@@ -177,40 +176,40 @@ if (
         }
 
         const xml = await cevap.text();
-       console.log(
-  "RSS TEST:",
-  xml.substring(0, 1000)
-);
-        const items =
-  xml.match(/<item[\s\S]*?<\/item>/gi) || [];
 
-for (const item of items) {
-          const baslik =
-            (item.match(
-            /<title[^>]*>([\s\S]*?)<\/title>/i
-            ) || [,""])[1]
-              .replace(/<!\[CDATA\[|\]\]>/g, "")
-              .trim();
+        const parser = new DOMParser();
+
+        const doc = parser.parseFromString(
+          xml,
+          "application/xml"
+        );
+
+        if (!doc) {
+          continue;
+        }
+
+        const items = [
+          ...doc.querySelectorAll("item")
+        ];
+
+        for (const item of items) {
+
+          const title =
+            item.querySelector("title")?.textContent?.trim() || "";
 
           const link =
-            (item.match(
-              /<link[^>]*>([\s\S]*?)<\/link>/i
-            ) || [,""])[1]
-              .trim();
+            item.querySelector("link")?.textContent?.trim() || "";
 
-          const tarih =
-            (item.match(
-              /<pubDate[^>]*>([\s\S]*?)<\/pubDate>/i
-            ) || [,""])[1]
-              .trim();
+          const pubDate =
+            item.querySelector("pubDate")?.textContent?.trim() || "";
 
-          if (baslik && link) {
+          if (title && link) {
 
             haberler.push({
-              baslik,
+              baslik: title,
               url: link,
               kaynak: kaynak.ad,
-              tarih
+              tarih: pubDate
             });
 
           }
@@ -226,14 +225,15 @@ for (const item of items) {
       }
     }
 
- const sonHaberler = haberler.slice(0, 5);   
+    const sonHaberler = haberler.slice(0, 5);
 
-return Response.json({
-  success: true,
-  kaynak: "Ücretsiz RSS",
-  toplam: sonHaberler.length,
-  haberler: sonHaberler
-});
+    return Response.json({
+      success: true,
+      kaynak: "Ücretsiz RSS",
+      toplam: sonHaberler.length,
+      haberler: sonHaberler
+    });
+
   } catch (error) {
 
     return Response.json({
@@ -242,7 +242,7 @@ return Response.json({
     }, { status: 500 });
 
   }
-}   
+}
     // =========================
 // ADMIN SECRET TEST
 // =========================
