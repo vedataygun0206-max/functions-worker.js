@@ -135,6 +135,66 @@ if (
 
   }
 }
+// =========================
+// TÜRKİYE GÜNDEM API
+// /api/gundem
+// =========================
+
+if (
+  url.pathname === "/api/gundem" &&
+  request.method === "GET"
+) {
+  try {
+
+    const apiUrl =
+      "https://api.gdeltproject.org/api/v2/doc/doc" +
+      "?query=Turkey" +
+      "&mode=artlist" +
+      "&format=json" +
+      "&maxrecords=20" +
+      "&sort=datedesc";
+
+    const cevap = await fetch(apiUrl, {
+      headers: {
+        "User-Agent": "Digital-Gundem/1.0"
+      }
+    });
+
+    if (!cevap.ok) {
+      return Response.json({
+        success: false,
+        error: "GDELT API cevap vermedi.",
+        status: cevap.status
+      }, { status: 502 });
+    }
+
+    const veri = await cevap.json();
+
+    const haberler = (veri.articles || []).map(haber => ({
+      baslik: haber.title || "",
+      url: haber.url || "",
+      kaynak: haber.domain || "",
+      tarih: haber.seendate || "",
+      dil: haber.language || "",
+      ulke: haber.sourcecountry || ""
+    }));
+
+    return Response.json({
+      success: true,
+      kaynak: "GDELT",
+      toplam: haberler.length,
+      haberler
+    });
+
+  } catch (error) {
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+
+  }
+}
     // =========================
 // ADMIN SECRET TEST
 // =========================
