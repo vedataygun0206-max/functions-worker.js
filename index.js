@@ -176,7 +176,14 @@ if (
         }
 
         const xml = await cevap.text();
-
+console.log(
+  "RSS DURUM:",
+  cevap.status,
+  "UZUNLUK:",
+  xml.length,
+  "BASLANGIC:",
+  xml.substring(0, 300)
+);
         const parser = new DOMParser();
 
         const doc = parser.parseFromString(
