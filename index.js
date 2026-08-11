@@ -135,7 +135,7 @@ if (
 
   }
 }
-// =========================
+ // =========================
 // TÜRKİYE GÜNDEM API
 // /api/gundem
 // =========================
@@ -146,44 +146,89 @@ if (
 ) {
   try {
 
-    const apiUrl =
-      "https://api.gdeltproject.org/api/v2/doc/doc" +
-      "?query=Turkey" +
-      "&mode=artlist" +
-      "&format=json" +
-      "&maxrecords=20" +
-      "&sort=datedesc";
-
-    const cevap = await fetch(apiUrl, {
-      headers: {
-        "User-Agent": "Digital-Gundem/1.0"
+    const kaynaklar = [
+      {
+        ad: "Google News Türkiye",
+        url:
+          "https://news.google.com/rss/search?q=Türkiye&hl=tr&gl=TR&ceid=TR:tr"
+      },
+      {
+        ad: "Google News Son Dakika",
+        url:
+          "https://news.google.com/rss/search?q=son+dakika+Türkiye&hl=tr&gl=TR&ceid=TR:tr"
       }
-    });
+    ];
 
-    if (!cevap.ok) {
-      return Response.json({
-        success: false,
-        error: "GDELT API cevap vermedi.",
-        status: cevap.status
-      }, { status: 502 });
+    const haberler = [];
+
+    for (const kaynak of kaynaklar) {
+
+      try {
+
+        const cevap = await fetch(kaynak.url, {
+          headers: {
+            "User-Agent":
+              "Digital-Gundem/1.0"
+          }
+        });
+
+        if (!cevap.ok) {
+          continue;
+        }
+
+        const xml = await cevap.text();
+
+        const items =
+          xml.match(/<item>[\s\S]*?<\/item>/g) || [];
+
+        for (const item of items) {
+
+          const baslik =
+            (item.match(
+              /<title>([\s\S]*?)<\/title>/
+            ) || [,""])[1]
+              .replace(/<!\[CDATA\[|\]\]>/g, "")
+              .trim();
+
+          const link =
+            (item.match(
+              /<link>([\s\S]*?)<\/link>/
+            ) || [,""])[1]
+              .trim();
+
+          const tarih =
+            (item.match(
+              /<pubDate>([\s\S]*?)<\/pubDate>/
+            ) || [,""])[1]
+              .trim();
+
+          if (baslik && link) {
+
+            haberler.push({
+              baslik,
+              url: link,
+              kaynak: kaynak.ad,
+              tarih
+            });
+
+          }
+        }
+
+      } catch (rssError) {
+
+        console.error(
+          "RSS kaynak hatası:",
+          rssError.message
+        );
+
+      }
     }
-
-    const veri = await cevap.json();
-
-    const haberler = (veri.articles || []).map(haber => ({
-      baslik: haber.title || "",
-      url: haber.url || "",
-      kaynak: haber.domain || "",
-      tarih: haber.seendate || "",
-      dil: haber.language || "",
-      ulke: haber.sourcecountry || ""
-    }));
 
     return Response.json({
       success: true,
-      kaynak: "GDELT",
+      kaynak: "Ücretsiz RSS",
       toplam: haberler.length,
-      haberler
+      haberler: haberler.slice(0, 30)
     });
 
   } catch (error) {
@@ -194,7 +239,7 @@ if (
     }, { status: 500 });
 
   }
-}
+}   
     // =========================
 // ADMIN SECRET TEST
 // =========================
