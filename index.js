@@ -177,7 +177,10 @@ if (
         }
 
         const xml = await cevap.text();
-
+       console.log(
+  "RSS TEST:",
+  xml.substring(0, 1000)
+);
         const items =
           xml.match(/<item>[\s\S]*?<\/item>/g) || [];
 
