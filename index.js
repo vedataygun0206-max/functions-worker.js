@@ -183,97 +183,77 @@ if (
 ) {
   try {
 
-    const kaynaklar = [
-      {
-        ad: "Google News Türkiye",
-        url:
-          "https://news.google.com/rss/search?q=Türkiye&hl=tr&gl=TR&ceid=TR:tr"
-      },
-      {
-        ad: "Google News Son Dakika",
-        url:
-          "https://news.google.com/rss/search?q=son+dakika+Türkiye&hl=tr&gl=TR&ceid=TR:tr"
+    const rssUrl =
+      "https://www.aa.com.tr/tr/rss/default?cat=gundem";
+
+    const cevap = await fetch(rssUrl, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 Digital-Gundem/1.0"
       }
-    ];
+    });
+
+    if (!cevap.ok) {
+      return Response.json({
+        success: false,
+        error: "AA RSS cevap vermedi.",
+        status: cevap.status
+      }, { status: 502 });
+    }
+
+    const xml = await cevap.text();
+
+    const items =
+      xml.match(/<item[\s\S]*?<\/item>/gi) || [];
 
     const haberler = [];
 
-    for (const kaynak of kaynaklar) {
+    for (const item of items) {
 
-      try {
+      const baslik =
+        (item.match(
+          /<title[^>]*>([\s\S]*?)<\/title>/i
+        ) || [,""])[1]
+          .replace(/<!\[CDATA\[|\]\]>/g, "")
+          .trim();
 
-        const cevap = await fetch(kaynak.url, {
-          headers: {
-            "User-Agent": "Mozilla/5.0 Digital-Gundem/1.0"
-          }
+      const link =
+        (item.match(
+          /<link[^>]*>([\s\S]*?)<\/link>/i
+        ) || [,""])[1]
+          .trim();
+
+      const tarih =
+        (item.match(
+          /<pubDate[^>]*>([\s\S]*?)<\/pubDate>/i
+        ) || [,""])[1]
+          .trim();
+
+      const aciklama =
+        (item.match(
+          /<description[^>]*>([\s\S]*?)<\/description>/i
+        ) || [,""])[1]
+          .replace(/<!\[CDATA\[|\]\]>/g, "")
+          .trim();
+
+      if (baslik && link) {
+
+        haberler.push({
+          baslik,
+          url: link,
+          kaynak: "Anadolu Ajansı",
+          tarih,
+          ozet: aciklama
         });
-
-        if (!cevap.ok) {
-          continue;
-        }
-
-        const xml = await cevap.text();
-console.log(
-  "RSS DURUM:",
-  cevap.status,
-  "UZUNLUK:",
-  xml.length,
-  "BASLANGIC:",
-  xml.substring(0, 300)
-);
-        const parser = new DOMParser();
-
-        const doc = parser.parseFromString(
-          xml,
-          "application/xml"
-        );
-
-        if (!doc) {
-          continue;
-        }
-
-        const items = [
-          ...doc.querySelectorAll("item")
-        ];
-
-        for (const item of items) {
-
-          const title =
-            item.querySelector("title")?.textContent?.trim() || "";
-
-          const link =
-            item.querySelector("link")?.textContent?.trim() || "";
-
-          const pubDate =
-            item.querySelector("pubDate")?.textContent?.trim() || "";
-
-          if (title && link) {
-
-            haberler.push({
-              baslik: title,
-              url: link,
-              kaynak: kaynak.ad,
-              tarih: pubDate
-            });
-
-          }
-        }
-
-      } catch (rssError) {
-
-        console.error(
-          "RSS kaynak hatası:",
-          rssError.message
-        );
 
       }
     }
 
-    const sonHaberler = haberler.slice(0, 5);
+    const sonHaberler =
+      haberler.slice(0, 5);
 
     return Response.json({
       success: true,
-      kaynak: "Ücretsiz RSS",
+      kaynak: "Anadolu Ajansı RSS",
       toplam: sonHaberler.length,
       haberler: sonHaberler
     });
