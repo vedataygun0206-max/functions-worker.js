@@ -182,26 +182,25 @@ if (
   xml.substring(0, 1000)
 );
         const items =
-          xml.match(/<item>[\s\S]*?<\/item>/g) || [];
+  xml.match(/<item[\s\S]*?<\/item>/gi) || [];
 
-        for (const item of items) {
-
+for (const item of items) {
           const baslik =
             (item.match(
-              /<title>([\s\S]*?)<\/title>/
+            /<title[^>]*>([\s\S]*?)<\/title>/i
             ) || [,""])[1]
               .replace(/<!\[CDATA\[|\]\]>/g, "")
               .trim();
 
           const link =
             (item.match(
-              /<link>([\s\S]*?)<\/link>/
+              /<link[^>]*>([\s\S]*?)<\/link>/i
             ) || [,""])[1]
               .trim();
 
           const tarih =
             (item.match(
-              /<pubDate>([\s\S]*?)<\/pubDate>/
+              /<pubDate[^>]*>([\s\S]*?)<\/pubDate>/i
             ) || [,""])[1]
               .trim();
 
