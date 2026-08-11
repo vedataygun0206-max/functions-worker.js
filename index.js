@@ -146,9 +146,8 @@ if (
 ) {
   try {
 
-    const rssUrl =
-      "https://news.google.com/rss/search?q=Türkiye&hl=tr&gl=TR&ceid=TR:tr";
-
+      const rssUrl =
+  "https://www.aa.com.tr/tr/rss/default?cat=gundem";
     const cevap = await fetch(rssUrl, {
       headers: {
         "User-Agent": "Mozilla/5.0"
