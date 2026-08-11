@@ -135,6 +135,44 @@ if (
 
   }
 }
+    // =========================
+// GOOGLE NEWS RSS TEST
+// /api/rss-test
+// =========================
+
+if (
+  url.pathname === "/api/rss-test" &&
+  request.method === "GET"
+) {
+  try {
+
+    const rssUrl =
+      "https://news.google.com/rss/search?q=Türkiye&hl=tr&gl=TR&ceid=TR:tr";
+
+    const cevap = await fetch(rssUrl, {
+      headers: {
+        "User-Agent": "Mozilla/5.0"
+      }
+    });
+
+    const xml = await cevap.text();
+
+    return Response.json({
+      success: cevap.ok,
+      status: cevap.status,
+      uzunluk: xml.length,
+      baslangic: xml.substring(0, 500)
+    });
+
+  } catch (error) {
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+
+  }
+}
 // =========================
 // TÜRKİYE GÜNDEM API
 // /api/gundem
