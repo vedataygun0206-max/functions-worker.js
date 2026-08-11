@@ -228,7 +228,7 @@ if (
       success: true,
       kaynak: "Ücretsiz RSS",
       toplam: haberler.length,
-      haberler: haberler.slice(0, 30)
+      haberler: haberler.slice(0, 5)
     });
 
   } catch (error) {
