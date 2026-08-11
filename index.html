@@ -192,6 +192,112 @@ Digital Gündem | Türkiye'nin Dijital Rehberi
 
 
 /* =========================================
+   30 SANİYEDE TÜRKİYE GÜNDEMİ
+========================================= */
+
+.kisa-gundem{
+    max-width:1200px;
+    margin:30px auto;
+    padding:20px;
+    background:#fff;
+    border-radius:16px;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.kisa-gundem-baslik{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    border-bottom:2px solid #eee;
+    padding-bottom:15px;
+    margin-bottom:15px;
+}
+
+.kisa-gundem-baslik > div{
+    font-size:20px;
+}
+
+.canli-nokta{
+    display:inline-block;
+    width:10px;
+    height:10px;
+    background:#d60000;
+    border-radius:50%;
+    margin-right:7px;
+    animation:gundemPulse 1.2s infinite;
+}
+
+@keyframes gundemPulse{
+
+    0%{
+        opacity:1;
+        transform:scale(1);
+    }
+
+    50%{
+        opacity:.4;
+        transform:scale(1.4);
+    }
+
+    100%{
+        opacity:1;
+        transform:scale(1);
+    }
+
+}
+
+#gundemDinleBtn{
+    border:0;
+    background:#d60000;
+    color:#fff;
+    padding:10px 16px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+#gundemDinleBtn:hover{
+    background:#a90000;
+}
+
+#gundemDurum{
+    color:#777;
+    margin-bottom:12px;
+}
+
+.gundem-haber{
+    padding:14px 0;
+    border-bottom:1px solid #eee;
+}
+
+.gundem-haber:last-child{
+    border-bottom:0;
+}
+
+.gundem-haber strong{
+    display:block;
+    font-size:16px;
+    line-height:1.4;
+}
+
+.gundem-haber p{
+    margin:6px 0 0;
+    color:#666;
+    font-size:14px;
+    line-height:1.5;
+}
+
+.gundem-haber a{
+    display:inline-block;
+    margin-top:7px;
+    color:#d60000;
+    font-size:13px;
+    font-weight:bold;
+}
+
+
+/* =========================================
    REKLAM
 ========================================= */
 
@@ -234,6 +340,20 @@ Digital Gündem | Türkiye'nin Dijital Rehberi
 
     .news-card img{
         height:180px;
+    }
+
+    .kisa-gundem{
+        margin:20px;
+        padding:16px;
+    }
+
+    .kisa-gundem-baslik{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    #gundemDinleBtn{
+        width:100%;
     }
 
 }
@@ -330,7 +450,6 @@ Köşe Yazarları çok yakında...
 </header>
 
 
-
 <!-- =========================================
      MANŞET
 ========================================= -->
@@ -348,7 +467,6 @@ Köşe Yazarları çok yakında...
 </section>
 
 
-
 <!-- =========================================
      ARAMA
 ========================================= -->
@@ -364,6 +482,39 @@ Köşe Yazarları çok yakında...
 </section>
 
 
+<!-- =========================================
+     30 SANİYEDE TÜRKİYE GÜNDEMİ
+========================================= -->
+
+<section class="kisa-gundem">
+
+    <div class="kisa-gundem-baslik">
+
+        <div>
+            <span class="canli-nokta"></span>
+            <strong>
+                30 SANİYEDE TÜRKİYE
+            </strong>
+        </div>
+
+        <button
+            id="gundemDinleBtn"
+            type="button"
+        >
+            🔊 Gündemi Dinle
+        </button>
+
+    </div>
+
+    <div id="gundemDurum">
+        🇹🇷 Türkiye gündemi yükleniyor...
+    </div>
+
+    <div id="gundemHaberleri">
+    </div>
+
+</section>
+
 
 <!-- =========================================
      ÖNE ÇIKAN HABERLER
@@ -374,7 +525,6 @@ Köşe Yazarları çok yakında...
 <h2>
 📰 Öne Çıkan Haberler
 </h2>
-
 
 <div
     class="news-grid"
@@ -390,7 +540,6 @@ Köşe Yazarları çok yakında...
 </section>
 
 
-
 <!-- =========================================
      REKLAMLAR
 ========================================= -->
@@ -402,7 +551,6 @@ Köşe Yazarları çok yakında...
 <h2>
 📢 Reklam Alanı
 </h2>
-
 
 <div id="reklamIcerik">
 
@@ -420,7 +568,6 @@ Reklam yükleniyor...
 </div>
 
 </section>
-
 
 
 <!-- =========================================
@@ -448,7 +595,6 @@ Tarafsız bakar, doğruyu yayınlar.
 </footer>
 
 
-
 <script>
 
 /* =========================================
@@ -459,7 +605,7 @@ const HABER_API = "/api/haberler";
 
 
 /* =========================================
-   HABERLERİ GETİR
+   HABERLER
 ========================================= */
 
 let tumHaberler = [];
@@ -477,7 +623,6 @@ async function haberleriGetir(){
             "mansetHaber"
         );
 
-
     try{
 
         const cevap =
@@ -489,10 +634,8 @@ async function haberleriGetir(){
                 }
             );
 
-
         const veri =
             await cevap.json();
-
 
         if(
             !cevap.ok ||
@@ -506,14 +649,12 @@ async function haberleriGetir(){
 
         }
 
-
         tumHaberler =
             Array.isArray(
                 veri.haberler
             )
             ? veri.haberler
             : [];
-
 
         if(
             tumHaberler.length === 0
@@ -525,7 +666,6 @@ async function haberleriGetir(){
                 </div>
             `;
 
-
             liste.innerHTML = `
                 <div class="bos-haber">
                     📰 Henüz yayınlanmış haber bulunmuyor.
@@ -536,38 +676,26 @@ async function haberleriGetir(){
 
         }
 
-
-        /* =========================
-           MANŞET
-        ========================= */
-
         const mansetHaber =
             tumHaberler[0];
-
 
         manset.innerHTML =
             mansetHTML(
                 mansetHaber
             );
 
-
-        /* =========================
-           HABER LİSTESİ
-        ========================= */
-
         haberleriListele(
             tumHaberler
         );
 
-
     }
+
     catch(error){
 
         console.error(
             "Haber API hatası:",
             error
         );
-
 
         manset.innerHTML = `
             <div class="api-hata">
@@ -584,7 +712,6 @@ async function haberleriGetir(){
 
             </div>
         `;
-
 
         liste.innerHTML = `
             <div class="api-hata">
@@ -605,7 +732,6 @@ async function haberleriGetir(){
 }
 
 
-
 /* =========================================
    MANŞET HTML
 ========================================= */
@@ -618,32 +744,25 @@ function mansetHTML(haber){
         ? haber.resim
         : "https://picsum.photos/1200/500";
 
-
     const baslik =
         haber.baslik ||
         "Başlıksız Haber";
-
 
     const ozet =
         haber.ozet ||
         "";
 
-
     const kategori =
         haber.kategori ||
         "Gündem";
-
 
     const tarih =
         haber.tarih ||
         "";
 
-
     return `
 
-        <article
-            class="headline-main"
-        >
+        <article class="headline-main">
 
             <img
                 src="${escapeHTML(resim)}"
@@ -653,23 +772,19 @@ function mansetHTML(haber){
                 "
             >
 
-
             <div class="headline-text">
 
                 <span class="etiket">
                     ${escapeHTML(kategori)}
                 </span>
 
-
                 <h2>
                     ${escapeHTML(baslik)}
                 </h2>
 
-
                 <p>
                     ${escapeHTML(ozet)}
                 </p>
-
 
                 ${
                     tarih
@@ -681,9 +796,10 @@ function mansetHTML(haber){
                     : ""
                 }
 
-
                 <a
-                    href="pages/haber.html?id=${encodeURIComponent(haber.id)}"
+                    href="pages/haber.html?id=${encodeURIComponent(
+                        haber.id
+                    )}"
                     class="btn"
                 >
                     Haberi Oku →
@@ -696,7 +812,6 @@ function mansetHTML(haber){
     `;
 
 }
-
 
 
 /* =========================================
@@ -712,7 +827,6 @@ function haberleriListele(
             "haberListesi"
         );
 
-
     if(
         !haberler.length
     ){
@@ -727,7 +841,6 @@ function haberleriListele(
 
     }
 
-
     liste.innerHTML =
         haberler
             .map(haber => {
@@ -737,7 +850,6 @@ function haberleriListele(
                     haber.resim.trim()
                     ? haber.resim
                     : "https://picsum.photos/600/350";
-
 
                 return `
 
@@ -756,7 +868,6 @@ function haberleriListele(
                             "
                         >
 
-
                         <div
                             class="news-card-content"
                         >
@@ -770,7 +881,6 @@ function haberleriListele(
 
                             </span>
 
-
                             <h3>
 
                                 ${escapeHTML(
@@ -780,7 +890,6 @@ function haberleriListele(
 
                             </h3>
 
-
                             <p>
 
                                 ${escapeHTML(
@@ -789,7 +898,6 @@ function haberleriListele(
                                 )}
 
                             </p>
-
 
                             <div class="haber-tarih">
 
@@ -804,9 +912,10 @@ function haberleriListele(
 
                             </div>
 
-
                             <a
-                                href="pages/haber.html?id=${encodeURIComponent(haber.id)}"
+                                href="pages/haber.html?id=${encodeURIComponent(
+                                    haber.id
+                                )}"
                             >
 
                                 Devamını Oku →
@@ -823,7 +932,6 @@ function haberleriListele(
             .join("");
 
 }
-
 
 
 /* =========================================
@@ -843,7 +951,6 @@ document
                     )
                     .trim();
 
-
             if(!arama){
 
                 haberleriListele(
@@ -853,7 +960,6 @@ document
                 return;
 
             }
-
 
             const filtre =
                 tumHaberler.filter(
@@ -874,7 +980,6 @@ document
                             "tr-TR"
                         );
 
-
                         return metin
                             .includes(
                                 arama
@@ -883,7 +988,6 @@ document
                     }
                 );
 
-
             haberleriListele(
                 filtre
             );
@@ -891,6 +995,194 @@ document
         }
     );
 
+
+/* =========================================
+   30 SANİYEDE TÜRKİYE GÜNDEMİ
+========================================= */
+
+let gundemHaberleri = [];
+
+
+async function gundemGetir(){
+
+    const durum =
+        document.getElementById(
+            "gundemDurum"
+        );
+
+    const alan =
+        document.getElementById(
+            "gundemHaberleri"
+        );
+
+    try{
+
+        const cevap =
+            await fetch(
+                "/api/gundem",
+                {
+                    method:"GET",
+                    cache:"no-store"
+                }
+            );
+
+        const veri =
+            await cevap.json();
+
+        if(
+            !cevap.ok ||
+            !veri.success
+        ){
+
+            throw new Error(
+                veri.error ||
+                "Gündem alınamadı."
+            );
+
+        }
+
+        gundemHaberleri =
+            Array.isArray(
+                veri.haberler
+            )
+            ? veri.haberler
+            : [];
+
+        if(
+            gundemHaberleri.length === 0
+        ){
+
+            durum.innerHTML =
+                "📰 Şu anda gündem haberi bulunamadı.";
+
+            alan.innerHTML = "";
+
+            return;
+
+        }
+
+        durum.innerHTML =
+            `✅ ${gundemHaberleri.length} güncel haber • Anadolu Ajansı`;
+
+        alan.innerHTML =
+            gundemHaberleri
+                .map(haber => `
+
+                    <article
+                        class="gundem-haber"
+                    >
+
+                        <strong>
+                            ${escapeHTML(
+                                haber.baslik
+                            )}
+                        </strong>
+
+                        <p>
+                            ${escapeHTML(
+                                haber.ozet || ""
+                            )}
+                        </p>
+
+                        <a
+                            href="${escapeHTML(
+                                haber.url
+                            )}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Anadolu Ajansı kaynağı →
+                        </a>
+
+                    </article>
+
+                `)
+                .join("");
+
+    }
+
+    catch(error){
+
+        console.error(
+            "Gündem API hatası:",
+            error
+        );
+
+        durum.innerHTML =
+            "❌ Türkiye gündemi yüklenemedi.";
+
+        alan.innerHTML = "";
+
+    }
+
+}
+
+
+/* =========================================
+   GÜNDEMİ SESLİ OKU
+========================================= */
+
+document
+    .getElementById(
+        "gundemDinleBtn"
+    )
+    .addEventListener(
+        "click",
+        function(){
+
+            if(
+                !gundemHaberleri.length
+            ){
+
+                alert(
+                    "Önce gündem haberlerinin yüklenmesini bekleyin."
+                );
+
+                return;
+
+            }
+
+            if(
+                !("speechSynthesis" in window)
+            ){
+
+                alert(
+                    "Cihazınız sesli okumayı desteklemiyor."
+                );
+
+                return;
+
+            }
+
+            speechSynthesis.cancel();
+
+            const metin =
+                "30 saniyede Türkiye gündemi. " +
+                gundemHaberleri
+                    .slice(0,5)
+                    .map(
+                        (haber,index) =>
+                            `${index + 1}. ` +
+                            `${haber.baslik}. ` +
+                            `${haber.ozet || ""}`
+                    )
+                    .join(" ");
+
+            const ses =
+                new SpeechSynthesisUtterance(
+                    metin
+                );
+
+            ses.lang = "tr-TR";
+            ses.rate = 1.05;
+            ses.pitch = 1;
+
+            speechSynthesis.speak(
+                ses
+            );
+
+        }
+    );
 
 
 /* =========================================
@@ -904,7 +1196,6 @@ async function reklamGetir(){
             "reklamIcerik"
         );
 
-
     try{
 
         const cevap =
@@ -916,10 +1207,8 @@ async function reklamGetir(){
                 }
             );
 
-
         const veri =
             await cevap.json();
-
 
         if(
             !cevap.ok ||
@@ -934,11 +1223,6 @@ async function reklamGetir(){
 
         }
 
-
-        /*
-         * Sadece ANA SAYFA reklamını göster.
-         */
-
         const reklam =
             veri.reklamlar.find(
                 r =>
@@ -947,7 +1231,6 @@ async function reklamGetir(){
             ) ||
             veri.reklamlar[0];
 
-
         if(!reklam){
 
             alan.innerHTML = "";
@@ -955,7 +1238,6 @@ async function reklamGetir(){
             return;
 
         }
-
 
         alan.innerHTML = `
 
@@ -981,7 +1263,6 @@ async function reklamGetir(){
                     `
                     : ""
                 }
-
 
                 ${
                     reklam.resim
@@ -1029,7 +1310,6 @@ async function reklamGetir(){
                     `
                 }
 
-
                 ${
                     reklam.link
                     ? "</a>"
@@ -1041,6 +1321,7 @@ async function reklamGetir(){
         `;
 
     }
+
     catch(error){
 
         console.error(
@@ -1053,7 +1334,6 @@ async function reklamGetir(){
     }
 
 }
-
 
 
 /* =========================================
@@ -1096,7 +1376,6 @@ function escapeHTML(
 }
 
 
-
 /* =========================================
    BAŞLAT
 ========================================= */
@@ -1106,6 +1385,8 @@ document.addEventListener(
     function(){
 
         haberleriGetir();
+
+        gundemGetir();
 
         reklamGetir();
 
