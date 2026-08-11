@@ -224,11 +224,7 @@ if (
       }
     }
 
-    haberler.sort((a, b) => {
-  return new Date(b.tarih) - new Date(a.tarih);
-});
-
-const sonHaberler = haberler.slice(0, 5);
+ const sonHaberler = haberler.slice(0, 5);   
 
 return Response.json({
   success: true,
