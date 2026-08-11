@@ -224,13 +224,18 @@ if (
       }
     }
 
-    return Response.json({
-      success: true,
-      kaynak: "Ücretsiz RSS",
-      toplam: haberler.length,
-      haberler: haberler.slice(0, 5)
-    });
+    haberler.sort((a, b) => {
+  return new Date(b.tarih) - new Date(a.tarih);
+});
 
+const sonHaberler = haberler.slice(0, 5);
+
+return Response.json({
+  success: true,
+  kaynak: "Ücretsiz RSS",
+  toplam: sonHaberler.length,
+  haberler: sonHaberler
+});
   } catch (error) {
 
     return Response.json({
