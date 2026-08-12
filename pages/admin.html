@@ -3,209 +3,600 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Digital Gündem | Yönetim Paneli</title>
+
 <link rel="stylesheet" href="../style.css">
+
+<style>
+/* =========================================
+   ADMIN DASHBOARD ÖZEL STİLLER
+========================================= */
+
+.admin-container {
+    min-height: calc(100vh - 100px);
+}
+
+.content {
+    color: #f8fafc;
+}
+
+/* Dashboard başlıkları */
+.content h2,
+.content h3 {
+    color: #ffffff;
+}
+
+.content p {
+    color: #cbd5e1;
+}
+
+/* En çok okunan */
+.en-cok-okunan {
+    margin-top: 30px;
+    background: #273449;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.15);
+}
+
+.en-cok-okunan h2 {
+    margin: 0 0 20px;
+    color: #ffffff;
+    font-size: 22px;
+}
+
+.okunan-liste {
+    display: flex;
+    flex-direction: column;
+}
+
+.okunan-haber {
+    padding: 16px 4px;
+    border-bottom: 1px solid rgba(255,255,255,.25);
+}
+
+.okunan-haber:last-child {
+    border-bottom: 0;
+}
+
+.okunan-baslik {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 7px;
+}
+
+.okunan-kategori {
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+.okunan-sayi {
+    float: right;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+/* İstatistikler */
+#istatistikler {
+    margin-top: 25px;
+    background: #273449;
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 22px;
+}
+
+#istatistikler h2 {
+    color: #ffffff;
+}
+
+#istatistikler p {
+    color: #cbd5e1;
+}
+
+#istatistikler table {
+    color: #ffffff;
+}
+
+#istatistikler th {
+    background: #1e293b;
+    color: #ffffff;
+}
+
+#istatistikler td {
+    color: #f8fafc;
+    border-bottom: 1px solid rgba(255,255,255,.18);
+}
+
+/* Mobil */
+@media (max-width: 700px) {
+
+    .en-cok-okunan,
+    #istatistikler {
+        padding: 16px;
+    }
+
+    .okunan-baslik {
+        font-size: 15px;
+    }
+}
+</style>
+
 </head>
 
 <body>
 
 <header class="admin-header">
 
-<div class="logo">
-<h1>📰 Digital Gündem</h1>
-<p>Profesyonel Yönetim Paneli</p>
-</div>
+    <div class="logo">
+        <h1>📰 Digital Gündem</h1>
+        <p>Profesyonel Yönetim Paneli</p>
+    </div>
 
-<div class="admin-user">
-👤 Yönetici
-<a href="../index.html" class="btn">Siteyi Gör</a>
-</div>
+    <div class="admin-user">
+        👤 Yönetici
+        <a href="../index.html" class="btn">
+            Siteyi Gör
+        </a>
+    </div>
 
 </header>
 
+
 <div class="admin-container">
+
+
+<!-- =========================================
+     SOL MENÜ
+========================================= -->
 
 <aside class="sidebar">
 
-<h3>Yönetim</h3>
+    <h3>Yönetim</h3>
 
-<ul>
+    <ul>
 
-<li><a href="#">🏠 Dashboard</a></li>
+        <li>
+            <a href="#">🏠 Dashboard</a>
+        </li>
 
-<li>
-  <a href="haberler.html">📰 Haberler</a>
-</li>
+        <li>
+            <a href="haberler.html">
+                📰 Haberler
+            </a>
+        </li>
 
-<li>
-  <a href="/pages/reklam.html">
-    📢 Özel Reklamlar
-  </a>
-</li>
-  
-<li><a href="#">📂 Kategoriler</a></li>
+        <li>
+            <a href="/pages/reklam.html">
+                📢 Özel Reklamlar
+            </a>
+        </li>
 
-<li><a href="#">🏢 Firma Rehberi</a></li>
+        <li>
+            <a href="#">
+                📂 Kategoriler
+            </a>
+        </li>
 
-<li><a href="#">✍️ Köşe Yazarları</a></li>
+        <li>
+            <a href="#">
+                🏢 Firma Rehberi
+            </a>
+        </li>
 
-<li><a href="#">🎥 Video Haberleri</a></li>
+        <li>
+            <a href="#">
+                ✍️ Köşe Yazarları
+            </a>
+        </li>
 
-<li><a href="#">📷 Foto Galeri</a></li>
+        <li>
+            <a href="#">
+                🎥 Video Haberleri
+            </a>
+        </li>
 
-<li><a href="#">💬 Yorumlar</a></li>
+        <li>
+            <a href="#">
+                📷 Foto Galeri
+            </a>
+        </li>
 
-<li><a href="#">👥 Kullanıcılar</a></li>
+        <li>
+            <a href="#">
+                💬 Yorumlar
+            </a>
+        </li>
 
-<li><a href="#">📊 İstatistikler</a></li>
-<section style="margin-top:25px;">
+        <li>
+            <a href="#">
+                👥 Kullanıcılar
+            </a>
+        </li>
 
-<h2>🔥 En Çok Okunan 5 Haber</h2>
+        <li>
+            <a href="#">
+                📊 İstatistikler
+            </a>
+        </li>
 
-<div id="enCokOkunanHaberler">
-    En çok okunan haberler yükleniyor...
-</div>
+        <li>
+            <a href="#">
+                ⚙️ Site Ayarları
+            </a>
+        </li>
 
-</section>
-  
-<li><a href="#">⚙️ Site Ayarları</a></li>
+        <li>
+            <a href="../index.html">
+                🚪 Siteye Dön
+            </a>
+        </li>
 
-<li><a href="../index.html">🚪 Siteye Dön</a></li>
-
-</ul>
+    </ul>
 
 </aside>
 
+
+<!-- =========================================
+     ANA İÇERİK
+========================================= -->
+
 <main class="content">
 
-<h2>📊 Dashboard</h2>
+    <h2>📊 Dashboard</h2>
 
-<div class="dashboard-grid">
 
-<a href="haberler.html" class="dash-link">
-<div class="dash-card">
-<h3>📰 Haber</h3>
-<h1 id="haberSayisi">0</h1>
-<p>Toplam Haber</p>
-</div>
-</a>
-<div class="dash-card">
-<h3>⭐ Manşet</h3>
-<h1>0</h1>
-<p>Öne Çıkan Haber</p>
-</div>
+    <!-- =====================================
+         DASHBOARD KARTLARI
+    ====================================== -->
 
-<div class="dash-card">
-<h3>🏢 Firmalar</h3>
-<h1>0</h1>
-<p>Kayıtlı Firma</p>
-</div>
+    <div class="dashboard-grid">
 
-<div class="dash-card">
-<h3>✍️ Yazarlar</h3>
-<h1>0</h1>
-<p>Köşe Yazarı</p>
-</div>
 
-<div class="dash-card">
-<h3>🎥 Videolar</h3>
-<h1>0</h1>
-<p>Video Haber</p>
-</div>
-<div class="dash-card">
-<h3>👁️ Okunma</h3>
-<h1 id="toplamOkunma">0</h1>
-<p>Toplam Haber Okunması</p>
-</div>
-  
-<div class="dash-card">
-<h3>👥 Bugünkü Ziyaretçi</h3>
-<h1 id="bugunkuZiyaretci">0</h1>
-<p>Bugünkü ziyaret</p>
-</div>
+        <a href="haberler.html" class="dash-link">
 
-<div class="dash-card">
-<h3>🌐 Toplam Ziyaretçi</h3>
-<h1 id="toplamZiyaretci">0</h1>
-<p>Toplam ziyaret</p>
-</div>
-<div class="dash-card">
-<h3>👁️ Okunma</h3>
-<h1 id="toplamOkunma">0</h1>
-<p>Toplam Haber Okunması</p>
-</div>
-  
-</div>
-  <section class="admin-form" id="istatistikler">
-<li><a href="#">📊 İstatistikler</a></li>
+            <div class="dash-card">
 
-<p>Haberlerin okunma sayılarını buradan takip edebilirsin.</p>
+                <h3>📰 Haber</h3>
 
-<div id="istatistikDurum">
-İstatistikler yükleniyor...
-</div>
+                <h1 id="haberSayisi">
+                    0
+                </h1>
 
-<div style="overflow-x:auto;">
+                <p>
+                    Toplam Haber
+                </p>
 
-<table style="
-width:100%;
-border-collapse:collapse;
-margin-top:20px;
-">
+            </div>
 
-<thead>
-<tr>
-<th style="padding:12px;text-align:left;">#</th>
-<th style="padding:12px;text-align:left;">Haber</th>
-<th style="padding:12px;text-align:left;">Kategori</th>
-<th style="padding:12px;text-align:center;">Okunma</th>
-</tr>
-</thead>
+        </a>
 
-<tbody id="istatistikTablo">
-</tbody>
 
-</table>
+        <div class="dash-card">
 
-</div>
-<h2>📰 Yeni Haber Ekle</h2>
+            <h3>⭐ Manşet</h3>
 
-<form id="haberForm">
+            <h1>
+                0
+            </h1>
 
-<input type="text" id="baslik" placeholder="Haber Başlığı" required>
+            <p>
+                Öne Çıkan Haber
+            </p>
 
-<select id="kategori">
-<option>Gündem</option>
-<option>Son Dakika</option>
-<option>Ekonomi</option>
-<option>Spor</option>
-<option>Teknoloji</option>
-<option>Sağlık</option>
-</select>
+        </div>
 
-<textarea id="ozet" rows="3" placeholder="Kısa Haber Özeti"></textarea>
 
-<textarea id="detay" rows="8" placeholder="Haber Detayı"></textarea>
+        <div class="dash-card">
 
-<label>📷 Haber Fotoğrafı</label>
-<input type="file" id="haberResim" accept="image/*">
+            <h3>🏢 Firmalar</h3>
 
-<label>
-<input type="checkbox" id="manset">
-⭐ Manşete Çıkar
-</label>
+            <h1>
+                0
+            </h1>
 
-<button type="button">💾 Taslak Kaydet</button>
+            <p>
+                Kayıtlı Firma
+            </p>
 
-<button type="submit">📰 Haberi Yayınla</button>
+        </div>
 
-</form>
 
-</section>
+        <div class="dash-card">
+
+            <h3>✍️ Yazarlar</h3>
+
+            <h1>
+                0
+            </h1>
+
+            <p>
+                Köşe Yazarı
+            </p>
+
+        </div>
+
+
+        <div class="dash-card">
+
+            <h3>🎥 Videolar</h3>
+
+            <h1>
+                0
+            </h1>
+
+            <p>
+                Video Haber
+            </p>
+
+        </div>
+
+
+        <div class="dash-card">
+
+            <h3>👁️ Okunma</h3>
+
+            <h1 id="toplamOkunma">
+                0
+            </h1>
+
+            <p>
+                Toplam Haber Okunması
+            </p>
+
+        </div>
+
+
+        <div class="dash-card">
+
+            <h3>👥 Bugünkü Ziyaretçi</h3>
+
+            <h1 id="bugunkuZiyaretci">
+                0
+            </h1>
+
+            <p>
+                Bugünkü ziyaret
+            </p>
+
+        </div>
+
+
+        <div class="dash-card">
+
+            <h3>🌐 Toplam Ziyaretçi</h3>
+
+            <h1 id="toplamZiyaretci">
+                0
+            </h1>
+
+            <p>
+                Toplam ziyaret
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================
+         EN ÇOK OKUNAN 5 HABER
+    ====================================== -->
+
+    <section class="en-cok-okunan">
+
+        <h2>
+            🔥 En Çok Okunan 5 Haber
+        </h2>
+
+        <div
+            id="enCokOkunanHaberler"
+            class="okunan-liste"
+        >
+
+            <div class="okunan-haber">
+
+                <div class="okunan-baslik">
+                    En çok okunan haberler yükleniyor...
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================
+         İSTATİSTİKLER
+    ====================================== -->
+
+    <section
+        class="admin-form"
+        id="istatistikler"
+    >
+
+        <h2>
+            📊 İstatistikler
+        </h2>
+
+        <p>
+            Haberlerin okunma sayılarını buradan takip edebilirsin.
+        </p>
+
+
+        <div id="istatistikDurum">
+            İstatistikler yükleniyor...
+        </div>
+
+
+        <div style="overflow-x:auto;">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th
+                            style="
+                            padding:12px;
+                            text-align:left;
+                            "
+                        >
+                            #
+                        </th>
+
+                        <th
+                            style="
+                            padding:12px;
+                            text-align:left;
+                            "
+                        >
+                            Haber
+                        </th>
+
+                        <th
+                            style="
+                            padding:12px;
+                            text-align:left;
+                            "
+                        >
+                            Kategori
+                        </th>
+
+                        <th
+                            style="
+                            padding:12px;
+                            text-align:center;
+                            "
+                        >
+                            Okunma
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="istatistikTablo">
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- =================================
+             YENİ HABER
+        ================================== -->
+
+        <h2 style="margin-top:35px;">
+            📰 Yeni Haber Ekle
+        </h2>
+
+
+        <form id="haberForm">
+
+
+            <input
+                type="text"
+                id="baslik"
+                placeholder="Haber Başlığı"
+                required
+            >
+
+
+            <select id="kategori">
+
+                <option>
+                    Gündem
+                </option>
+
+                <option>
+                    Son Dakika
+                </option>
+
+                <option>
+                    Ekonomi
+                </option>
+
+                <option>
+                    Spor
+                </option>
+
+                <option>
+                    Teknoloji
+                </option>
+
+                <option>
+                    Sağlık
+                </option>
+
+            </select>
+
+
+            <textarea
+                id="ozet"
+                rows="3"
+                placeholder="Kısa Haber Özeti"
+            ></textarea>
+
+
+            <textarea
+                id="detay"
+                rows="8"
+                placeholder="Haber Detayı"
+            ></textarea>
+
+
+            <label>
+                📷 Haber Fotoğrafı
+            </label>
+
+
+            <input
+                type="file"
+                id="haberResim"
+                accept="image/*"
+            >
+
+
+            <label>
+
+                <input
+                    type="checkbox"
+                    id="manset"
+                >
+
+                ⭐ Manşete Çıkar
+
+            </label>
+
+
+            <button type="button">
+                💾 Taslak Kaydet
+            </button>
+
+
+            <button type="submit">
+                📰 Haberi Yayınla
+            </button>
+
+
+        </form>
+
+    </section>
+
 
 </main>
 
 </div>
+
 
 <script src="../admin.js"></script>
 
