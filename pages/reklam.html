@@ -4,266 +4,368 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Özel Reklam Yönetimi | Digital Gündem</title>
+<title>Reklam Ver | Digital Gündem</title>
+
+<meta name="description" content="Digital Gündem'de reklam verin. Markanızı, firmanızı ve işletmenizi Türkiye'nin dijital gündeminde tanıtın.">
 
 <style>
-* {
-    box-sizing: border-box;
+*{
+    box-sizing:border-box;
 }
 
-body {
-    margin: 0;
-    background: #f3f4f6;
-    font-family: Arial, Helvetica, sans-serif;
-    color: #111827;
+html{
+    scroll-behavior:smooth;
 }
 
-.header {
-    background: #111827;
-    color: white;
-    padding: 18px 20px;
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f6f9;
+    color:#111827;
 }
 
-.header-inner {
-    max-width: 1100px;
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
+.header{
+    background:linear-gradient(135deg,#111827,#1f2937);
+    color:white;
+    padding:18px 20px;
+    position:sticky;
+    top:0;
+    z-index:1000;
+    box-shadow:0 3px 15px rgba(0,0,0,.15);
 }
 
-.logo {
-    font-size: 21px;
-    font-weight: bold;
+.header-inner{
+    max-width:1150px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
 }
 
-.geri {
-    color: white;
-    background: #e50914;
-    text-decoration: none;
-    padding: 9px 14px;
-    border-radius: 7px;
+.logo{
+    font-size:23px;
+    font-weight:800;
 }
 
-.container {
-    max-width: 1100px;
-    margin: 25px auto;
-    padding: 0 15px;
+.logo span{
+    color:#e50914;
 }
 
-.baslik {
-    margin-bottom: 20px;
+.geri{
+    color:white;
+    background:#e50914;
+    text-decoration:none;
+    padding:10px 16px;
+    border-radius:8px;
+    font-weight:bold;
 }
 
-.baslik h1 {
-    margin: 0 0 5px;
-    font-size: 28px;
+.hero{
+    background:
+        linear-gradient(rgba(17,24,39,.88),rgba(17,24,39,.92)),
+        radial-gradient(circle at top right,#e50914,transparent 40%);
+    color:white;
+    padding:65px 20px;
 }
 
-.baslik p {
-    margin: 0;
-    color: #6b7280;
+.hero-inner{
+    max-width:1100px;
+    margin:auto;
+    text-align:center;
 }
 
-.card {
-    background: white;
-    border-radius: 12px;
-    padding: 22px;
-    margin-bottom: 20px;
-    box-shadow: 0 3px 15px rgba(0,0,0,.06);
+.hero h1{
+    margin:0 0 15px;
+    font-size:42px;
 }
 
-.card h2 {
-    margin-top: 0;
-    font-size: 20px;
+.hero h1 span{
+    color:#ff303b;
 }
 
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
+.hero p{
+    max-width:750px;
+    margin:0 auto;
+    font-size:18px;
+    line-height:1.7;
+    color:#e5e7eb;
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
+.hero-button{
+    display:inline-block;
+    margin-top:25px;
+    background:#e50914;
+    color:white;
+    padding:14px 25px;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:bold;
 }
 
-.form-group.full {
-    grid-column: 1 / -1;
+.container{
+    max-width:1100px;
+    margin:35px auto;
+    padding:0 15px;
 }
 
-label {
-    font-weight: bold;
-    margin-bottom: 6px;
-    font-size: 14px;
+.baslik{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.baslik h2{
+    font-size:30px;
+    margin:0 0 8px;
+}
+
+.baslik p{
+    color:#6b7280;
+    margin:0;
+}
+
+.reklam-turleri{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+    margin-bottom:35px;
+}
+
+.tur{
+    background:white;
+    border-radius:14px;
+    padding:25px 20px;
+    text-align:center;
+    box-shadow:0 4px 18px rgba(0,0,0,.06);
+    border:1px solid #e5e7eb;
+}
+
+.tur-icon{
+    font-size:40px;
+    margin-bottom:10px;
+}
+
+.tur h3{
+    margin:8px 0;
+}
+
+.tur p{
+    color:#6b7280;
+    line-height:1.6;
+    font-size:14px;
+}
+
+.form-card{
+    background:white;
+    border-radius:15px;
+    padding:30px;
+    box-shadow:0 5px 25px rgba(0,0,0,.08);
+    margin-bottom:35px;
+}
+
+.form-card h2{
+    margin-top:0;
+    font-size:25px;
+}
+
+.form-card .aciklama{
+    color:#6b7280;
+    margin-bottom:25px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:17px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+label{
+    font-weight:bold;
+    font-size:14px;
+    margin-bottom:7px;
 }
 
 input,
-select {
-    width: 100%;
-    padding: 11px;
-    border: 1px solid #d1d5db;
-    border-radius: 7px;
-    font-size: 15px;
+select,
+textarea{
+    width:100%;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    padding:12px;
+    font-size:15px;
+    font-family:inherit;
+    background:white;
+}
+
+textarea{
+    min-height:130px;
+    resize:vertical;
 }
 
 input:focus,
-select:focus {
-    outline: none;
-    border-color: #e50914;
+select:focus,
+textarea:focus{
+    outline:none;
+    border-color:#e50914;
+    box-shadow:0 0 0 3px rgba(229,9,20,.08);
 }
 
-.buttons {
-    margin-top: 20px;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+.checkbox{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    margin-top:18px;
+    color:#4b5563;
+    font-size:13px;
+    line-height:1.5;
 }
 
-button {
-    border: 0;
-    border-radius: 7px;
-    padding: 11px 17px;
-    cursor: pointer;
-    font-weight: bold;
+.checkbox input{
+    width:auto;
+    margin-top:3px;
 }
 
-.btn-kaydet {
-    background: #e50914;
-    color: white;
+.gonder{
+    width:100%;
+    margin-top:20px;
+    padding:15px;
+    border:0;
+    border-radius:9px;
+    background:#e50914;
+    color:white;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
 }
 
-.btn-temizle {
-    background: #e5e7eb;
-    color: #111827;
+.gonder:hover{
+    background:#c80710;
 }
 
-.btn-duzenle {
-    background: #2563eb;
-    color: white;
+.gonder:disabled{
+    opacity:.6;
+    cursor:not-allowed;
 }
 
-.btn-pasif {
-    background: #f59e0b;
-    color: white;
+.mesaj{
+    display:none;
+    padding:15px;
+    border-radius:8px;
+    margin-bottom:20px;
+    line-height:1.5;
 }
 
-.btn-sil {
-    background: #dc2626;
-    color: white;
+.mesaj.basari{
+    display:block;
+    background:#dcfce7;
+    color:#166534;
+    border:1px solid #bbf7d0;
 }
 
-.mesaj {
-    display: none;
-    padding: 12px;
-    border-radius: 7px;
-    margin-bottom: 15px;
+.mesaj.hata{
+    display:block;
+    background:#fee2e2;
+    color:#991b1b;
+    border:1px solid #fecaca;
 }
 
-.mesaj.basari {
-    display: block;
-    background: #dcfce7;
-    color: #166534;
+.nasil{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+    margin-bottom:35px;
 }
 
-.mesaj.hata {
-    display: block;
-    background: #fee2e2;
-    color: #991b1b;
+.adim{
+    background:white;
+    padding:25px;
+    border-radius:13px;
+    box-shadow:0 3px 15px rgba(0,0,0,.05);
 }
 
-.reklam-liste {
-    display: grid;
-    gap: 15px;
+.adim-no{
+    width:40px;
+    height:40px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:#e50914;
+    color:white;
+    font-weight:bold;
+    margin-bottom:12px;
 }
 
-.reklam {
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
-    padding: 16px;
+.adim h3{
+    margin:5px 0 8px;
 }
 
-.reklam-ust {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 15px;
+.adim p{
+    color:#6b7280;
+    font-size:14px;
+    line-height:1.6;
 }
 
-.reklam h3 {
-    margin: 0 0 7px;
+.guven{
+    background:#111827;
+    color:white;
+    border-radius:15px;
+    padding:30px;
+    text-align:center;
+    margin-bottom:35px;
 }
 
-.reklam-bilgi {
-    color: #6b7280;
-    font-size: 14px;
-    line-height: 1.7;
+.guven h2{
+    margin-top:0;
 }
 
-.reklam-resim {
-    width: 180px;
-    max-height: 90px;
-    object-fit: contain;
-    border-radius: 6px;
-    border: 1px solid #eee;
-    margin-top: 10px;
+.guven p{
+    color:#d1d5db;
+    line-height:1.7;
 }
 
-.durum {
-    display: inline-block;
-    padding: 5px 9px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: bold;
+.footer{
+    background:#111827;
+    color:#9ca3af;
+    padding:25px 20px;
+    text-align:center;
+    font-size:13px;
 }
 
-.durum-aktif {
-    background: #dcfce7;
-    color: #166534;
-}
+@media(max-width:800px){
 
-.durum-pasif {
-    background: #fee2e2;
-    color: #991b1b;
-}
-
-.reklam-islem {
-    margin-top: 12px;
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-.bos {
-    text-align: center;
-    padding: 30px;
-    color: #777;
-}
-
-@media (max-width: 700px) {
-
-    .header-inner {
-        flex-direction: column;
-        align-items: flex-start;
+    .hero h1{
+        font-size:32px;
     }
 
-    .form-grid {
-        grid-template-columns: 1fr;
+    .reklam-turleri,
+    .nasil{
+        grid-template-columns:1fr;
     }
 
-    .form-group.full {
-        grid-column: auto;
+    .form-grid{
+        grid-template-columns:1fr;
     }
 
-    .reklam-ust {
-        flex-direction: column;
+    .form-group.full{
+        grid-column:auto;
     }
 
-    .reklam-resim {
-        width: 100%;
-        max-width: 300px;
+    .header-inner{
+        flex-direction:column;
+    }
+
+    .form-card{
+        padding:20px;
     }
 }
 </style>
@@ -276,11 +378,11 @@ button {
     <div class="header-inner">
 
         <div class="logo">
-            📢 Digital Gündem — Özel Reklam
+            Digital <span>Gündem</span>
         </div>
 
-        <a class="geri" href="/pages/admin.html">
-            ← Yönetim Paneli
+        <a href="/" class="geri">
+            ← Ana Sayfa
         </a>
 
     </div>
@@ -288,182 +390,101 @@ button {
 </header>
 
 
-<main class="container">
+<section class="hero">
 
-    <div class="baslik">
+    <div class="hero-inner">
 
-        <h1>📢 Özel Reklam Yönetimi</h1>
+        <h1>
+            📢 <span>REKLAM VER</span>
+        </h1>
 
         <p>
-            Talep eden firmaların reklamlarını buradan yönetebilirsiniz.
+            Markanızı, firmanızı, işletmenizi veya hizmetinizi
+            Digital Gündem'in geniş dijital yayın ağı üzerinden
+            hedef kitlenizle buluşturun.
         </p>
+
+        <a href="#basvuru" class="hero-button">
+            Reklam Başvurusu Yap
+        </a>
 
     </div>
 
-
-    <div id="mesaj" class="mesaj"></div>
-
-
-    <!-- =========================
-         REKLAM FORMU
-    ========================== -->
-
-    <section class="card">
-
-        <h2 id="formBaslik">
-            ➕ Yeni Reklam Ekle
-        </h2>
-
-        <input type="hidden" id="reklamId">
+</section>
 
 
-        <div class="form-grid">
-
-            <div class="form-group">
-
-                <label for="firmaAdi">
-                    Firma / Reklamveren
-                </label>
-
-                <input
-                    type="text"
-                    id="firmaAdi"
-                    placeholder="Örn: Cide Belediyesi"
-                >
-
-            </div>
+<main class="container">
 
 
-            <div class="form-group">
+    <section>
 
-                <label for="konum">
-                    Reklam Konumu
-                </label>
+        <div class="baslik">
 
-                <select id="konum">
+            <h2>
+                Reklam Alanlarımız
+            </h2>
 
-                    <option value="anasayfa">
-                        Ana Sayfa
-                    </option>
-
-                    <option value="haberler">
-                        Haberler
-                    </option>
-
-                    <option value="haber-detay">
-                        Haber Detay
-                    </option>
-
-                    <option value="ust">
-                        Üst Alan
-                    </option>
-
-                    <option value="yan">
-                        Yan Alan
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div class="form-group full">
-
-                <label for="resim">
-                    Reklam Görseli
-                </label>
-
-                <input
-                    type="text"
-                    id="resim"
-                    placeholder="Görsel URL'si"
-                >
-
-            </div>
-
-
-            <div class="form-group full">
-
-                <label for="link">
-                    Tıklama Bağlantısı
-                </label>
-
-                <input
-                    type="url"
-                    id="link"
-                    placeholder="https://..."
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label for="baslangic">
-                    Başlangıç Tarihi
-                </label>
-
-                <input
-                    type="datetime-local"
-                    id="baslangic"
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label for="bitis">
-                    Bitiş Tarihi
-                </label>
-
-                <input
-                    type="datetime-local"
-                    id="bitis"
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label for="durum">
-                    Durum
-                </label>
-
-                <select id="durum">
-
-                    <option value="aktif">
-                        🟢 Aktif
-                    </option>
-
-                    <option value="pasif">
-                        🔴 Pasif
-                    </option>
-
-                </select>
-
-            </div>
+            <p>
+                İşletmenize uygun reklam alanını seçin.
+            </p>
 
         </div>
 
 
-        <div class="buttons">
+        <div class="reklam-turleri">
 
-            <button
-                class="btn-kaydet"
-                onclick="reklamKaydet()"
-            >
-                💾 Reklamı Kaydet
-            </button>
+            <div class="tur">
+
+                <div class="tur-icon">
+                    🏠
+                </div>
+
+                <h3>
+                    Ana Sayfa
+                </h3>
+
+                <p>
+                    Digital Gündem ana sayfasında
+                    markanızın görünürlüğünü artırın.
+                </p>
+
+            </div>
 
 
-            <button
-                class="btn-temizle"
-                onclick="formTemizle()"
-            >
-                Temizle
-            </button>
+            <div class="tur">
+
+                <div class="tur-icon">
+                    📰
+                </div>
+
+                <h3>
+                    Haber Sayfaları
+                </h3>
+
+                <p>
+                    Haber içerikleri içerisinde ve
+                    haber listelerinde reklamınızı yayınlayın.
+                </p>
+
+            </div>
+
+
+            <div class="tur">
+
+                <div class="tur-icon">
+                    📱
+                </div>
+
+                <h3>
+                    Dijital Banner
+                </h3>
+
+                <p>
+                    Görsel banner reklamlarla
+                    ziyaretçilerin dikkatini doğrudan çekin.
+                </p>
+
+            </div>
 
         </div>
 
@@ -471,26 +492,373 @@ button {
 
 
     <!-- =========================
-         REKLAM LİSTESİ
+         BAŞVURU FORMU
     ========================== -->
 
-    <section class="card">
+    <section
+        class="form-card"
+        id="basvuru"
+    >
 
         <h2>
-            📋 Reklamlar
+            📢 Reklam Başvuru Formu
         </h2>
 
-        <div id="reklamListe" class="reklam-liste">
+        <p class="aciklama">
+            Bilgilerinizi eksiksiz doldurun.
+            Reklam ekibimiz başvurunuzu değerlendirdikten
+            sonra sizinle iletişime geçecektir.
+        </p>
 
-            <div class="bos">
-                Reklamlar yükleniyor...
+
+        <div id="mesaj" class="mesaj"></div>
+
+
+        <form id="reklamForm">
+
+
+            <div class="form-grid">
+
+
+                <div class="form-group">
+
+                    <label for="firma">
+                        Firma / Marka Adı *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="firma"
+                        name="firma"
+                        placeholder="Örn: ABC Gıda"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="yetkili">
+                        Yetkili Ad Soyad *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="yetkili"
+                        name="yetkili"
+                        placeholder="Ad Soyad"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="telefon">
+                        Telefon *
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="telefon"
+                        name="telefon"
+                        placeholder="05XX XXX XX XX"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="email">
+                        E-posta *
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="ornek@email.com"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="web">
+                        Web Sitesi
+                    </label>
+
+                    <input
+                        type="url"
+                        id="web"
+                        name="web"
+                        placeholder="https://www.firmaniz.com"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="reklamTuru">
+                        Reklam Türü *
+                    </label>
+
+                    <select
+                        id="reklamTuru"
+                        name="reklam_turu"
+                        required
+                    >
+
+                        <option value="">
+                            Seçiniz
+                        </option>
+
+                        <option value="Ana Sayfa">
+                            Ana Sayfa Reklamı
+                        </option>
+
+                        <option value="Haberler">
+                            Haberler Sayfası
+                        </option>
+
+                        <option value="Haber Detay">
+                            Haber Detay Reklamı
+                        </option>
+
+                        <option value="Üst Alan">
+                            Üst Banner
+                        </option>
+
+                        <option value="Yan Alan">
+                            Yan Banner
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="baslangic">
+                        İstenen Başlangıç Tarihi
+                    </label>
+
+                    <input
+                        type="date"
+                        id="baslangic"
+                        name="baslangic"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="bitis">
+                        İstenen Bitiş Tarihi
+                    </label>
+
+                    <input
+                        type="date"
+                        id="bitis"
+                        name="bitis"
+                    >
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label for="gorsel">
+                        Reklam Görseli URL'si
+                    </label>
+
+                    <input
+                        type="url"
+                        id="gorsel"
+                        name="gorsel"
+                        placeholder="https://..."
+                    >
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label for="link">
+                        Reklam Tıklama Bağlantısı
+                    </label>
+
+                    <input
+                        type="url"
+                        id="link"
+                        name="link"
+                        placeholder="https://..."
+                    >
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label for="aciklama">
+                        Reklam / Firma Açıklaması
+                    </label>
+
+                    <textarea
+                        id="aciklama"
+                        name="aciklama"
+                        placeholder="Reklamınız hakkında kısa bilgi yazabilirsiniz."
+                    ></textarea>
+
+                </div>
+
             </div>
+
+
+            <label class="checkbox">
+
+                <input
+                    type="checkbox"
+                    id="onay"
+                    required
+                >
+
+                <span>
+                    Gönderdiğim bilgilerin reklam başvurumun
+                    değerlendirilmesi amacıyla Digital Gündem
+                    tarafından kullanılmasını kabul ediyorum.
+                </span>
+
+            </label>
+
+
+            <button
+                type="submit"
+                class="gonder"
+                id="gonderBtn"
+            >
+                📢 REKLAM BAŞVURUSU GÖNDER
+            </button>
+
+
+        </form>
+
+    </section>
+
+
+    <!-- =========================
+         NASIL ÇALIŞIR
+    ========================== -->
+
+    <section>
+
+        <div class="baslik">
+
+            <h2>
+                Nasıl Çalışır?
+            </h2>
+
+            <p>
+                Reklam sürecimiz üç basit adımdan oluşur.
+            </p>
+
+        </div>
+
+
+        <div class="nasil">
+
+
+            <div class="adim">
+
+                <div class="adim-no">
+                    1
+                </div>
+
+                <h3>
+                    Başvurunuzu Gönderin
+                </h3>
+
+                <p>
+                    Formu doldurarak reklam talebinizi
+                    Digital Gündem'e iletin.
+                </p>
+
+            </div>
+
+
+            <div class="adim">
+
+                <div class="adim-no">
+                    2
+                </div>
+
+                <h3>
+                    Sizinle İletişime Geçelim
+                </h3>
+
+                <p>
+                    Reklam ekibimiz talebinizi inceleyerek
+                    sizinle iletişime geçer.
+                </p>
+
+            </div>
+
+
+            <div class="adim">
+
+                <div class="adim-no">
+                    3
+                </div>
+
+                <h3>
+                    Reklamınız Yayında
+                </h3>
+
+                <p>
+                    Onaylanan reklamınız belirlenen
+                    tarih ve konumda yayınlanır.
+                </p>
+
+            </div>
+
 
         </div>
 
     </section>
 
+
+    <section class="guven">
+
+        <h2>
+            Digital Gündem'de Markanızı Öne Çıkarın
+        </h2>
+
+        <p>
+            Türkiye'nin dijital gündeminde yerinizi alın.
+            Firmanızı, markanızı ve hizmetlerinizi
+            Digital Gündem ziyaretçileriyle buluşturun.
+        </p>
+
+    </section>
+
+
 </main>
+
+
+<footer class="footer">
+
+    © 2026 Digital Gündem — Türkiye'nin Dijital Rehberi
+
+</footer>
 
 
 <script>
@@ -498,200 +866,56 @@ button {
 const API = "/api";
 
 
-document.addEventListener(
-    "DOMContentLoaded",
-    reklamlarGetir
+const form =
+    document.getElementById("reklamForm");
+
+const mesaj =
+    document.getElementById("mesaj");
+
+const gonderBtn =
+    document.getElementById("gonderBtn");
+
+
+form.addEventListener(
+    "submit",
+    reklamBasvurusu
 );
 
 
 /* =========================
-   REKLAMLARI GETİR
+   REKLAM BAŞVURUSU
 ========================= */
 
-async function reklamlarGetir() {
+async function reklamBasvurusu(event){
 
-    const liste =
-        document.getElementById("reklamListe");
-
-    try {
-
-        const cevap =
-            await fetch(API + "/reklamlar");
-
-        const veri =
-            await cevap.json();
-
-        if (!cevap.ok || !veri.success) {
-
-            throw new Error(
-                veri.error ||
-                "Reklamlar alınamadı."
-            );
-
-        }
-
-        if (
-            !veri.reklamlar ||
-            veri.reklamlar.length === 0
-        ) {
-
-            liste.innerHTML = `
-                <div class="bos">
-                    📢 Henüz reklam bulunmuyor.
-                </div>
-            `;
-
-            return;
-        }
+    event.preventDefault();
 
 
-        liste.innerHTML =
-            veri.reklamlar
-                .map(reklamHTML)
-                .join("");
+    gonderBtn.disabled = true;
 
+    gonderBtn.textContent =
+        "⏳ Başvurunuz gönderiliyor...";
 
-    } catch (error) {
-
-        liste.innerHTML = `
-            <div class="bos">
-                ❌ ${escapeHTML(error.message)}
-            </div>
-        `;
-
-    }
-
-}
-
-
-/* =========================
-   REKLAM HTML
-========================= */
-
-function reklamHTML(reklam) {
-
-    const resim =
-        reklam.resim
-        ? `
-            <img
-                class="reklam-resim"
-                src="${escapeHTML(reklam.resim)}"
-                alt="${escapeHTML(reklam.firma_adi)}"
-                onerror="this.style.display='none'"
-            >
-          `
-        : "";
-
-
-    const durumClass =
-        reklam.durum === "aktif"
-        ? "durum-aktif"
-        : "durum-pasif";
-
-
-    return `
-
-        <div class="reklam">
-
-            <div class="reklam-ust">
-
-                <div>
-
-                    <h3>
-                        ${escapeHTML(reklam.firma_adi)}
-                    </h3>
-
-                    <span class="durum ${durumClass}">
-                        ${reklam.durum === "aktif"
-                            ? "🟢 Aktif"
-                            : "🔴 Pasif"}
-                    </span>
-
-                    <div class="reklam-bilgi">
-
-                        📍 Konum:
-                        ${escapeHTML(reklam.konum)}
-
-                        <br>
-
-                        📅 Başlangıç:
-                        ${escapeHTML(reklam.baslangic)}
-
-                        <br>
-
-                        📅 Bitiş:
-                        ${escapeHTML(reklam.bitis)}
-
-                    </div>
-
-                    ${resim}
-
-                </div>
-
-            </div>
-
-
-            <div class="reklam-islem">
-
-                <button
-                    class="btn-duzenle"
-                    onclick="reklamDuzenle(${reklam.id})"
-                >
-                    ✏️ Düzenle
-                </button>
-
-
-                <button
-                    class="btn-pasif"
-                    onclick="durumDegistir(
-                        ${reklam.id},
-                        '${reklam.durum}'
-                    )"
-                >
-                    ${reklam.durum === "aktif"
-                        ? "⏸️ Pasif Yap"
-                        : "▶️ Aktif Yap"}
-                </button>
-
-
-                <button
-                    class="btn-sil"
-                    onclick="reklamSil(${reklam.id})"
-                >
-                    🗑️ Sil
-                </button>
-
-            </div>
-
-        </div>
-
-    `;
-
-}
-
-
-/* =========================
-   REKLAM EKLE
-========================= */
-
-async function reklamKaydet() {
-
-    const id =
-        document.getElementById("reklamId").value;
 
     const veri = {
 
-        firma_adi:
-            document.getElementById("firmaAdi").value.trim(),
+        firma:
+            document.getElementById("firma").value.trim(),
 
-        resim:
-            document.getElementById("resim").value.trim(),
+        yetkili:
+            document.getElementById("yetkili").value.trim(),
 
-        link:
-            document.getElementById("link").value.trim(),
+        telefon:
+            document.getElementById("telefon").value.trim(),
 
-        konum:
-            document.getElementById("konum").value,
+        email:
+            document.getElementById("email").value.trim(),
+
+        web:
+            document.getElementById("web").value.trim(),
+
+        reklam_turu:
+            document.getElementById("reklamTuru").value,
 
         baslangic:
             document.getElementById("baslangic").value,
@@ -699,415 +923,87 @@ async function reklamKaydet() {
         bitis:
             document.getElementById("bitis").value,
 
-        durum:
-            document.getElementById("durum").value
+        gorsel:
+            document.getElementById("gorsel").value.trim(),
+
+        link:
+            document.getElementById("link").value.trim(),
+
+        aciklama:
+            document.getElementById("aciklama").value.trim()
 
     };
 
 
-    if (!veri.firma_adi) {
-
-        mesajGoster(
-            "Firma / reklamveren adı gerekli.",
-            true
-        );
-
-        return;
-    }
-
-
-    if (!veri.baslangic || !veri.bitis) {
-
-        mesajGoster(
-            "Başlangıç ve bitiş tarihi gerekli.",
-            true
-        );
-
-        return;
-    }
-
-
-    try {
-
-        const url =
-            id
-            ? API + "/reklam?id=" +
-              encodeURIComponent(id)
-            : API + "/reklam";
-
-
-        const method =
-            id ? "PUT" : "POST";
-
-
-        const cevap =
-            await fetch(url, {
-
-                method,
-
-                headers: {
-                    "Content-Type":
-                        "application/json"
-                },
-
-                body:
-                    JSON.stringify(veri)
-
-            });
-
-
-        const sonuc =
-            await cevap.json();
-
-
-        if (!cevap.ok || !sonuc.success) {
-
-            throw new Error(
-                sonuc.error ||
-                "İşlem başarısız."
-            );
-
-        }
-
-
-        mesajGoster(
-            sonuc.message ||
-            "Reklam kaydedildi."
-        );
-
-
-        formTemizle();
-
-        reklamlarGetir();
-
-
-    } catch (error) {
-
-        mesajGoster(
-            error.message,
-            true
-        );
-
-    }
-
-}
-
-
-/* =========================
-   REKLAM DÜZENLE
-========================= */
-
-async function reklamDuzenle(id) {
-
-    try {
+    try{
 
         const cevap =
             await fetch(
-                API +
-                "/reklam?id=" +
-                encodeURIComponent(id)
-            );
-
-
-        const veri =
-            await cevap.json();
-
-
-        if (!cevap.ok || !veri.success) {
-
-            throw new Error(
-                veri.error ||
-                "Reklam alınamadı."
-            );
-
-        }
-
-
-        const reklam =
-            veri.reklam;
-
-
-        document.getElementById(
-            "reklamId"
-        ).value = reklam.id;
-
-
-        document.getElementById(
-            "firmaAdi"
-        ).value = reklam.firma_adi || "";
-
-
-        document.getElementById(
-            "resim"
-        ).value = reklam.resim || "";
-
-
-        document.getElementById(
-            "link"
-        ).value = reklam.link || "";
-
-
-        document.getElementById(
-            "konum"
-        ).value = reklam.konum || "anasayfa";
-
-
-        document.getElementById(
-            "baslangic"
-        ).value = tarihInput(
-            reklam.baslangic
-        );
-
-
-        document.getElementById(
-            "bitis"
-        ).value = tarihInput(
-            reklam.bitis
-        );
-
-
-        document.getElementById(
-            "durum"
-        ).value = reklam.durum || "aktif";
-
-
-        document.getElementById(
-            "formBaslik"
-        ).textContent =
-            "✏️ Reklam Düzenle";
-
-
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-
-
-    } catch (error) {
-
-        mesajGoster(
-            error.message,
-            true
-        );
-
-    }
-
-}
-
-
-/* =========================
-   DURUM DEĞİŞTİR
-========================= */
-
-async function durumDegistir(
-    id,
-    mevcut
-) {
-
-    try {
-
-        const cevap =
-            await fetch(
-                API +
-                "/reklam?id=" +
-                encodeURIComponent(id)
-            );
-
-
-        const veri =
-            await cevap.json();
-
-
-        if (!cevap.ok || !veri.success) {
-
-            throw new Error(
-                veri.error ||
-                "Reklam alınamadı."
-            );
-
-        }
-
-
-        const reklam =
-            veri.reklam;
-
-
-        reklam.durum =
-            mevcut === "aktif"
-            ? "pasif"
-            : "aktif";
-
-
-        const guncelle =
-            await fetch(
-                API +
-                "/reklam?id=" +
-                encodeURIComponent(id),
+                API + "/reklam-basvuru",
                 {
+                    method:"POST",
 
-                    method: "PUT",
-
-                    headers: {
+                    headers:{
                         "Content-Type":
                             "application/json"
                     },
 
                     body:
-                        JSON.stringify(reklam)
-
+                        JSON.stringify(veri)
                 }
             );
 
 
         const sonuc =
-            await guncelle.json();
-
-
-        if (
-            !guncelle.ok ||
-            !sonuc.success
-        ) {
-
-            throw new Error(
-                sonuc.error ||
-                "Durum değiştirilemedi."
-            );
-
-        }
-
-
-        mesajGoster(
-            "Reklam durumu değiştirildi."
-        );
-
-
-        reklamlarGetir();
-
-
-    } catch (error) {
-
-        mesajGoster(
-            error.message,
-            true
-        );
-
-    }
-
-}
-
-
-/* =========================
-   REKLAM SİL
-========================= */
-
-async function reklamSil(id) {
-
-    if (
-        !confirm(
-            "Bu reklamı silmek istediğinize emin misiniz?"
-        )
-    ) {
-        return;
-    }
-
-
-    try {
-
-        const cevap =
-            await fetch(
-                API +
-                "/reklam?id=" +
-                encodeURIComponent(id),
-                {
-                    method: "DELETE"
-                }
-            );
-
-
-        const veri =
             await cevap.json();
 
 
-        if (!cevap.ok || !veri.success) {
+        if(
+            !cevap.ok ||
+            !sonuc.success
+        ){
 
             throw new Error(
-                veri.error ||
-                "Reklam silinemedi."
+                sonuc.error ||
+                "Başvuru gönderilemedi."
             );
 
         }
 
 
         mesajGoster(
-            "Reklam başarıyla silindi."
+            "✅ Reklam başvurunuz başarıyla alındı. Digital Gündem ekibimiz başvurunuzu inceleyerek sizinle iletişime geçecektir.",
+            false
         );
 
 
-        reklamlarGetir();
+        form.reset();
 
 
-    } catch (error) {
+        window.scrollTo({
+            top:
+                document.getElementById(
+                    "basvuru"
+                ).offsetTop - 100,
+            behavior:"smooth"
+        });
+
+
+    }catch(error){
 
         mesajGoster(
-            error.message,
+            "❌ " + error.message,
             true
         );
 
+    }finally{
+
+        gonderBtn.disabled = false;
+
+        gonderBtn.textContent =
+            "📢 REKLAM BAŞVURUSU GÖNDER";
+
     }
-
-}
-
-
-/* =========================
-   FORM TEMİZLE
-========================= */
-
-function formTemizle() {
-
-    document.getElementById(
-        "reklamId"
-    ).value = "";
-
-
-    document.getElementById(
-        "firmaAdi"
-    ).value = "";
-
-
-    document.getElementById(
-        "resim"
-    ).value = "";
-
-
-    document.getElementById(
-        "link"
-    ).value = "";
-
-
-    document.getElementById(
-        "konum"
-    ).value = "anasayfa";
-
-
-    document.getElementById(
-        "baslangic"
-    ).value = "";
-
-
-    document.getElementById(
-        "bitis"
-    ).value = "";
-
-
-    document.getElementById(
-        "durum"
-    ).value = "aktif";
-
-
-    document.getElementById(
-        "formBaslik"
-    ).textContent =
-        "➕ Yeni Reklam Ekle";
 
 }
 
@@ -1118,63 +1014,22 @@ function formTemizle() {
 
 function mesajGoster(
     metin,
-    hata = false
-) {
-
-    const mesaj =
-        document.getElementById("mesaj");
-
+    hata
+){
 
     mesaj.textContent = metin;
 
     mesaj.className =
         "mesaj " +
-        (hata ? "hata" : "basari");
-
-
-    setTimeout(() => {
-
-        mesaj.className = "mesaj";
-
-    }, 4000);
-
-}
-
-
-/* =========================
-   TARİH FORMAT
-========================= */
-
-function tarihInput(tarih) {
-
-    if (!tarih) {
-        return "";
-    }
-
-
-    return String(tarih)
-        .replace(" ", "T")
-        .slice(0, 16);
-
-}
-
-
-/* =========================
-   HTML GÜVENLİĞİ
-========================= */
-
-function escapeHTML(value) {
-
-    return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        (
+            hata
+            ? "hata"
+            : "basari"
+        );
 
 }
 
 </script>
 
 </body>
-  </html>
+</html>
