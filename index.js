@@ -1808,7 +1808,649 @@ Tekrar Dene
         });
 
       }
+// =========================================================
+// FİRMA SİSTEMİ
+// =========================================================
 
+// ---------------------------------------------------------
+// TÜM YAYINDAKİ FİRMALAR
+// GET /api/firmalar
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/firmalar" &&
+  request.method === "GET"
+) {
+
+  try {
+
+    const result =
+      await env.DB
+        .prepare(`
+          SELECT *
+          FROM firmalar
+          WHERE durum = 'yayinda'
+          ORDER BY id DESC
+        `)
+        .all();
+
+    return Response.json({
+
+      success: true,
+
+      toplam:
+        result.results.length,
+
+      firmalar:
+        result.results
+
+    });
+
+  } catch (error) {
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        error.message
+
+    }, {
+      status: 500
+    });
+
+  }
+
+}
+
+
+// ---------------------------------------------------------
+// TEK FİRMA
+// GET /api/firma?id=1
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/firma" &&
+  request.method === "GET"
+) {
+
+  try {
+
+    const id =
+      url.searchParams.get("id");
+
+    if (!id) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Firma ID belirtilmedi."
+
+      }, {
+        status: 400
+      });
+
+    }
+
+    const firma =
+      await env.DB
+        .prepare(`
+          SELECT *
+          FROM firmalar
+          WHERE id = ?
+          AND durum = 'yayinda'
+          LIMIT 1
+        `)
+        .bind(id)
+        .first();
+
+    if (!firma) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Firma bulunamadı."
+
+      }, {
+        status: 404
+      });
+
+    }
+
+    return Response.json({
+
+      success: true,
+
+      firma
+
+    });
+
+  } catch (error) {
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        error.message
+
+    }, {
+      status: 500
+    });
+
+  }
+
+}
+
+
+// ---------------------------------------------------------
+// FİRMA EKLE
+// POST /api/firma
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/firma" &&
+  request.method === "POST"
+) {
+
+  try {
+
+    const data =
+      await request.json();
+
+
+    const firma_adi =
+      String(
+        data.firma_adi || ""
+      ).trim();
+
+
+    const kategori =
+      String(
+        data.kategori || "Diğer"
+      ).trim();
+
+
+    const il =
+      String(
+        data.il || ""
+      ).trim();
+
+
+    const ilce =
+      String(
+        data.ilce || ""
+      ).trim();
+
+
+    const mahalle =
+      String(
+        data.mahalle || ""
+      ).trim();
+
+
+    const adres =
+      String(
+        data.adres || ""
+      ).trim();
+
+
+    const telefon =
+      String(
+        data.telefon || ""
+      ).trim();
+
+
+    const whatsapp =
+      String(
+        data.whatsapp || ""
+      ).trim();
+
+
+    const email =
+      String(
+        data.email || ""
+      ).trim();
+
+
+    const website =
+      String(
+        data.website || ""
+      ).trim();
+
+
+    const aciklama =
+      String(
+        data.aciklama || ""
+      ).trim();
+
+
+    const logo =
+      String(
+        data.logo || ""
+      ).trim();
+
+
+    const durum =
+      String(
+        data.durum || "yayinda"
+      ).trim();
+
+
+    const tarih =
+      String(
+        data.tarih ||
+        new Date().toLocaleDateString(
+          "tr-TR"
+        )
+      ).trim();
+
+
+    if (!firma_adi) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Firma adı boş olamaz."
+
+      }, {
+        status: 400
+      });
+
+    }
+
+
+    const result =
+      await env.DB
+        .prepare(`
+          INSERT INTO firmalar
+          (
+            firma_adi,
+            kategori,
+            il,
+            ilce,
+            mahalle,
+            adres,
+            telefon,
+            whatsapp,
+            email,
+            website,
+            aciklama,
+            logo,
+            durum,
+            tarih
+          )
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `)
+        .bind(
+          firma_adi,
+          kategori,
+          il,
+          ilce,
+          mahalle,
+          adres,
+          telefon,
+          whatsapp,
+          email,
+          website,
+          aciklama,
+          logo,
+          durum,
+          tarih
+        )
+        .run();
+
+
+    return Response.json({
+
+      success: true,
+
+      message:
+        "Firma başarıyla kaydedildi.",
+
+      id:
+        result.meta.last_row_id
+
+    });
+
+  } catch (error) {
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        error.message
+
+    }, {
+      status: 500
+    });
+
+  }
+
+}
+
+
+// ---------------------------------------------------------
+// FİRMA DÜZENLE
+// PUT /api/firma?id=1
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/firma" &&
+  request.method === "PUT"
+) {
+
+  try {
+
+    const id =
+      url.searchParams.get("id");
+
+
+    if (!id) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Firma ID belirtilmedi."
+
+      }, {
+        status: 400
+      });
+
+    }
+
+
+    const data =
+      await request.json();
+
+
+    const firma_adi =
+      String(
+        data.firma_adi || ""
+      ).trim();
+
+
+    const kategori =
+      String(
+        data.kategori || "Diğer"
+      ).trim();
+
+
+    const il =
+      String(
+        data.il || ""
+      ).trim();
+
+
+    const ilce =
+      String(
+        data.ilce || ""
+      ).trim();
+
+
+    const mahalle =
+      String(
+        data.mahalle || ""
+      ).trim();
+
+
+    const adres =
+      String(
+        data.adres || ""
+      ).trim();
+
+
+    const telefon =
+      String(
+        data.telefon || ""
+      ).trim();
+
+
+    const whatsapp =
+      String(
+        data.whatsapp || ""
+      ).trim();
+
+
+    const email =
+      String(
+        data.email || ""
+      ).trim();
+
+
+    const website =
+      String(
+        data.website || ""
+      ).trim();
+
+
+    const aciklama =
+      String(
+        data.aciklama || ""
+      ).trim();
+
+
+    const logo =
+      String(
+        data.logo || ""
+      ).trim();
+
+
+    const durum =
+      String(
+        data.durum || "yayinda"
+      ).trim();
+
+
+    const tarih =
+      String(
+        data.tarih || ""
+      ).trim();
+
+
+    if (!firma_adi) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Firma adı boş olamaz."
+
+      }, {
+        status: 400
+      });
+
+    }
+
+
+    const result =
+      await env.DB
+        .prepare(`
+          UPDATE firmalar
+          SET
+            firma_adi = ?,
+            kategori = ?,
+            il = ?,
+            ilce = ?,
+            mahalle = ?,
+            adres = ?,
+            telefon = ?,
+            whatsapp = ?,
+            email = ?,
+            website = ?,
+            aciklama = ?,
+            logo = ?,
+            durum = ?,
+            tarih = ?
+          WHERE id = ?
+        `)
+        .bind(
+          firma_adi,
+          kategori,
+          il,
+          ilce,
+          mahalle,
+          adres,
+          telefon,
+          whatsapp,
+          email,
+          website,
+          aciklama,
+          logo,
+          durum,
+          tarih,
+          id
+        )
+        .run();
+
+
+    if (
+      result.meta.changes === 0
+    ) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Firma bulunamadı veya değişiklik yapılmadı."
+
+      }, {
+        status: 404
+      });
+
+    }
+
+
+    return Response.json({
+
+      success: true,
+
+      message:
+        "Firma başarıyla güncellendi.",
+
+      id,
+
+      changes:
+        result.meta.changes
+
+    });
+
+  } catch (error) {
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        error.message
+
+    }, {
+      status: 500
+    });
+
+  }
+
+}
+
+
+// ---------------------------------------------------------
+// FİRMA SİL
+// DELETE /api/firma?id=1
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/firma" &&
+  request.method === "DELETE"
+) {
+
+  try {
+
+    const id =
+      url.searchParams.get("id");
+
+
+    if (!id) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Firma ID belirtilmedi."
+
+      }, {
+        status: 400
+      });
+
+    }
+
+
+    const result =
+      await env.DB
+        .prepare(`
+          DELETE FROM firmalar
+          WHERE id = ?
+        `)
+        .bind(id)
+        .run();
+
+
+    if (
+      result.meta.changes === 0
+    ) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Silinecek firma bulunamadı."
+
+      }, {
+        status: 404
+      });
+
+    }
+
+
+    return Response.json({
+
+      success: true,
+
+      message:
+        "Firma başarıyla silindi.",
+
+      id
+
+    });
+
+  } catch (error) {
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        error.message
+
+    }, {
+      status: 500
+    });
+
+  }
+
+          
     }    // =========================================================
     // ESKİ HABER ADRESLERİ
     // =========================================================
