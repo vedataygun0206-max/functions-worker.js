@@ -758,7 +758,35 @@ ${urls.join("")}
 
     }
 
+// =========================================================
+// ADMIN PANELİ KORUMASI
+// /pages/admin.html
+// =========================================================
 
+if (
+  url.pathname === "/pages/admin.html" &&
+  request.method === "GET"
+) {
+
+  const auth =
+    cookieOku(
+      request,
+      ADMIN_COOKIE
+    );
+
+  if (auth !== "ok") {
+
+    return Response.redirect(
+      new URL(
+        "/admin-giris",
+        request.url
+      ),
+      302
+    );
+
+  }
+
+}
     // =========================================================
     // YÖNETİM GİRİŞ SAYFASI
     // =========================================================
@@ -1816,27 +1844,52 @@ Tekrar Dene
 
     }
 
+// =========================================================
+// ADMIN ÇIKIŞ
+// =========================================================
 
-    // =========================================================
-    // WEB SİTESİ
-    // =========================================================
-    //
-    // API olmayan tüm normal istekleri
-    // Cloudflare Pages dosyalarına gönder.
-    //
-    // index.html
-    // pages/
-    // style.css
-    // admin.js
-    // resimler
-    // vb.
-    // =========================================================
+if (
+  url.pathname === "/admin-cikis" &&
+  request.method === "GET"
+) {
 
-    return env.ASSETS.fetch(
-      request
-    );
+  return new Response(
+    null,
+    {
+      status: 302,
+
+      headers: {
+        "Location": "/admin-giris",
+
+        "Set-Cookie":
+          "dg_admin_auth=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0"
+      }
+    }
+  );
+
+}
+
+
+// =========================================================
+// WEB SİTESİ
+// =========================================================
+//
+// API olmayan tüm normal istekleri
+// Cloudflare Pages dosyalarına gönderir.
+//
+// index.html
+// pages/
+// style.css
+// admin.js
+// resimler
+// vb.
+// =========================================================
+
+return env.ASSETS.fetch(
+  request
+);
 
   }
 
 };
-  
+    
