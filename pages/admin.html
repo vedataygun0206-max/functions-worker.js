@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -9,8 +10,9 @@
 <link rel="stylesheet" href="../style.css">
 
 <style>
+
 /* =========================================
-   ADMIN DASHBOARD ÖZEL STİLLER
+   ADMIN DASHBOARD
 ========================================= */
 
 .admin-container {
@@ -21,7 +23,6 @@
     color: #f8fafc;
 }
 
-/* Dashboard başlıkları */
 .content h2,
 .content h3 {
     color: #ffffff;
@@ -31,119 +32,300 @@
     color: #cbd5e1;
 }
 
-/* En çok okunan */
+
+/* =========================================
+   EN ÇOK OKUNAN HABERLER
+========================================= */
+
 .en-cok-okunan {
+
     margin-top: 30px;
+
     background: #273449;
+
     border-radius: 14px;
+
     padding: 22px;
-    box-shadow: 0 4px 18px rgba(0,0,0,.15);
+
+    box-shadow:
+        0 4px 18px rgba(0,0,0,.15);
 }
 
 .en-cok-okunan h2 {
+
     margin: 0 0 20px;
+
     color: #ffffff;
+
     font-size: 22px;
 }
 
 .okunan-liste {
+
     display: flex;
+
     flex-direction: column;
 }
 
 .okunan-haber {
+
     padding: 16px 4px;
-    border-bottom: 1px solid rgba(255,255,255,.25);
+
+    border-bottom:
+        1px solid rgba(255,255,255,.25);
 }
 
 .okunan-haber:last-child {
+
     border-bottom: 0;
 }
 
 .okunan-baslik {
+
     color: #ffffff;
+
     font-weight: 700;
+
     font-size: 16px;
+
     line-height: 1.5;
+
     margin-bottom: 7px;
 }
 
 .okunan-kategori {
+
     color: #cbd5e1;
+
     font-size: 14px;
 }
 
 .okunan-sayi {
+
     float: right;
+
     color: #ffffff;
+
     font-weight: bold;
+
     font-size: 15px;
 }
 
-/* İstatistikler */
+
+/* =========================================
+   İSTATİSTİKLER
+========================================= */
+
 #istatistikler {
+
     margin-top: 25px;
+
     background: #273449;
+
     color: #ffffff;
+
     border-radius: 14px;
+
     padding: 22px;
 }
 
 #istatistikler h2 {
+
     color: #ffffff;
 }
 
 #istatistikler p {
+
     color: #cbd5e1;
 }
 
 #istatistikler table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
     color: #ffffff;
+
+    margin-top: 20px;
 }
 
 #istatistikler th {
+
     background: #1e293b;
+
     color: #ffffff;
+
+    padding: 12px;
+
+    text-align: left;
 }
 
 #istatistikler td {
+
     color: #f8fafc;
-    border-bottom: 1px solid rgba(255,255,255,.18);
+
+    padding: 12px;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.18);
 }
 
-/* Mobil */
+#istatistikler th:last-child,
+#istatistikler td:last-child {
+
+    text-align: center;
+}
+
+
+/* =========================================
+   YENİ HABER FORMU
+========================================= */
+
+.yeni-haber {
+
+    margin-top: 30px;
+
+    background: #273449;
+
+    border-radius: 14px;
+
+    padding: 22px;
+}
+
+.yeni-haber h2 {
+
+    margin-top: 0;
+
+    color: #ffffff;
+}
+
+.yeni-haber form {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+.yeni-haber input,
+.yeni-haber select,
+.yeni-haber textarea {
+
+    width: 100%;
+
+    padding: 12px;
+
+    border-radius: 8px;
+
+    border: 1px solid #475569;
+
+    background: #1e293b;
+
+    color: #ffffff;
+
+    font-size: 15px;
+}
+
+.yeni-haber textarea {
+
+    resize: vertical;
+}
+
+.yeni-haber label {
+
+    color: #e2e8f0;
+
+    font-weight: 600;
+}
+
+.yeni-haber button {
+
+    padding: 12px 18px;
+
+    border: 0;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+}
+
+
+/* =========================================
+   MOBİL
+========================================= */
+
 @media (max-width: 700px) {
 
     .en-cok-okunan,
-    #istatistikler {
+    #istatistikler,
+    .yeni-haber {
+
         padding: 16px;
     }
 
-    .okunan-baslik {
-        font-size: 15px;
+    .en-cok-okunan h2 {
+
+        font-size: 20px;
     }
+
+    .okunan-baslik {
+
+        font-size: 15px;
+
+        padding-right: 5px;
+    }
+
+    .okunan-sayi {
+
+        font-size: 14px;
+    }
+
 }
+
 </style>
 
 </head>
 
+
 <body>
+
+
+<!-- =========================================
+     ÜST BAŞLIK
+========================================= -->
 
 <header class="admin-header">
 
     <div class="logo">
+
         <h1>📰 Digital Gündem</h1>
-        <p>Profesyonel Yönetim Paneli</p>
+
+        <p>
+            Profesyonel Yönetim Paneli
+        </p>
+
     </div>
 
+
     <div class="admin-user">
+
         👤 Yönetici
-        <a href="../index.html" class="btn">
+
+        <a
+            href="../index.html"
+            class="btn"
+        >
             Siteyi Gör
         </a>
+
     </div>
 
 </header>
+
 
 
 <div class="admin-container">
@@ -157,11 +339,15 @@
 
     <h3>Yönetim</h3>
 
+
     <ul>
 
         <li>
-            <a href="#">🏠 Dashboard</a>
+            <a href="#">
+                🏠 Dashboard
+            </a>
         </li>
+
 
         <li>
             <a href="haberler.html">
@@ -169,11 +355,13 @@
             </a>
         </li>
 
+
         <li>
             <a href="/pages/reklam.html">
                 📢 Özel Reklamlar
             </a>
         </li>
+
 
         <li>
             <a href="#">
@@ -181,11 +369,13 @@
             </a>
         </li>
 
+
         <li>
             <a href="#">
                 🏢 Firma Rehberi
             </a>
         </li>
+
 
         <li>
             <a href="#">
@@ -193,11 +383,13 @@
             </a>
         </li>
 
+
         <li>
             <a href="#">
                 🎥 Video Haberleri
             </a>
         </li>
+
 
         <li>
             <a href="#">
@@ -205,11 +397,13 @@
             </a>
         </li>
 
+
         <li>
             <a href="#">
                 💬 Yorumlar
             </a>
         </li>
+
 
         <li>
             <a href="#">
@@ -217,17 +411,20 @@
             </a>
         </li>
 
+
         <li>
-            <a href="#">
+            <a href="#istatistikler">
                 📊 İstatistikler
             </a>
         </li>
+
 
         <li>
             <a href="#">
                 ⚙️ Site Ayarları
             </a>
         </li>
+
 
         <li>
             <a href="../index.html">
@@ -240,13 +437,18 @@
 </aside>
 
 
+
 <!-- =========================================
      ANA İÇERİK
 ========================================= -->
 
 <main class="content">
 
-    <h2>📊 Dashboard</h2>
+
+    <h2>
+        📊 Dashboard
+    </h2>
+
 
 
     <!-- =====================================
@@ -256,11 +458,18 @@
     <div class="dashboard-grid">
 
 
-        <a href="haberler.html" class="dash-link">
+        <!-- HABER -->
+
+        <a
+            href="haberler.html"
+            class="dash-link"
+        >
 
             <div class="dash-card">
 
-                <h3>📰 Haber</h3>
+                <h3>
+                    📰 Haber
+                </h3>
 
                 <h1 id="haberSayisi">
                     0
@@ -275,9 +484,14 @@
         </a>
 
 
+
+        <!-- MANŞET -->
+
         <div class="dash-card">
 
-            <h3>⭐ Manşet</h3>
+            <h3>
+                ⭐ Manşet
+            </h3>
 
             <h1>
                 0
@@ -290,9 +504,14 @@
         </div>
 
 
+
+        <!-- FİRMALAR -->
+
         <div class="dash-card">
 
-            <h3>🏢 Firmalar</h3>
+            <h3>
+                🏢 Firmalar
+            </h3>
 
             <h1>
                 0
@@ -305,9 +524,14 @@
         </div>
 
 
+
+        <!-- YAZARLAR -->
+
         <div class="dash-card">
 
-            <h3>✍️ Yazarlar</h3>
+            <h3>
+                ✍️ Yazarlar
+            </h3>
 
             <h1>
                 0
@@ -320,9 +544,14 @@
         </div>
 
 
+
+        <!-- VİDEOLAR -->
+
         <div class="dash-card">
 
-            <h3>🎥 Videolar</h3>
+            <h3>
+                🎥 Videolar
+            </h3>
 
             <h1>
                 0
@@ -335,9 +564,14 @@
         </div>
 
 
+
+        <!-- OKUNMA -->
+
         <div class="dash-card">
 
-            <h3>👁️ Okunma</h3>
+            <h3>
+                👁️ Okunma
+            </h3>
 
             <h1 id="toplamOkunma">
                 0
@@ -350,9 +584,14 @@
         </div>
 
 
+
+        <!-- BUGÜNKÜ ZİYARET -->
+
         <div class="dash-card">
 
-            <h3>👥 Bugünkü Ziyaretçi</h3>
+            <h3>
+                👥 Bugünkü Ziyaretçi
+            </h3>
 
             <h1 id="bugunkuZiyaretci">
                 0
@@ -365,9 +604,14 @@
         </div>
 
 
+
+        <!-- TOPLAM ZİYARET -->
+
         <div class="dash-card">
 
-            <h3>🌐 Toplam Ziyaretçi</h3>
+            <h3>
+                🌐 Toplam Ziyaretçi
+            </h3>
 
             <h1 id="toplamZiyaretci">
                 0
@@ -383,15 +627,18 @@
     </div>
 
 
+
     <!-- =====================================
          EN ÇOK OKUNAN 5 HABER
     ====================================== -->
 
     <section class="en-cok-okunan">
 
+
         <h2>
             🔥 En Çok Okunan 5 Haber
         </h2>
+
 
         <div
             id="enCokOkunanHaberler"
@@ -401,14 +648,18 @@
             <div class="okunan-haber">
 
                 <div class="okunan-baslik">
+
                     En çok okunan haberler yükleniyor...
+
                 </div>
 
             </div>
 
         </div>
 
+
     </section>
+
 
 
     <!-- =====================================
@@ -416,7 +667,6 @@
     ====================================== -->
 
     <section
-        class="admin-form"
         id="istatistikler"
     >
 
@@ -424,17 +674,22 @@
             📊 İstatistikler
         </h2>
 
+
         <p>
-            Haberlerin okunma sayılarını buradan takip edebilirsin.
+            Haberlerin okunma sayılarını
+            buradan takip edebilirsin.
         </p>
 
 
         <div id="istatistikDurum">
+
             İstatistikler yükleniyor...
+
         </div>
 
 
         <div style="overflow-x:auto;">
+
 
             <table>
 
@@ -442,39 +697,19 @@
 
                     <tr>
 
-                        <th
-                            style="
-                            padding:12px;
-                            text-align:left;
-                            "
-                        >
+                        <th>
                             #
                         </th>
 
-                        <th
-                            style="
-                            padding:12px;
-                            text-align:left;
-                            "
-                        >
+                        <th>
                             Haber
                         </th>
 
-                        <th
-                            style="
-                            padding:12px;
-                            text-align:left;
-                            "
-                        >
+                        <th>
                             Kategori
                         </th>
 
-                        <th
-                            style="
-                            padding:12px;
-                            text-align:center;
-                            "
-                        >
+                        <th>
                             Okunma
                         </th>
 
@@ -488,14 +723,22 @@
 
             </table>
 
+
         </div>
 
 
-        <!-- =================================
-             YENİ HABER
-        ================================== -->
+    </section>
 
-        <h2 style="margin-top:35px;">
+
+
+    <!-- =====================================
+         YENİ HABER EKLE
+    ====================================== -->
+
+    <section class="yeni-haber">
+
+
+        <h2>
             📰 Yeni Haber Ekle
         </h2>
 
@@ -578,27 +821,39 @@
             </label>
 
 
-            <button type="button">
+            <button
+                type="button"
+            >
                 💾 Taslak Kaydet
             </button>
 
 
-            <button type="submit">
+            <button
+                type="submit"
+            >
                 📰 Haberi Yayınla
             </button>
 
 
         </form>
 
+
     </section>
 
 
 </main>
 
+
 </div>
 
 
+
+<!-- =========================================
+     JAVASCRIPT
+========================================= -->
+
 <script src="../admin.js"></script>
+
 
 </body>
 </html>
