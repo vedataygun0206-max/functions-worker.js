@@ -1,1 +1,1240 @@
-turkıye 
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Digital Gündem | Firma Yönetimi</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: #f8fafc;
+}
+
+.header {
+    background: #111827;
+    padding: 18px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid #334155;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.header a {
+    color: white;
+    background: #dc2626;
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.container {
+    width: 95%;
+    max-width: 1200px;
+    margin: 25px auto;
+}
+
+.panel {
+    background: #1e293b;
+    padding: 22px;
+    border-radius: 14px;
+    margin-bottom: 25px;
+}
+
+.panel h2 {
+    margin-top: 0;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #475569;
+    border-radius: 8px;
+    background: #0f172a;
+    color: white;
+    font-size: 15px;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+button {
+    border: 0;
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.btn-ekle {
+    background: #16a34a;
+    color: white;
+}
+
+.btn-temizle {
+    background: #475569;
+    color: white;
+    margin-left: 8px;
+}
+
+.btn-duzenle {
+    background: #2563eb;
+    color: white;
+}
+
+.btn-sil {
+    background: #dc2626;
+    color: white;
+}
+
+.mesaj {
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    display: none;
+}
+
+.basari {
+    background: #166534;
+    color: white;
+}
+
+.hata {
+    background: #991b1b;
+    color: white;
+}
+
+.arama {
+    margin-bottom: 18px;
+}
+
+.firma-liste {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.firma {
+    background: #273449;
+    border-radius: 12px;
+    padding: 18px;
+    border: 1px solid #334155;
+}
+
+.firma h3 {
+    margin-top: 0;
+    color: white;
+}
+
+.firma p {
+    color: #cbd5e1;
+    line-height: 1.5;
+}
+
+.firma-logo {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.etiket {
+    display: inline-block;
+    background: #334155;
+    color: #e2e8f0;
+    padding: 5px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    margin: 2px;
+}
+
+.aksiyonlar {
+    display: flex;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.bos {
+    text-align: center;
+    padding: 30px;
+    color: #cbd5e1;
+    background: #273449;
+    border-radius: 10px;
+}
+
+@media (max-width: 800px) {
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .firma-liste {
+        grid-template-columns: 1fr;
+    }
+
+    .full {
+        grid-column: auto;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <h1>🏢 Digital Gündem | Firma Yönetimi</h1>
+
+    <a href="admin.html">
+        ← Yönetim Paneli
+    </a>
+
+</header>
+
+
+<div class="container">
+
+
+    <!-- =====================================================
+         FİRMA EKLE / DÜZENLE
+    ====================================================== -->
+
+    <section class="panel">
+
+        <h2 id="formBaslik">
+            ➕ Yeni Firma Ekle
+        </h2>
+
+        <div id="mesaj" class="mesaj"></div>
+
+        <form id="firmaForm">
+
+            <input type="hidden" id="firmaId">
+
+            <div class="form-grid">
+
+                <div>
+                    <label>Firma Adı</label>
+                    <input
+                        type="text"
+                        id="firma_adi"
+                        placeholder="Firma adı"
+                        required
+                    >
+                </div>
+
+
+                <div>
+                    <label>Kategori</label>
+
+                    <select id="kategori">
+
+                        <option>Market</option>
+                        <option>Restoran</option>
+                        <option>Cafe</option>
+                        <option>Manav</option>
+                        <option>Kasap</option>
+                        <option>Berber</option>
+                        <option>Kuaför</option>
+                        <option>Otomotiv</option>
+                        <option>Elektronik</option>
+                        <option>Giyim</option>
+                        <option>Sağlık</option>
+                        <option>Eğitim</option>
+                        <option>İnşaat</option>
+                        <option>Hizmet</option>
+                        <option>Diğer</option>
+
+                    </select>
+
+                </div>
+
+
+                <div>
+                    <label>İl</label>
+
+                    <input
+                        type="text"
+                        id="il"
+                        placeholder="İstanbul"
+                    >
+
+                </div>
+
+
+                <div>
+                    <label>İlçe</label>
+
+                    <input
+                        type="text"
+                        id="ilce"
+                        placeholder="Ümraniye"
+                    >
+
+                </div>
+
+
+                <div>
+                    <label>Mahalle</label>
+
+                    <input
+                        type="text"
+                        id="mahalle"
+                        placeholder="Mahalle"
+                    >
+
+                </div>
+
+
+                <div>
+                    <label>Telefon</label>
+
+                    <input
+                        type="text"
+                        id="telefon"
+                        placeholder="0216 000 00 00"
+                    >
+
+                </div>
+
+
+                <div>
+                    <label>WhatsApp</label>
+
+                    <input
+                        type="text"
+                        id="whatsapp"
+                        placeholder="905xxxxxxxxx"
+                    >
+
+                </div>
+
+
+                <div>
+                    <label>E-posta</label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="firma@email.com"
+                    >
+
+                </div>
+
+
+                <div class="full">
+                    <label>Web Sitesi</label>
+
+                    <input
+                        type="url"
+                        id="website"
+                        placeholder="https://www.ornek.com"
+                    >
+
+                </div>
+
+
+                <div class="full">
+                    <label>Adres</label>
+
+                    <textarea
+                        id="adres"
+                        placeholder="Firma açık adresi"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="full">
+                    <label>Açıklama</label>
+
+                    <textarea
+                        id="aciklama"
+                        placeholder="Firma hakkında kısa bilgi"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="full">
+                    <label>Logo URL</label>
+
+                    <input
+                        type="url"
+                        id="logo"
+                        placeholder="https://..."
+                    >
+
+                </div>
+
+
+                <div>
+                    <label>Durum</label>
+
+                    <select id="durum">
+
+                        <option value="yayinda">
+                            Yayında
+                        </option>
+
+                        <option value="taslak">
+                            Taslak
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <br>
+
+            <button
+                type="submit"
+                class="btn-ekle"
+                id="kaydetBtn"
+            >
+                💾 Firmayı Kaydet
+            </button>
+
+            <button
+                type="button"
+                class="btn-temizle"
+                onclick="formTemizle()"
+            >
+                Temizle
+            </button>
+
+        </form>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         FİRMA LİSTESİ
+    ====================================================== -->
+
+    <section class="panel">
+
+        <h2>
+            🏢 Kayıtlı Firmalar
+        </h2>
+
+
+        <input
+            type="search"
+            id="arama"
+            class="arama"
+            placeholder="🔎 Firma adı, il, ilçe veya kategori ara..."
+        >
+
+
+        <div
+            id="firmaListe"
+            class="firma-liste"
+        >
+
+            <div class="bos">
+                Firmalar yükleniyor...
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+
+<script>
+
+const API = "/api";
+
+let firmalar = [];
+
+
+/* =========================================================
+   MESAJ
+========================================================= */
+
+function mesajGoster(text, tip = "basari") {
+
+    const el =
+        document.getElementById("mesaj");
+
+    el.textContent = text;
+
+    el.className =
+        "mesaj " + tip;
+
+    el.style.display = "block";
+
+    setTimeout(() => {
+
+        el.style.display = "none";
+
+    }, 4000);
+
+}
+
+
+
+/* =========================================================
+   FİRMALARI GETİR
+========================================================= */
+
+async function firmalariGetir() {
+
+    const liste =
+        document.getElementById("firmaListe");
+
+    try {
+
+        const cevap =
+            await fetch(
+                API + "/firmalar"
+            );
+
+
+        const data =
+            await cevap.json();
+
+
+        if (!data.success) {
+
+            throw new Error(
+                data.error ||
+                "Firmalar alınamadı."
+            );
+
+        }
+
+
+        firmalar =
+            data.firmalar || [];
+
+
+        firmalariGoster();
+
+    } catch (error) {
+
+        liste.innerHTML = `
+
+            <div class="bos">
+
+                ❌ Firmalar yüklenemedi.
+
+                <br><br>
+
+                ${escapeHtml(error.message)}
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+
+/* =========================================================
+   FİRMALARI GÖSTER
+========================================================= */
+
+function firmalariGoster() {
+
+    const liste =
+        document.getElementById("firmaListe");
+
+
+    const arama =
+        document
+            .getElementById("arama")
+            .value
+            .toLowerCase()
+            .trim();
+
+
+    const filtre =
+        firmalar.filter(firma => {
+
+            const metin = [
+
+                firma.firma_adi,
+                firma.kategori,
+                firma.il,
+                firma.ilce,
+                firma.mahalle
+
+            ]
+            .join(" ")
+            .toLowerCase();
+
+
+            return metin.includes(arama);
+
+        });
+
+
+    if (filtre.length === 0) {
+
+        liste.innerHTML = `
+
+            <div class="bos">
+
+                📭 Henüz kayıtlı firma yok.
+
+                <br><br>
+
+                Yukarıdaki formdan ilk firmayı ekleyebilirsin.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    liste.innerHTML =
+        filtre.map(firma => `
+
+            <article class="firma">
+
+                ${
+                    firma.logo
+                    ?
+                    `
+                    <img
+                        src="${escapeHtml(firma.logo)}"
+                        class="firma-logo"
+                        alt="${escapeHtml(firma.firma_adi)}"
+                    >
+                    `
+                    :
+                    `🏢`
+                }
+
+
+                <h3>
+                    ${escapeHtml(firma.firma_adi)}
+                </h3>
+
+
+                <span class="etiket">
+                    ${escapeHtml(firma.kategori || "Diğer")}
+                </span>
+
+
+                ${
+                    firma.il
+                    ?
+                    `
+                    <span class="etiket">
+                        📍 ${escapeHtml(firma.il)}
+                    </span>
+                    `
+                    :
+                    ""
+                }
+
+
+                ${
+                    firma.ilce
+                    ?
+                    `
+                    <span class="etiket">
+                        ${escapeHtml(firma.ilce)}
+                    </span>
+                    `
+                    :
+                    ""
+                }
+
+
+                <p>
+
+                    ${
+                        firma.adres
+                        ?
+                        "📍 " +
+                        escapeHtml(firma.adres) +
+                        "<br>"
+                        :
+                        ""
+                    }
+
+                    ${
+                        firma.telefon
+                        ?
+                        "📞 " +
+                        escapeHtml(firma.telefon) +
+                        "<br>"
+                        :
+                        ""
+                    }
+
+                    ${
+                        firma.email
+                        ?
+                        "✉️ " +
+                        escapeHtml(firma.email) +
+                        "<br>"
+                        :
+                        ""
+                    }
+
+                    ${
+                        firma.durum
+                        ?
+                        "Durum: " +
+                        escapeHtml(firma.durum)
+                        :
+                        ""
+                    }
+
+                </p>
+
+
+                ${
+                    firma.aciklama
+                    ?
+                    `
+                    <p>
+                        ${escapeHtml(firma.aciklama)}
+                    </p>
+                    `
+                    :
+                    ""
+                }
+
+
+                <div class="aksiyonlar">
+
+                    <button
+                        class="btn-duzenle"
+                        onclick="firmaDuzenle(${Number(firma.id)})"
+                    >
+                        ✏️ Düzenle
+                    </button>
+
+
+                    <button
+                        class="btn-sil"
+                        onclick="firmaSil(${Number(firma.id)})"
+                    >
+                        🗑️ Sil
+                    </button>
+
+                </div>
+
+            </article>
+
+        `)
+        .join("");
+
+}
+
+
+
+/* =========================================================
+   FİRMA EKLE / GÜNCELLE
+========================================================= */
+
+document
+    .getElementById("firmaForm")
+    .addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            const id =
+                document
+                    .getElementById("firmaId")
+                    .value;
+
+
+            const veri = {
+
+                firma_adi:
+                    document
+                        .getElementById("firma_adi")
+                        .value
+                        .trim(),
+
+                kategori:
+                    document
+                        .getElementById("kategori")
+                        .value,
+
+                il:
+                    document
+                        .getElementById("il")
+                        .value
+                        .trim(),
+
+                ilce:
+                    document
+                        .getElementById("ilce")
+                        .value
+                        .trim(),
+
+                mahalle:
+                    document
+                        .getElementById("mahalle")
+                        .value
+                        .trim(),
+
+                adres:
+                    document
+                        .getElementById("adres")
+                        .value
+                        .trim(),
+
+                telefon:
+                    document
+                        .getElementById("telefon")
+                        .value
+                        .trim(),
+
+                whatsapp:
+                    document
+                        .getElementById("whatsapp")
+                        .value
+                        .trim(),
+
+                email:
+                    document
+                        .getElementById("email")
+                        .value
+                        .trim(),
+
+                website:
+                    document
+                        .getElementById("website")
+                        .value
+                        .trim(),
+
+                aciklama:
+                    document
+                        .getElementById("aciklama")
+                        .value
+                        .trim(),
+
+                logo:
+                    document
+                        .getElementById("logo")
+                        .value
+                        .trim(),
+
+                durum:
+                    document
+                        .getElementById("durum")
+                        .value
+
+            };
+
+
+            if (!veri.firma_adi) {
+
+                mesajGoster(
+                    "Firma adı zorunludur.",
+                    "hata"
+                );
+
+                return;
+
+            }
+
+
+            const url =
+                id
+                ?
+                API + "/firma?id=" +
+                encodeURIComponent(id)
+                :
+                API + "/firma";
+
+
+            const method =
+                id
+                ?
+                "PUT"
+                :
+                "POST";
+
+
+            try {
+
+                const cevap =
+                    await fetch(
+                        url,
+                        {
+                            method,
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(veri)
+                        }
+                    );
+
+
+                const data =
+                    await cevap.json();
+
+
+                if (!cevap.ok || !data.success) {
+
+                    throw new Error(
+                        data.error ||
+                        "İşlem başarısız."
+                    );
+
+                }
+
+
+                mesajGoster(
+                    id
+                    ?
+                    "Firma başarıyla güncellendi."
+                    :
+                    "Firma başarıyla eklendi."
+                );
+
+
+                formTemizle();
+
+                await firmalariGetir();
+
+            } catch (error) {
+
+                mesajGoster(
+                    error.message,
+                    "hata"
+                );
+
+            }
+
+        }
+    );
+
+
+
+/* =========================================================
+   DÜZENLE
+========================================================= */
+
+function firmaDuzenle(id) {
+
+    const firma =
+        firmalar.find(
+            f =>
+                Number(f.id) === Number(id)
+        );
+
+
+    if (!firma) {
+
+        mesajGoster(
+            "Firma bulunamadı.",
+            "hata"
+        );
+
+        return;
+
+    }
+
+
+    document
+        .getElementById("firmaId")
+        .value =
+        firma.id || "";
+
+
+    document
+        .getElementById("firma_adi")
+        .value =
+        firma.firma_adi || "";
+
+
+    document
+        .getElementById("kategori")
+        .value =
+        firma.kategori || "Diğer";
+
+
+    document
+        .getElementById("il")
+        .value =
+        firma.il || "";
+
+
+    document
+        .getElementById("ilce")
+        .value =
+        firma.ilce || "";
+
+
+    document
+        .getElementById("mahalle")
+        .value =
+        firma.mahalle || "";
+
+
+    document
+        .getElementById("adres")
+        .value =
+        firma.adres || "";
+
+
+    document
+        .getElementById("telefon")
+        .value =
+        firma.telefon || "";
+
+
+    document
+        .getElementById("whatsapp")
+        .value =
+        firma.whatsapp || "";
+
+
+    document
+        .getElementById("email")
+        .value =
+        firma.email || "";
+
+
+    document
+        .getElementById("website")
+        .value =
+        firma.website || "";
+
+
+    document
+        .getElementById("aciklama")
+        .value =
+        firma.aciklama || "";
+
+
+    document
+        .getElementById("logo")
+        .value =
+        firma.logo || "";
+
+
+    document
+        .getElementById("durum")
+        .value =
+        firma.durum || "yayinda";
+
+
+    document
+        .getElementById("formBaslik")
+        .textContent =
+        "✏️ Firma Düzenle";
+
+
+    document
+        .getElementById("kaydetBtn")
+        .textContent =
+        "💾 Değişiklikleri Kaydet";
+
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+
+/* =========================================================
+   SİL
+========================================================= */
+
+async function firmaSil(id) {
+
+    const firma =
+        firmalar.find(
+            f =>
+                Number(f.id) === Number(id)
+        );
+
+
+    if (!firma) return;
+
+
+    const onay =
+        confirm(
+            `"${firma.firma_adi}" firmasını silmek istediğine emin misin?`
+        );
+
+
+    if (!onay) return;
+
+
+    try {
+
+        const cevap =
+            await fetch(
+                API +
+                "/firma?id=" +
+                encodeURIComponent(id),
+                {
+                    method: "DELETE"
+                }
+            );
+
+
+        const data =
+            await cevap.json();
+
+
+        if (!cevap.ok || !data.success) {
+
+            throw new Error(
+                data.error ||
+                "Firma silinemedi."
+            );
+
+        }
+
+
+        mesajGoster(
+            "Firma başarıyla silindi."
+        );
+
+
+        await firmalariGetir();
+
+    } catch (error) {
+
+        mesajGoster(
+            error.message,
+            "hata"
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   FORM TEMİZLE
+========================================================= */
+
+function formTemizle() {
+
+    document
+        .getElementById("firmaForm")
+        .reset();
+
+
+    document
+        .getElementById("firmaId")
+        .value = "";
+
+
+    document
+        .getElementById("formBaslik")
+        .textContent =
+        "➕ Yeni Firma Ekle";
+
+
+    document
+        .getElementById("kaydetBtn")
+        .textContent =
+        "💾 Firmayı Kaydet";
+
+}
+
+
+
+/* =========================================================
+   ARAMA
+========================================================= */
+
+document
+    .getElementById("arama")
+    .addEventListener(
+        "input",
+        firmalariGoster
+    );
+
+
+
+/* =========================================================
+   HTML GÜVENLİK
+========================================================= */
+
+function escapeHtml(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+
+/* =========================================================
+   BAŞLAT
+========================================================= */
+
+firmalariGetir();
+
+</script>
+
+</body>
+</html>
