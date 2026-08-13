@@ -1,151 +1,2527 @@
 <!DOCTYPE html>
 <html lang="tr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Digital Gündem | Türkiye'nin Dijital Rehberi</title>
-<meta name="description" content="Digital Gündem - Türkiye'nin Dijital Rehberi. Güncel haberler, Türkiye gündemi, firmalar, rehber ve daha fazlası.">
-<link rel="stylesheet" href="style.css">
-<style>
-.api-yukleniyor,.bos-haber{padding:35px;text-align:center;background:#fff;border-radius:12px;color:#666}
-.api-hata{padding:25px;text-align:center;background:#fff1f2;color:#b91c1c;border:1px solid #fecdd3;border-radius:12px}
-.headline{max-width:1200px;margin:30px auto;padding:0 20px}.headline-main{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 8px 25px #0000001a}.headline-main img{width:100%;height:420px;object-fit:cover;display:block}.headline-text{padding:25px}.headline-text h2{font-size:32px;line-height:1.25}.headline-text p{color:#555;line-height:1.7}.etiket{display:inline-block;background:#d60000;color:#fff;padding:6px 11px;border-radius:6px;font-size:12px;font-weight:bold}.haber-tarih{color:#777;font-size:13px;margin-top:10px}
-.news,.search,.ads{max-width:1200px;margin:35px auto;padding:0 20px}.news-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}.news-card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 15px #00000014}.news-card img{width:100%;height:190px;object-fit:cover}.news-card-content{padding:18px}.news-card a{display:inline-block;margin-top:12px;color:#d60000;font-weight:bold}.search input{width:100%;padding:15px 18px;border:1px solid #ddd;border-radius:10px;font-size:16px}
-.kisa-gundem{max-width:1200px;margin:30px auto;padding:20px;background:#fff;border-radius:16px;box-shadow:0 5px 20px #00000014}.kisa-gundem-baslik{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #eee;padding-bottom:15px}.canli-nokta{display:inline-block;width:10px;height:10px;background:#d60000;border-radius:50%;margin-right:7px}.gundem-haber{padding:14px 0;border-bottom:1px solid #eee}.gundem-haber strong{display:block}.gundem-haber p{color:#666}.gundem-haber a{color:#d60000;font-weight:bold}
-#gundemDinleBtn{border:0;background:#d60000;color:#fff;padding:10px 16px;border-radius:8px;font-weight:bold}
 
-/* ================= PROFESYONEL REKLAM ================= */
-.ads{margin-top:45px}.reklam-baslik{display:flex;justify-content:space-between;align-items:end;margin-bottom:15px}.reklam-baslik h2{margin:0}.reklam-alt{font-size:13px;color:#777;margin-top:5px}
-#reklamIcerik{position:relative;width:100%;min-height:90px}.reklam-karti{display:none;position:relative;max-width:1000px;margin:auto;overflow:hidden;background:#fff;border:1px solid #e5e7eb;border-radius:14px;box-shadow:0 5px 20px #00000012}.reklam-karti.aktif{display:block;animation:reklamFade .4s ease}.reklam-karti a{display:block;color:inherit;text-decoration:none}.reklam-karti img{width:100%;height:auto;max-height:280px;object-fit:cover;display:block}.reklam-etiket{position:absolute;z-index:2;top:9px;left:9px;background:#000b;color:#fff;padding:4px 8px;border-radius:5px;font-size:10px}.reklam-fallback{min-height:110px;padding:30px;text-align:center;display:flex;align-items:center;justify-content:center;font-weight:bold}.reklam-bos{border:1px dashed #d1d5db;background:#fafafa;border-radius:14px;padding:28px;text-align:center;color:#777}
-.reklam-noktalar{text-align:center;margin-top:12px}.reklam-nokta{width:8px;height:8px;padding:0;border:0;border-radius:50%;background:#ccc;margin:0 4px;cursor:pointer}.reklam-nokta.aktif{background:#d60000;transform:scale(1.25)}.reklam-yon{display:none;position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:38px;height:38px;border:0;border-radius:50%;background:#000a;color:#fff;font-size:22px;cursor:pointer}.reklam-kapsayici.coklu .reklam-yon{display:block}.reklam-once{left:10px}.reklam-sonra{right:10px}
-@keyframes reklamFade{from{opacity:.3;transform:translateY(4px)}to{opacity:1;transform:none}}
-@media(max-width:768px){.headline-main img{height:220px}.headline-text{padding:18px}.headline-text h2{font-size:24px}.kisa-gundem{margin:20px}.kisa-gundem-baslik{align-items:flex-start;flex-direction:column;gap:12px}#gundemDinleBtn{width:100%}.ads{padding:0 14px}.reklam-karti img{max-height:220px}.reklam-yon{width:32px;height:32px;font-size:17px}}
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width,initial-scale=1">
+
+<title>
+Digital Gündem | Türkiye'nin Dijital Rehberi
+</title>
+
+<meta name="description"
+      content="Digital Gündem - Türkiye'nin Dijital Rehberi. Güncel haberler, Türkiye gündemi, firmalar, rehber ve daha fazlası.">
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+/* =========================================================
+   GENEL API DURUMLARI
+========================================================= */
+
+.api-yukleniyor,
+.bos-haber,
+.firma-bos{
+
+  padding:35px;
+
+  text-align:center;
+
+  background:#fff;
+
+  border-radius:12px;
+
+  color:#666;
+
+}
+
+.api-hata{
+
+  padding:25px;
+
+  text-align:center;
+
+  background:#fff1f2;
+
+  color:#b91c1c;
+
+  border:1px solid #fecdd3;
+
+  border-radius:12px;
+
+}
+
+
+/* =========================================================
+   MANŞET
+========================================================= */
+
+.headline{
+
+  max-width:1200px;
+
+  margin:30px auto;
+
+  padding:0 20px;
+
+}
+
+.headline-main{
+
+  background:#fff;
+
+  border-radius:18px;
+
+  overflow:hidden;
+
+  box-shadow:0 8px 25px #0000001a;
+
+}
+
+.headline-main img{
+
+  width:100%;
+
+  height:420px;
+
+  object-fit:cover;
+
+  display:block;
+
+}
+
+.headline-text{
+
+  padding:25px;
+
+}
+
+.headline-text h2{
+
+  font-size:32px;
+
+  line-height:1.25;
+
+}
+
+.headline-text p{
+
+  color:#555;
+
+  line-height:1.7;
+
+}
+
+.etiket{
+
+  display:inline-block;
+
+  background:#d60000;
+
+  color:#fff;
+
+  padding:6px 11px;
+
+  border-radius:6px;
+
+  font-size:12px;
+
+  font-weight:bold;
+
+}
+
+.haber-tarih{
+
+  color:#777;
+
+  font-size:13px;
+
+  margin-top:10px;
+
+}
+
+
+/* =========================================================
+   HABERLER
+========================================================= */
+
+.news,
+.search,
+.ads{
+
+  max-width:1200px;
+
+  margin:35px auto;
+
+  padding:0 20px;
+
+}
+
+.news-grid{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fit,minmax(280px,1fr));
+
+  gap:20px;
+
+}
+
+.news-card{
+
+  background:#fff;
+
+  border-radius:12px;
+
+  overflow:hidden;
+
+  box-shadow:0 4px 15px #00000014;
+
+}
+
+.news-card img{
+
+  width:100%;
+
+  height:190px;
+
+  object-fit:cover;
+
+}
+
+.news-card-content{
+
+  padding:18px;
+
+}
+
+.news-card a{
+
+  display:inline-block;
+
+  margin-top:12px;
+
+  color:#d60000;
+
+  font-weight:bold;
+
+}
+
+
+/* =========================================================
+   ARAMA
+========================================================= */
+
+.search input{
+
+  width:100%;
+
+  padding:15px 18px;
+
+  border:1px solid #ddd;
+
+  border-radius:10px;
+
+  font-size:16px;
+
+  box-sizing:border-box;
+
+}
+
+
+/* =========================================================
+   FİRMA REHBERİ
+========================================================= */
+
+.firmalar-anasayfa{
+
+  max-width:1200px;
+
+  margin:35px auto;
+
+  padding:0 20px;
+
+}
+
+.firma-baslik{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  margin-bottom:18px;
+
+}
+
+.firma-baslik h2{
+
+  margin:0 0 5px;
+
+}
+
+.firma-baslik p{
+
+  margin:0;
+
+  color:#777;
+
+}
+
+.firma-tum-btn{
+
+  background:#d60000;
+
+  color:#fff;
+
+  padding:10px 16px;
+
+  border-radius:8px;
+
+  text-decoration:none;
+
+  font-weight:bold;
+
+}
+
+.firma-grid{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fit,minmax(250px,1fr));
+
+  gap:18px;
+
+}
+
+.firma-karti{
+
+  background:#fff;
+
+  border-radius:12px;
+
+  padding:18px;
+
+  box-shadow:0 4px 15px #00000014;
+
+}
+
+.firma-logo{
+
+  width:70px;
+
+  height:70px;
+
+  object-fit:contain;
+
+  border-radius:10px;
+
+  background:#f5f5f5;
+
+  margin-bottom:12px;
+
+}
+
+.firma-logo-yok{
+
+  width:70px;
+
+  height:70px;
+
+  border-radius:10px;
+
+  background:#f5f5f5;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  font-size:30px;
+
+  margin-bottom:12px;
+
+}
+
+.firma-karti h3{
+
+  margin:5px 0;
+
+}
+
+.firma-kategori{
+
+  color:#d60000;
+
+  font-size:13px;
+
+  font-weight:bold;
+
+}
+
+.firma-konum{
+
+  color:#666;
+
+  margin:8px 0;
+
+}
+
+.firma-detay{
+
+  display:inline-block;
+
+  margin-top:8px;
+
+  color:#d60000;
+
+  font-weight:bold;
+
+  text-decoration:none;
+
+}
+
+
+/* =========================================================
+   30 SANİYEDE TÜRKİYE
+========================================================= */
+
+.kisa-gundem{
+
+  max-width:1200px;
+
+  margin:30px auto;
+
+  padding:20px;
+
+  background:#fff;
+
+  border-radius:16px;
+
+  box-shadow:0 5px 20px #00000014;
+
+}
+
+.kisa-gundem-baslik{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  border-bottom:2px solid #eee;
+
+  padding-bottom:15px;
+
+}
+
+.canli-nokta{
+
+  display:inline-block;
+
+  width:10px;
+
+  height:10px;
+
+  background:#d60000;
+
+  border-radius:50%;
+
+  margin-right:7px;
+
+}
+
+.gundem-haber{
+
+  padding:14px 0;
+
+  border-bottom:1px solid #eee;
+
+}
+
+.gundem-haber strong{
+
+  display:block;
+
+}
+
+.gundem-haber p{
+
+  color:#666;
+
+}
+
+.gundem-haber a{
+
+  color:#d60000;
+
+  font-weight:bold;
+
+}
+
+#gundemDinleBtn{
+
+  border:0;
+
+  background:#d60000;
+
+  color:#fff;
+
+  padding:10px 16px;
+
+  border-radius:8px;
+
+  font-weight:bold;
+
+}
+
+
+/* =========================================================
+   REKLAMLAR
+========================================================= */
+
+.ads{
+
+  margin-top:45px;
+
+}
+
+.reklam-baslik{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:end;
+
+  margin-bottom:15px;
+
+}
+
+.reklam-baslik h2{
+
+  margin:0;
+
+}
+
+.reklam-alt{
+
+  font-size:13px;
+
+  color:#777;
+
+  margin-top:5px;
+
+}
+
+#reklamIcerik{
+
+  position:relative;
+
+  width:100%;
+
+  min-height:90px;
+
+}
+
+.reklam-karti{
+
+  display:none;
+
+  position:relative;
+
+  max-width:1000px;
+
+  margin:auto;
+
+  overflow:hidden;
+
+  background:#fff;
+
+  border:1px solid #e5e7eb;
+
+  border-radius:14px;
+
+  box-shadow:0 5px 20px #00000012;
+
+}
+
+.reklam-karti.aktif{
+
+  display:block;
+
+  animation:reklamFade .4s ease;
+
+}
+
+.reklam-karti a{
+
+  display:block;
+
+  color:inherit;
+
+  text-decoration:none;
+
+}
+
+.reklam-karti img{
+
+  width:100%;
+
+  height:auto;
+
+  max-height:280px;
+
+  object-fit:cover;
+
+  display:block;
+
+}
+
+.reklam-etiket{
+
+  position:absolute;
+
+  z-index:2;
+
+  top:9px;
+
+  left:9px;
+
+  background:#000b;
+
+  color:#fff;
+
+  padding:4px 8px;
+
+  border-radius:5px;
+
+  font-size:10px;
+
+}
+
+.reklam-fallback{
+
+  min-height:110px;
+
+  padding:30px;
+
+  text-align:center;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  font-weight:bold;
+
+}
+
+.reklam-bos{
+
+  border:1px dashed #d1d5db;
+
+  background:#fafafa;
+
+  border-radius:14px;
+
+  padding:28px;
+
+  text-align:center;
+
+  color:#777;
+
+}
+
+.reklam-noktalar{
+
+  text-align:center;
+
+  margin-top:12px;
+
+}
+
+.reklam-nokta{
+
+  width:8px;
+
+  height:8px;
+
+  padding:0;
+
+  border:0;
+
+  border-radius:50%;
+
+  background:#ccc;
+
+  margin:0 4px;
+
+  cursor:pointer;
+
+}
+
+.reklam-nokta.aktif{
+
+  background:#d60000;
+
+  transform:scale(1.25);
+
+}
+
+.reklam-yon{
+
+  display:none;
+
+  position:absolute;
+
+  top:50%;
+
+  transform:translateY(-50%);
+
+  z-index:5;
+
+  width:38px;
+
+  height:38px;
+
+  border:0;
+
+  border-radius:50%;
+
+  background:#000a;
+
+  color:#fff;
+
+  font-size:22px;
+
+  cursor:pointer;
+
+}
+
+.reklam-kapsayici.coklu .reklam-yon{
+
+  display:block;
+
+}
+
+.reklam-once{
+
+  left:10px;
+
+}
+
+.reklam-sonra{
+
+  right:10px;
+
+}
+
+@keyframes reklamFade{
+
+  from{
+
+    opacity:.3;
+
+    transform:translateY(4px);
+
+  }
+
+  to{
+
+    opacity:1;
+
+    transform:none;
+
+  }
+
+}
+
+
+/* =========================================================
+   MOBİL
+========================================================= */
+
+@media(max-width:768px){
+
+  .headline-main img{
+
+    height:220px;
+
+  }
+
+  .headline-text{
+
+    padding:18px;
+
+  }
+
+  .headline-text h2{
+
+    font-size:24px;
+
+  }
+
+  .kisa-gundem{
+
+    margin:20px;
+
+  }
+
+  .kisa-gundem-baslik{
+
+    align-items:flex-start;
+
+    flex-direction:column;
+
+    gap:12px;
+
+  }
+
+  #gundemDinleBtn{
+
+    width:100%;
+
+  }
+
+  .ads{
+
+    padding:0 14px;
+
+  }
+
+  .reklam-karti img{
+
+    max-height:220px;
+
+  }
+
+  .reklam-yon{
+
+    width:32px;
+
+    height:32px;
+
+    font-size:17px;
+
+  }
+
+  .firma-baslik{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    gap:12px;
+
+  }
+
+}
+
 </style>
+
 </head>
+
+
 <body>
 
-<div class="topbar"><marquee>📢 SON DAKİKA • Digital Gündem yayında • Türkiye Rehberi hazırlanıyor • Firma Rehberi yakında • Köşe Yazarları çok yakında...</marquee></div>
+
+<!-- =====================================================
+     ÜST BAR
+===================================================== -->
+
+<div class="topbar">
+
+<marquee>
+
+📢 SON DAKİKA • Digital Gündem yayında •
+Türkiye Rehberi hazırlanıyor •
+Firma Rehberi aktif •
+Köşe Yazarları çok yakında...
+
+</marquee>
+
+</div>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
 
 <header class="site-header">
-<div class="logo-area"><a href="index.html" class="site-logo"><h1>Digital <span>Gündem</span></h1><p>Türkiye'nin Dijital Rehberi</p></a></div>
+
+<div class="logo-area">
+
+<a href="index.html"
+   class="site-logo">
+
+<h1>
+Digital <span>Gündem</span>
+</h1>
+
+<p>
+Türkiye'nin Dijital Rehberi
+</p>
+
+</a>
+
+</div>
+
+
 <nav class="main-nav">
-<a href="index.html">🏠 Ana Sayfa</a><a href="/reklam-ver.html">
-    📢 Reklam Ver
-</a><a href="pages/sondakika.html">📰 Son Dakika</a><a href="pages/turkiye.html">🇹🇷 Türkiye</a>
-<a href="pages/rehber.html">📍 Rehber</a><a href="pages/firmalar.html">🏢 Firmalar</a><a href="pages/yazarlar.html">✍️ Yazarlar</a>
-<a href="pages/video.html">🎥 Video</a><a href="pages/iletisim.html">📞 İletişim</a><a href="/admin-giris">🔐 Yönetim</a>
+
+<a href="index.html">
+🏠 Ana Sayfa
+</a>
+
+<a href="/reklam-ver.html">
+📢 Reklam Ver
+</a>
+
+<a href="pages/sondakika.html">
+📰 Son Dakika
+</a>
+
+<a href="pages/turkiye.html">
+🇹🇷 Türkiye
+</a>
+
+<a href="pages/rehber.html">
+📍 Rehber
+</a>
+
+<a href="pages/firmalar.html">
+🏢 Firmalar
+</a>
+
+<a href="pages/yazarlar.html">
+✍️ Yazarlar
+</a>
+
+<a href="pages/video.html">
+🎥 Video
+</a>
+
+<a href="pages/iletisim.html">
+📞 İletişim
+</a>
+
+<a href="/admin-giris">
+🔐 Yönetim
+</a>
+
 </nav>
+
 </header>
 
-<section class="headline"><div id="mansetHaber"><div class="api-yukleniyor">📰 Haberler yükleniyor...</div></div></section>
 
-<section class="search"><input id="haberArama" type="text" placeholder="Haber, il veya firma ara..."></section>
+<!-- =====================================================
+     MANŞET HABER
+===================================================== -->
+
+<section class="headline">
+
+<div id="mansetHaber">
+
+<div class="api-yukleniyor">
+
+📰 Haberler yükleniyor...
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     ARAMA
+===================================================== -->
+
+<section class="search">
+
+<input
+  id="haberArama"
+  type="text"
+  placeholder="Haber, il veya firma ara..."
+>
+
+</section>
+
+
+<!-- =====================================================
+     FİRMA REHBERİ
+===================================================== -->
+
+<section class="firmalar-anasayfa">
+
+<div class="firma-baslik">
+
+<div>
+
+<h2>
+🏢 Firma Rehberi
+</h2>
+
+<p>
+Türkiye'deki firmaları keşfedin
+</p>
+
+</div>
+
+
+<a
+  href="pages/firmalar.html"
+  class="firma-tum-btn"
+>
+Tüm Firmalar →
+</a>
+
+</div>
+
+
+<div id="anasayfaFirmalar">
+
+<div class="api-yukleniyor">
+
+🏢 Firmalar yükleniyor...
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     30 SANİYEDE TÜRKİYE
+===================================================== -->
 
 <section class="kisa-gundem">
-<div class="kisa-gundem-baslik"><div><span class="canli-nokta"></span><strong>30 SANİYEDE TÜRKİYE</strong></div><button id="gundemDinleBtn">🔊 Gündemi Dinle</button></div>
-<div id="gundemDurum">🇹🇷 Türkiye gündemi yükleniyor...</div><div id="gundemHaberleri"></div>
+
+<div class="kisa-gundem-baslik">
+
+<div>
+
+<span class="canli-nokta"></span>
+
+<strong>
+30 SANİYEDE TÜRKİYE
+</strong>
+
+</div>
+
+<button id="gundemDinleBtn">
+
+🔊 Gündemi Dinle
+
+</button>
+
+</div>
+
+
+<div id="gundemDurum">
+
+🇹🇷 Türkiye gündemi yükleniyor...
+
+</div>
+
+
+<div id="gundemHaberleri"></div>
+
 </section>
 
-<section class="news"><h2>📰 Öne Çıkan Haberler</h2><div class="news-grid" id="haberListesi"><div class="api-yukleniyor">📰 Haberler yükleniyor...</div></div></section>
 
-<section class="ads" id="reklamBolumu">
-<div class="reklam-baslik"><div><h2>📢 Reklam Alanı</h2><div class="reklam-alt">Digital Gündem'de yerinizi alın</div></div></div>
-<div id="reklamIcerik"><div class="reklam-bos">📢 Reklamlar yükleniyor...</div></div>
+<!-- =====================================================
+     HABERLER
+===================================================== -->
+
+<section class="news">
+
+<h2>
+📰 Öne Çıkan Haberler
+</h2>
+
+<div
+  class="news-grid"
+  id="haberListesi"
+>
+
+<div class="api-yukleniyor">
+
+📰 Haberler yükleniyor...
+
+</div>
+
+</div>
+
 </section>
 
-<footer><h2>Digital Gündem</h2><p>Türkiye'nin Dijital Rehberi</p><p>Tarafsız bakar, doğruyu yayınlar.</p><p>© 2026 Digital Gündem</p></footer>
+
+<!-- =====================================================
+     REKLAM
+===================================================== -->
+
+<section
+  class="ads"
+  id="reklamBolumu"
+>
+
+<div class="reklam-baslik">
+
+<div>
+
+<h2>
+📢 Reklam Alanı
+</h2>
+
+<div class="reklam-alt">
+Digital Gündem'de yerinizi alın
+</div>
+
+</div>
+
+</div>
+
+
+<div id="reklamIcerik">
+
+<div class="reklam-bos">
+
+📢 Reklamlar yükleniyor...
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+<h2>
+Digital Gündem
+</h2>
+
+<p>
+Türkiye'nin Dijital Rehberi
+</p>
+
+<p>
+Tarafsız bakar, doğruyu yayınlar.
+</p>
+
+<p>
+© 2026 Digital Gündem
+</p>
+
+</footer>
+
 
 <script>
-const HABER_API="/api/haberler",REKLAM_API="/api/reklamlar";
-let tumHaberler=[],gundemHaberleri=[],reklamlar=[],reklamIndex=0,reklamTimer=null;
 
-function escapeHTML(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
+/* =========================================================
+   API ADRESLERİ
+========================================================= */
 
-/* HABERLER */
+const HABER_API =
+  "/api/haberler";
+
+const FIRMA_API =
+  "/api/firmalar";
+
+const REKLAM_API =
+  "/api/reklamlar";
+
+
+let tumHaberler = [];
+
+let gundemHaberleri = [];
+
+let reklamlar = [];
+
+let reklamIndex = 0;
+
+let reklamTimer = null;
+
+
+/* =========================================================
+   HTML GÜVENLİĞİ
+========================================================= */
+
+function escapeHTML(v){
+
+  return String(v ?? "")
+
+    .replace(/&/g,"&amp;")
+
+    .replace(/</g,"&lt;")
+
+    .replace(/>/g,"&gt;")
+
+    .replace(/"/g,"&quot;")
+
+    .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================================================
+   HABERLERİ GETİR
+========================================================= */
+
 async function haberleriGetir(){
- const liste=document.getElementById("haberListesi"),manset=document.getElementById("mansetHaber");
- try{
-  const r=await fetch(HABER_API,{cache:"no-store"}),d=await r.json();
-  if(!r.ok||!d.success)throw Error(d.error||"Haberler alınamadı.");
-  tumHaberler=Array.isArray(d.haberler)?d.haberler:[];
-  if(!tumHaberler.length){manset.innerHTML='<div class="bos-haber">📰 Henüz yayınlanmış haber bulunmuyor.</div>';liste.innerHTML=manset.innerHTML;return;}
-  const h=tumHaberler[0],img=h.resim?.trim()||"https://picsum.photos/1200/500";
-  manset.innerHTML=`<article class="headline-main"><img src="${escapeHTML(img)}" alt="${escapeHTML(h.baslik||"Haber")}"><div class="headline-text"><span class="etiket">${escapeHTML(h.kategori||"Gündem")}</span><h2>${escapeHTML(h.baslik||"Başlıksız Haber")}</h2><p>${escapeHTML(h.ozet||"")}</p>${h.tarih?`<div class="haber-tarih">📅 ${escapeHTML(h.tarih)}</div>`:""}<a href="pages/haber.html?id=${encodeURIComponent(h.id)}" class="btn">Haberi Oku →</a></div></article>`;
-  haberleriListele(tumHaberler);
- }catch(e){manset.innerHTML=`<div class="api-hata">❌ Haberler yüklenemedi.<br><small>${escapeHTML(e.message)}</small></div>`;liste.innerHTML=manset.innerHTML;}
-}
-function haberleriListele(arr){
- const l=document.getElementById("haberListesi");
- if(!arr.length){l.innerHTML='<div class="bos-haber">Haber bulunamadı.</div>';return;}
- l.innerHTML=arr.map(h=>{const img=h.resim?.trim()||"https://picsum.photos/600/350";return `<article class="news-card"><img src="${escapeHTML(img)}" alt="${escapeHTML(h.baslik||"Haber")}"><div class="news-card-content"><span class="etiket">${escapeHTML(h.kategori||"Gündem")}</span><h3>${escapeHTML(h.baslik||"Başlıksız Haber")}</h3><p>${escapeHTML(h.ozet||"")}</p><div class="haber-tarih">${h.tarih?"📅 "+escapeHTML(h.tarih):""}</div><a href="pages/haber.html?id=${encodeURIComponent(h.id)}">Devamını Oku →</a></div></article>`}).join("");
-}
-document.getElementById("haberArama").addEventListener("input",function(){
- const q=this.value.toLocaleLowerCase("tr-TR").trim();
- haberleriListele(!q?tumHaberler:tumHaberler.filter(h=>`${h.baslik||""} ${h.ozet||""} ${h.icerik||""} ${h.kategori||""}`.toLocaleLowerCase("tr-TR").includes(q)));
-});
 
-/* GÜNDEM */
-async function gundemGetir(){
- const durum=document.getElementById("gundemDurum"),alan=document.getElementById("gundemHaberleri");
- try{
-  const r=await fetch("/api/gundem",{cache:"no-store"}),d=await r.json();
-  if(!r.ok||!d.success)throw Error(d.error||"Gündem alınamadı.");
-  gundemHaberleri=Array.isArray(d.haberler)?d.haberler:[];
-  durum.innerHTML=gundemHaberleri.length?`✅ ${gundemHaberleri.length} güncel haber • Anadolu Ajansı`:"📰 Şu anda gündem haberi bulunamadı.";
-  alan.innerHTML=gundemHaberleri.map(h=>`<article class="gundem-haber"><strong>${escapeHTML(h.baslik)}</strong><p>${escapeHTML(h.ozet||"")}</p><a href="${escapeHTML(h.url)}" target="_blank" rel="noopener noreferrer">Anadolu Ajansı kaynağı →</a></article>`).join("");
- }catch(e){durum.innerHTML="❌ Türkiye gündemi yüklenemedi.";alan.innerHTML="";}
-}
-document.getElementById("gundemDinleBtn").onclick=()=>{
- if(!gundemHaberleri.length)return alert("Önce gündem haberlerinin yüklenmesini bekleyin.");
- if(!("speechSynthesis"in window))return alert("Cihazınız sesli okumayı desteklemiyor.");
- speechSynthesis.cancel();const u=new SpeechSynthesisUtterance("30 saniyede Türkiye gündemi. "+gundemHaberleri.slice(0,5).map((h,i)=>`${i+1}. ${h.baslik}. ${h.ozet||""}`).join(" "));
- u.lang="tr-TR";u.rate=1.05;speechSynthesis.speak(u);
-};
+  const liste =
+    document.getElementById(
+      "haberListesi"
+    );
 
-/* REKLAM */
-function reklamGecerli(r){
- if(!r||r.durum!=="aktif")return false;
- const now=new Date();
- if(r.baslangic){const x=new Date(String(r.baslangic).replace(" ","T"));if(!isNaN(x)&&now<x)return false;}
- if(r.bitis){const x=new Date(String(r.bitis).replace(" ","T"));if(!isNaN(x)&&now>x)return false;}
- return true;
-}
-function reklamGoster(i){
- const kartlar=document.querySelectorAll(".reklam-karti"),noktalar=document.querySelectorAll(".reklam-nokta");
- if(!kartlar.length)return;
- reklamIndex=(i+kartlar.length)%kartlar.length;
- kartlar.forEach((x,j)=>x.classList.toggle("aktif",j===reklamIndex));
- noktalar.forEach((x,j)=>x.classList.toggle("aktif",j===reklamIndex));
-}
-function reklamTimerBaslat(){
- clearInterval(reklamTimer);
- if(reklamlar.length>1)reklamTimer=setInterval(()=>reklamGoster(reklamIndex+1),7000);
-}
-async function reklamGetir(){
- const alan=document.getElementById("reklamIcerik");
- try{
-  const r=await fetch(REKLAM_API,{cache:"no-store"}),d=await r.json();
-  if(!r.ok||!d.success)throw Error(d.error||"Reklamlar alınamadı.");
-  const tum=Array.isArray(d.reklamlar)?d.reklamlar:[];
-  reklamlar=tum.filter(reklamGecerli).filter(r=>!r.konum||r.konum==="anasayfa");
-  if(!reklamlar.length)reklamlar=tum.filter(reklamGecerli);
-  if(!reklamlar.length){alan.innerHTML='<div class="reklam-bos">📢 Şu anda yayınlanan reklam bulunmuyor.</div>';return;}
+  const manset =
+    document.getElementById(
+      "mansetHaber"
+    );
 
-  alan.innerHTML=reklamlar.map((r,i)=>{
-   const icerik=r.resim?`<img src="${escapeHTML(r.resim)}" alt="${escapeHTML(r.firma_adi||"Reklam")}" loading="${i?"lazy":"eager"}">`:`<div class="reklam-fallback">📢 ${escapeHTML(r.firma_adi||"Reklam")}</div>`;
-   return `<div class="reklam-karti ${i===0?"aktif":""}"><span class="reklam-etiket">REKLAM</span>${r.link?`<a href="${escapeHTML(r.link)}" target="_blank" rel="noopener noreferrer sponsored">${icerik}</a>`:icerik}</div>`;
-  }).join("")+(reklamlar.length>1?`<div class="reklam-noktalar">${reklamlar.map((_,i)=>`<button class="reklam-nokta ${i===0?"aktif":""}" aria-label="${i+1}. reklam" onclick="reklamGoster(${i});reklamTimerBaslat()"></button>`).join("")}</div>`:"");
+  try{
 
-  if(reklamlar.length>1){
-   alan.classList.add("reklam-kapsayici","coklu");
-   const a=document.createElement("button");a.className="reklam-yon reklam-once";a.textContent="‹";a.onclick=()=>{reklamGoster(reklamIndex-1);reklamTimerBaslat()};
-   const b=document.createElement("button");b.className="reklam-yon reklam-sonra";b.textContent="›";b.onclick=()=>{reklamGoster(reklamIndex+1);reklamTimerBaslat()};
-   alan.append(a,b);reklamTimerBaslat();
+    const r =
+      await fetch(
+        HABER_API,
+        {
+          cache:"no-store"
+        }
+      );
+
+
+    const d =
+      await r.json();
+
+
+    if(
+      !r.ok ||
+      !d.success
+    ){
+
+      throw new Error(
+        d.error ||
+        "Haberler alınamadı."
+      );
+
+    }
+
+
+    tumHaberler =
+      Array.isArray(d.haberler)
+        ? d.haberler
+        : [];
+
+
+    if(
+      !tumHaberler.length
+    ){
+
+      manset.innerHTML =
+        `
+        <div class="bos-haber">
+
+        📰 Henüz yayınlanmış
+        haber bulunmuyor.
+
+        </div>
+        `;
+
+      liste.innerHTML =
+        manset.innerHTML;
+
+      return;
+
+    }
+
+
+    const h =
+      tumHaberler[0];
+
+
+    const img =
+      h.resim?.trim() ||
+      "https://picsum.photos/1200/500";
+
+
+    manset.innerHTML = `
+
+      <article class="headline-main">
+
+        <img
+          src="${escapeHTML(img)}"
+          alt="${escapeHTML(
+            h.baslik || "Haber"
+          )}"
+        >
+
+        <div class="headline-text">
+
+          <span class="etiket">
+
+            ${escapeHTML(
+              h.kategori || "Gündem"
+            )}
+
+          </span>
+
+          <h2>
+
+            ${escapeHTML(
+              h.baslik ||
+              "Başlıksız Haber"
+            )}
+
+          </h2>
+
+          <p>
+
+            ${escapeHTML(
+              h.ozet || ""
+            )}
+
+          </p>
+
+          ${
+            h.tarih
+              ?
+              `
+              <div class="haber-tarih">
+
+                📅
+                ${escapeHTML(h.tarih)}
+
+              </div>
+              `
+              :
+              ""
+          }
+
+          <a
+            href="pages/haber.html?id=${encodeURIComponent(h.id)}"
+            class="btn"
+          >
+
+            Haberi Oku →
+
+          </a>
+
+        </div>
+
+      </article>
+
+    `;
+
+
+    haberleriListele(
+      tumHaberler
+    );
+
+
+  }catch(e){
+
+    console.error(e);
+
+
+    manset.innerHTML = `
+
+      <div class="api-hata">
+
+        ❌ Haberler yüklenemedi.
+
+        <br>
+
+        <small>
+
+          ${escapeHTML(
+            e.message
+          )}
+
+        </small>
+
+      </div>
+
+    `;
+
+
+    liste.innerHTML =
+      manset.innerHTML;
+
   }
- }catch(e){console.error(e);alan.innerHTML='<div class="reklam-bos">📢 Reklam alanı şu anda kullanılamıyor.</div>';}
+
 }
 
-document.addEventListener("DOMContentLoaded",()=>{haberleriGetir();gundemGetir();reklamGetir();});
+
+/* =========================================================
+   HABER LİSTELE
+========================================================= */
+
+function haberleriListele(arr){
+
+  const l =
+    document.getElementById(
+      "haberListesi"
+    );
+
+
+  if(!arr.length){
+
+    l.innerHTML = `
+
+      <div class="bos-haber">
+
+        Haber bulunamadı.
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  l.innerHTML =
+
+    arr.map(
+      h => {
+
+        const img =
+          h.resim?.trim() ||
+          "https://picsum.photos/600/350";
+
+
+        return `
+
+          <article
+            class="news-card"
+          >
+
+            <img
+              src="${escapeHTML(img)}"
+              alt="${escapeHTML(
+                h.baslik ||
+                "Haber"
+              )}"
+            >
+
+            <div
+              class="news-card-content"
+            >
+
+              <span class="etiket">
+
+                ${escapeHTML(
+                  h.kategori ||
+                  "Gündem"
+                )}
+
+              </span>
+
+
+              <h3>
+
+                ${escapeHTML(
+                  h.baslik ||
+                  "Başlıksız Haber"
+                )}
+
+              </h3>
+
+
+              <p>
+
+                ${escapeHTML(
+                  h.ozet || ""
+                )}
+
+              </p>
+
+
+              <div
+                class="haber-tarih"
+              >
+
+                ${
+                  h.tarih
+                    ?
+                    "📅 " +
+                    escapeHTML(
+                      h.tarih
+                    )
+                    :
+                    ""
+                }
+
+              </div>
+
+
+              <a
+                href="pages/haber.html?id=${encodeURIComponent(h.id)}"
+              >
+
+                Devamını Oku →
+
+              </a>
+
+            </div>
+
+          </article>
+
+        `;
+
+      }
+    ).join("");
+
+}
+
+
+/* =========================================================
+   ARAMA
+   HABER + FİRMA
+========================================================= */
+
+document
+  .getElementById("haberArama")
+  .addEventListener(
+    "input",
+    function(){
+
+      const q =
+        this.value
+          .toLocaleLowerCase(
+            "tr-TR"
+          )
+          .trim();
+
+
+      if(!q){
+
+        haberleriListele(
+          tumHaberler
+        );
+
+        return;
+
+      }
+
+
+      const sonuc =
+        tumHaberler.filter(
+          h =>
+
+            `
+
+            ${h.baslik || ""}
+
+            ${h.ozet || ""}
+
+            ${h.icerik || ""}
+
+            ${h.kategori || ""}
+
+            `
+            .toLocaleLowerCase(
+              "tr-TR"
+            )
+            .includes(q)
+
+        );
+
+
+      haberleriListele(
+        sonuc
+      );
+
+    }
+  );
+
+
+/* =========================================================
+   FİRMA REHBERİ
+========================================================= */
+
+async function firmalariGetir(){
+
+  const alan =
+    document.getElementById(
+      "anasayfaFirmalar"
+    );
+
+
+  if(!alan) return;
+
+
+  try{
+
+    const r =
+      await fetch(
+        FIRMA_API,
+        {
+          cache:"no-store"
+        }
+      );
+
+
+    const d =
+      await r.json();
+
+
+    if(
+      !r.ok ||
+      !d.success
+    ){
+
+      throw new Error(
+        d.error ||
+        "Firmalar alınamadı."
+      );
+
+    }
+
+
+    const firmalar =
+      Array.isArray(d.firmalar)
+        ? d.firmalar
+        : [];
+
+
+    if(
+      !firmalar.length
+    ){
+
+      alan.innerHTML = `
+
+        <div class="firma-bos">
+
+          🏢 Henüz yayınlanmış
+          firma bulunmuyor.
+
+          <br><br>
+
+          <a
+            href="/admin-giris"
+            style="
+              color:#d60000;
+              font-weight:bold;
+            "
+          >
+            Yönetim panelinden
+            firma ekleyebilirsiniz →
+          </a>
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    const ilkFirmalar =
+      firmalar.slice(0,6);
+
+
+    alan.innerHTML = `
+
+      <div class="firma-grid">
+
+        ${
+          ilkFirmalar
+            .map(
+              firma => {
+
+                const logo =
+                  firma.logo &&
+                  String(
+                    firma.logo
+                  ).trim()
+                    ?
+                    firma.logo
+                    :
+                    "";
+
+
+                const konum =
+                  [
+                    firma.il,
+                    firma.ilce
+                  ]
+                  .filter(Boolean)
+                  .join(" / ");
+
+
+                return `
+
+                  <article
+                    class="firma-karti"
+                  >
+
+                    ${
+                      logo
+
+                      ?
+
+                      `
+                      <img
+                        class="firma-logo"
+                        src="${escapeHTML(
+                          logo
+                        )}"
+                        alt="${escapeHTML(
+                          firma.firma_adi ||
+                          "Firma"
+                        )}"
+                      >
+                      `
+
+                      :
+
+                      `
+                      <div
+                        class="firma-logo-yok"
+                      >
+                        🏢
+                      </div>
+                      `
+                    }
+
+
+                    <div
+                      class="firma-kategori"
+                    >
+
+                      ${escapeHTML(
+                        firma.kategori ||
+                        "Diğer"
+                      )}
+
+                    </div>
+
+
+                    <h3>
+
+                      ${escapeHTML(
+                        firma.firma_adi ||
+                        "Firma"
+                      )}
+
+                    </h3>
+
+
+                    ${
+                      konum
+
+                        ?
+
+                        `
+                        <div
+                          class="firma-konum"
+                        >
+
+                          📍
+                          ${escapeHTML(
+                            konum
+                          )}
+
+                        </div>
+                        `
+
+                        :
+
+                        ""
+                    }
+
+
+                    ${
+                      firma.aciklama
+
+                        ?
+
+                        `
+                        <p>
+
+                          ${escapeHTML(
+                            firma.aciklama
+                          ).substring(
+                            0,
+                            140
+                          )}
+
+                        </p>
+                        `
+
+                        :
+
+                        ""
+                    }
+
+
+                    <a
+                      class="firma-detay"
+                      href="pages/firmalar.html?id=${encodeURIComponent(
+                        firma.id
+                      )}"
+                    >
+
+                      Firma Detayı →
+
+                    </a>
+
+                  </article>
+
+                `;
+
+              }
+            )
+            .join("")
+        }
+
+      </div>
+
+    `;
+
+
+  }catch(e){
+
+    console.error(
+      "Firma sistemi:",
+      e
+    );
+
+
+    alan.innerHTML = `
+
+      <div class="api-hata">
+
+        ❌ Firma rehberi yüklenemedi.
+
+        <br>
+
+        <small>
+
+          ${escapeHTML(
+            e.message
+          )}
+
+        </small>
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+/* =========================================================
+   TÜRKİYE GÜNDEMİ
+========================================================= */
+
+async function gundemGetir(){
+
+  const durum =
+    document.getElementById(
+      "gundemDurum"
+    );
+
+  const alan =
+    document.getElementById(
+      "gundemHaberleri"
+    );
+
+
+  try{
+
+    const r =
+      await fetch(
+        "/api/gundem",
+        {
+          cache:"no-store"
+        }
+      );
+
+
+    const d =
+      await r.json();
+
+
+    if(
+      !r.ok ||
+      !d.success
+    ){
+
+      throw new Error(
+        d.error ||
+        "Gündem alınamadı."
+      );
+
+    }
+
+
+    gundemHaberleri =
+      Array.isArray(d.haberler)
+        ? d.haberler
+        : [];
+
+
+    durum.innerHTML =
+
+      gundemHaberleri.length
+
+        ?
+
+        `
+
+        ✅
+        ${gundemHaberleri.length}
+        güncel haber •
+        Anadolu Ajansı
+
+        `
+
+        :
+
+        `
+        📰 Şu anda gündem
+        haberi bulunamadı.
+        `;
+
+
+    alan.innerHTML =
+
+      gundemHaberleri
+        .map(
+          h => `
+
+            <article
+              class="gundem-haber"
+            >
+
+              <strong>
+
+                ${escapeHTML(
+                  h.baslik
+                )}
+
+              </strong>
+
+              <p>
+
+                ${escapeHTML(
+                  h.ozet || ""
+                )}
+
+              </p>
+
+              <a
+                href="${escapeHTML(
+                  h.url
+                )}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+
+                Anadolu Ajansı kaynağı →
+
+              </a>
+
+            </article>
+
+          `
+        )
+        .join("");
+
+
+  }catch(e){
+
+    console.error(e);
+
+
+    durum.innerHTML =
+      "❌ Türkiye gündemi yüklenemedi.";
+
+    alan.innerHTML = "";
+
+  }
+
+}
+
+
+/* =========================================================
+   GÜNDEM SESLİ OKUMA
+========================================================= */
+
+document
+  .getElementById(
+    "gundemDinleBtn"
+  )
+  .onclick = () => {
+
+
+    if(
+      !gundemHaberleri.length
+    ){
+
+      alert(
+        "Önce gündem haberlerinin yüklenmesini bekleyin."
+      );
+
+      return;
+
+    }
+
+
+    if(
+      !("speechSynthesis" in window)
+    ){
+
+      alert(
+        "Cihazınız sesli okumayı desteklemiyor."
+      );
+
+      return;
+
+    }
+
+
+    speechSynthesis.cancel();
+
+
+    const metin =
+
+      "30 saniyede Türkiye gündemi. " +
+
+      gundemHaberleri
+        .slice(0,5)
+        .map(
+          (h,i) =>
+            `${i+1}. ${h.baslik}. ${h.ozet || ""}`
+        )
+        .join(" ");
+
+
+    const u =
+      new SpeechSynthesisUtterance(
+        metin
+      );
+
+
+    u.lang =
+      "tr-TR";
+
+    u.rate =
+      1.05;
+
+
+    speechSynthesis.speak(u);
+
+  };
+
+
+/* =========================================================
+   REKLAM
+========================================================= */
+
+function reklamGecerli(r){
+
+  if(
+    !r ||
+    r.durum !== "aktif"
+  ){
+
+    return false;
+
+  }
+
+
+  const now =
+    new Date();
+
+
+  if(r.baslangic){
+
+    const x =
+      new Date(
+        String(
+          r.baslangic
+        ).replace(
+          " ",
+          "T"
+        )
+      );
+
+
+    if(
+      !isNaN(x) &&
+      now < x
+    ){
+
+      return false;
+
+    }
+
+  }
+
+
+  if(r.bitis){
+
+    const x =
+      new Date(
+        String(
+          r.bitis
+        ).replace(
+          " ",
+          "T"
+        )
+      );
+
+
+    if(
+      !isNaN(x) &&
+      now > x
+    ){
+
+      return false;
+
+    }
+
+  }
+
+
+  return true;
+
+}
+
+
+function reklamGoster(i){
+
+  const kartlar =
+    document.querySelectorAll(
+      ".reklam-karti"
+    );
+
+
+  const noktalar =
+    document.querySelectorAll(
+      ".reklam-nokta"
+    );
+
+
+  if(!kartlar.length)
+    return;
+
+
+  reklamIndex =
+    (
+      i +
+      kartlar.length
+    ) %
+    kartlar.length;
+
+
+  kartlar.forEach(
+    (x,j) => {
+
+      x.classList.toggle(
+        "aktif",
+        j === reklamIndex
+      );
+
+    }
+  );
+
+
+  noktalar.forEach(
+    (x,j) => {
+
+      x.classList.toggle(
+        "aktif",
+        j === reklamIndex
+      );
+
+    }
+  );
+
+}
+
+
+function reklamTimerBaslat(){
+
+  clearInterval(
+    reklamTimer
+  );
+
+
+  if(
+    reklamlar.length > 1
+  ){
+
+    reklamTimer =
+      setInterval(
+        () =>
+          reklamGoster(
+            reklamIndex + 1
+          ),
+        7000
+      );
+
+  }
+
+}
+
+
+async function reklamGetir(){
+
+  const alan =
+    document.getElementById(
+      "reklamIcerik"
+    );
+
+
+  try{
+
+    const r =
+      await fetch(
+        REKLAM_API,
+        {
+          cache:"no-store"
+        }
+      );
+
+
+    const d =
+      await r.json();
+
+
+    if(
+      !r.ok ||
+      !d.success
+    ){
+
+      throw new Error(
+        d.error ||
+        "Reklamlar alınamadı."
+      );
+
+    }
+
+
+    const tum =
+      Array.isArray(
+        d.reklamlar
+      )
+        ? d.reklamlar
+        : [];
+
+
+    reklamlar =
+      tum
+        .filter(
+          reklamGecerli
+        )
+        .filter(
+          r =>
+            !r.konum ||
+            r.konum ===
+            "anasayfa"
+        );
+
+
+    if(
+      !reklamlar.length
+    ){
+
+      reklamlar =
+        tum.filter(
+          reklamGecerli
+        );
+
+    }
+
+
+    if(
+      !reklamlar.length
+    ){
+
+      alan.innerHTML = `
+
+        <div class="reklam-bos">
+
+          📢 Şu anda yayınlanan
+          reklam bulunmuyor.
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    alan.innerHTML =
+
+      reklamlar
+        .map(
+          (r,i) => {
+
+            const icerik =
+
+              r.resim
+
+                ?
+
+                `
+                <img
+                  src="${escapeHTML(
+                    r.resim
+                  )}"
+                  alt="${escapeHTML(
+                    r.firma_adi ||
+                    "Reklam"
+                  )}"
+                  loading="${
+                    i
+                      ? "lazy"
+                      : "eager"
+                  }"
+                >
+                `
+
+                :
+
+                `
+                <div
+                  class="reklam-fallback"
+                >
+
+                  📢
+                  ${escapeHTML(
+                    r.firma_adi ||
+                    "Reklam"
+                  )}
+
+                </div>
+                `;
+
+
+            return `
+
+              <div
+                class="
+                  reklam-karti
+                  ${i === 0
+                    ? "aktif"
+                    : ""}
+                "
+              >
+
+                <span
+                  class="reklam-etiket"
+                >
+
+                  REKLAM
+
+                </span>
+
+
+                ${
+                  r.link
+
+                    ?
+
+                    `
+                    <a
+                      href="${escapeHTML(
+                        r.link
+                      )}"
+                      target="_blank"
+                      rel="noopener noreferrer sponsored"
+                    >
+
+                      ${icerik}
+
+                    </a>
+                    `
+
+                    :
+
+                    icerik
+                }
+
+              </div>
+
+            `;
+
+          }
+        )
+        .join("");
+
+
+    if(
+      reklamlar.length > 1
+    ){
+
+      alan.innerHTML += `
+
+        <div
+          class="reklam-noktalar"
+        >
+
+          ${
+            reklamlar
+              .map(
+                (_,i) => `
+
+                  <button
+                    class="
+                      reklam-nokta
+                      ${i === 0
+                        ? "aktif"
+                        : ""}
+                    "
+                    aria-label="${
+                      i+1
+                    }. reklam"
+                    onclick="
+                      reklamGoster(${i});
+                      reklamTimerBaslat();
+                    "
+                  ></button>
+
+                `
+              )
+              .join("")
+          }
+
+        </div>
+
+      `;
+
+
+      alan.classList.add(
+        "reklam-kapsayici",
+        "coklu"
+      );
+
+
+      const once =
+        document.createElement(
+          "button"
+        );
+
+      once.className =
+        "reklam-yon reklam-once";
+
+      once.textContent =
+        "‹";
+
+      once.onclick = () => {
+
+        reklamGoster(
+          reklamIndex - 1
+        );
+
+        reklamTimerBaslat();
+
+      };
+
+
+      const sonra =
+        document.createElement(
+          "button"
+        );
+
+      sonra.className =
+        "reklam-yon reklam-sonra";
+
+      sonra.textContent =
+        "›";
+
+      sonra.onclick = () => {
+
+        reklamGoster(
+          reklamIndex + 1
+        );
+
+        reklamTimerBaslat();
+
+      };
+
+
+      alan.append(
+        once,
+        sonra
+      );
+
+
+      reklamTimerBaslat();
+
+    }
+
+
+  }catch(e){
+
+    console.error(e);
+
+
+    alan.innerHTML = `
+
+      <div class="reklam-bos">
+
+        📢 Reklam alanı şu anda
+        kullanılamıyor.
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+/* =========================================================
+   SAYFA AÇILINCA
+========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    haberleriGetir();
+
+    firmalariGetir();
+
+    gundemGetir();
+
+    reklamGetir();
+
+  }
+);
+
 </script>
+
 </body>
+
 </html>
