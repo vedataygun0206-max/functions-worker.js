@@ -2451,7 +2451,533 @@ if (
 
   }
 
-          
+    // =========================================================
+// 🎥 VİDEO HABERLER API
+// =========================================================
+
+// ---------------------------------------------------------
+// VİDEOLAR
+// GET /api/videolar
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/videolar" &&
+  request.method === "GET"
+) {
+
+  try {
+
+    const result = await env.DB
+      .prepare(`
+        SELECT *
+        FROM video_haberler
+        WHERE durum = 'yayinda'
+        ORDER BY id DESC
+      `)
+      .all();
+
+    return Response.json({
+      success: true,
+      toplam: result.results.length,
+      videolar: result.results
+    });
+
+  } catch (error) {
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, {
+      status: 500
+    });
+
+  }
+
+}
+
+
+// ---------------------------------------------------------
+// TEK VİDEO
+// GET /api/video?id=1
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/video" &&
+  request.method === "GET"
+) {
+
+  try {
+
+    const id = url.searchParams.get("id");
+
+    if (!id) {
+
+      return Response.json({
+        success: false,
+        error: "Video ID belirtilmedi."
+      }, {
+        status: 400
+      });
+
+    }
+
+    const video = await env.DB
+      .prepare(`
+        SELECT *
+        FROM video_haberler
+        WHERE id = ?
+        AND durum = 'yayinda'
+        LIMIT 1
+      `)
+      .bind(id)
+      .first();
+
+    if (!video) {
+
+      return Response.json({
+        success: false,
+        error: "Video bulunamadı."
+      }, {
+        status: 404
+      });
+
+    }
+
+    // İzlenme +1
+    await env.DB
+      .prepare(`
+        UPDATE video_haberler
+        SET izlenme = COALESCE(izlenme, 0) + 1
+        WHERE id = ?
+      `)
+      .bind(id)
+      .run();
+
+    video.izlenme =
+      (Number(video.izlenme) || 0) + 1;
+
+    return Response.json({
+      success: true,
+      video
+    });
+
+  } catch (error) {
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, {
+      status: 500
+    });
+
+  }
+
+}
+
+
+// ---------------------------------------------------------
+// VİDEO EKLE
+// POST /api/video
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/video" &&
+  request.method === "POST"
+) {
+
+  try {
+
+    const data = await request.json();
+
+    const baslik =
+      String(data.baslik || "").trim();
+
+    const aciklama =
+      String(data.aciklama || "").trim();
+
+    const video_url =
+      String(
+        data.video_url ||
+        data.videoUrl ||
+        ""
+      ).trim();
+
+    const resim =
+      String(data.resim || "").trim();
+
+    const kategori =
+      String(
+        data.kategori ||
+        "Video Haber"
+      ).trim();
+
+    const durum =
+      String(
+        data.durum ||
+        "yayinda"
+      ).trim();
+
+    const tarih =
+      String(
+        data.tarih ||
+        new Date().toLocaleDateString("tr-TR")
+      ).trim();
+
+    if (!baslik) {
+
+      return Response.json({
+        success: false,
+        error: "Video başlığı boş olamaz."
+      }, {
+        status: 400
+      });
+
+    }
+
+    if (!video_url) {
+
+      return Response.json({
+        success: false,
+        error: "Video bağlantısı boş olamaz."
+      }, {
+        status: 400
+      });
+
+    }
+
+    const result = await env.DB
+      .prepare(`
+        INSERT INTO video_haberler
+        (
+          baslik,
+          aciklama,
+          video_url,
+          resim,
+          kategori,
+          tarih,
+          durum,
+          izlenme
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `)
+      .bind(
+        baslik,
+        aciklama,
+        video_url,
+        resim,
+        kategori,
+        tarih,
+        durum,
+        0
+      )
+      .run();
+
+    return Response.json({
+      success: true,
+      message: "Video haber başarıyla kaydedildi.",
+      id: result.meta.last_row_id
+    });
+
+  } catch (error) {
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, {
+      status: 500
+    });
+
+  }
+
+}
+
+
+// ---------------------------------------------------------
+// VİDEO DÜZENLE
+// PUT /api/video?id=1
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/video" &&
+  request.method === "PUT"
+) {
+
+  try {
+
+    const id = url.searchParams.get("id");
+
+    if (!id) {
+
+      return Response.json({
+        success: false,
+        error: "Video ID belirtilmedi."
+      }, {
+        status: 400
+      });
+
+    }
+
+    const data = await request.json();
+
+    const baslik =
+      String(data.baslik || "").trim();
+
+    const aciklama =
+      String(data.aciklama || "").trim();
+
+    const video_url =
+      String(
+        data.video_url ||
+        data.videoUrl ||
+        ""
+      ).trim();
+
+    const resim =
+      String(data.resim || "").trim();
+
+    const kategori =
+      String(
+        data.kategori ||
+        "Video Haber"
+      ).trim();
+
+    const durum =
+      String(
+        data.durum ||
+        "yayinda"
+      ).trim();
+
+    const tarih =
+      String(
+        data.tarih ||
+        ""
+      ).trim();
+
+    if (!baslik) {
+
+      return Response.json({
+        success: false,
+        error: "Video başlığı boş olamaz."
+      }, {
+        status: 400
+      });
+
+    }
+
+    if (!video_url) {
+
+      return Response.json({
+        success: false,
+        error: "Video bağlantısı boş olamaz."
+      }, {
+        status: 400
+      });
+
+    }
+
+    const result = await env.DB
+      .prepare(`
+        UPDATE video_haberler
+        SET
+          baslik = ?,
+          aciklama = ?,
+          video_url = ?,
+          resim = ?,
+          kategori = ?,
+          tarih = ?,
+          durum = ?
+        WHERE id = ?
+      `)
+      .bind(
+        baslik,
+        aciklama,
+        video_url,
+        resim,
+        kategori,
+        tarih,
+        durum,
+        id
+      )
+      .run();
+
+    if (result.meta.changes === 0) {
+
+      return Response.json({
+        success: false,
+        error: "Video bulunamadı."
+      }, {
+        status: 404
+      });
+
+    }
+
+    return Response.json({
+      success: true,
+      message: "Video başarıyla güncellendi.",
+      id
+    });
+
+  } catch (error) {
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, {
+      status: 500
+    });
+
+  }
+
+}
+
+
+// ---------------------------------------------------------
+// VİDEO SİL
+// DELETE /api/video?id=1
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/video" &&
+  request.method === "DELETE"
+) {
+
+  try {
+
+    const id = url.searchParams.get("id");
+
+    if (!id) {
+
+      return Response.json({
+        success: false,
+        error: "Video ID belirtilmedi."
+      }, {
+        status: 400
+      });
+
+    }
+
+    const result = await env.DB
+      .prepare(`
+        DELETE FROM video_haberler
+        WHERE id = ?
+      `)
+      .bind(id)
+      .run();
+
+    if (result.meta.changes === 0) {
+
+      return Response.json({
+        success: false,
+        error: "Silinecek video bulunamadı."
+      }, {
+        status: 404
+      });
+
+    }
+
+    return Response.json({
+      success: true,
+      message: "Video başarıyla silindi.",
+      id
+    });
+
+  } catch (error) {
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, {
+      status: 500
+    });
+
+  }
+
+}
+
+
+// ---------------------------------------------------------
+// VİDEO İSTATİSTİKLERİ
+// GET /api/video-istatistik
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/video-istatistik" &&
+  request.method === "GET"
+) {
+
+  const auth =
+    cookieOku(
+      request,
+      ADMIN_COOKIE
+    );
+
+  if (auth !== "ok") {
+
+    return Response.json({
+      success: false,
+      error: "Yetkisiz erişim."
+    }, {
+      status: 401
+    });
+
+  }
+
+  try {
+
+    const result = await env.DB
+      .prepare(`
+        SELECT
+          id,
+          baslik,
+          kategori,
+          tarih,
+          durum,
+          izlenme
+        FROM video_haberler
+        ORDER BY
+          izlenme DESC,
+          id DESC
+      `)
+      .all();
+
+    const toplam =
+      result.results.reduce(
+        (sum, video) =>
+          sum +
+          (Number(video.izlenme) || 0),
+        0
+      );
+
+    return Response.json({
+
+      success: true,
+
+      toplam_izlenme:
+        toplam,
+
+      toplam_video:
+        result.results.length,
+
+      videolar:
+        result.results
+
+    });
+
+  } catch (error) {
+
+    return Response.json({
+
+      success: false,
+
+      error: error.message
+
+    }, {
+      status: 500
+    });
+
+  }
+
+}      
     }    // =========================================================
     // ESKİ HABER ADRESLERİ
     // =========================================================
