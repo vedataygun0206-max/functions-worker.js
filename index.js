@@ -3430,7 +3430,17 @@ if (
 
     const result = await env.DB
       .prepare(`
-        SELECT *
+        SELECT
+          id,
+          baslik,
+          ozet,
+          video_url,
+          kapak_resmi,
+          kategori,
+          tarih,
+          durum,
+          manset,
+          izlenme
         FROM video_haberler
         WHERE durum = 'yayinda'
         ORDER BY id DESC
@@ -3438,16 +3448,26 @@ if (
       .all();
 
     return Response.json({
+
       success: true,
-      toplam: result.results.length,
-      videolar: result.results
+
+      toplam:
+        result.results.length,
+
+      videolar:
+        result.results
+
     });
 
   } catch (error) {
 
     return Response.json({
+
       success: false,
-      error: error.message
+
+      error:
+        error.message
+
     }, {
       status: 500
     });
@@ -3475,8 +3495,12 @@ if (
     if (!id) {
 
       return Response.json({
+
         success: false,
-        error: "Video ID belirtilmedi."
+
+        error:
+          "Video ID belirtilmedi."
+
       }, {
         status: 400
       });
@@ -3486,7 +3510,17 @@ if (
     const video =
       await env.DB
         .prepare(`
-          SELECT *
+          SELECT
+            id,
+            baslik,
+            ozet,
+            video_url,
+            kapak_resmi,
+            kategori,
+            tarih,
+            durum,
+            manset,
+            izlenme
           FROM video_haberler
           WHERE id = ?
           AND durum = 'yayinda'
@@ -3498,36 +3532,55 @@ if (
     if (!video) {
 
       return Response.json({
+
         success: false,
-        error: "Video bulunamadı."
+
+        error:
+          "Video bulunamadı."
+
       }, {
         status: 404
       });
 
     }
 
+
+    // -------------------------------------------------------
+    // İZLENME +1
+    // -------------------------------------------------------
+
     await env.DB
       .prepare(`
         UPDATE video_haberler
-        SET izlenme = COALESCE(izlenme, 0) + 1
+        SET izlenme =
+          COALESCE(izlenme, 0) + 1
         WHERE id = ?
       `)
       .bind(id)
       .run();
 
+
     video.izlenme =
       (Number(video.izlenme) || 0) + 1;
 
+
     return Response.json({
+
       success: true,
+
       video
+
     });
 
   } catch (error) {
 
     return Response.json({
+
       success: false,
-      error: error.message
+
+      error:
+        error.message
+
     }, {
       status: 500
     });
@@ -3552,58 +3605,95 @@ if (
     const data =
       await request.json();
 
+
     const baslik =
-      String(data.baslik || "").trim();
+      String(
+        data.baslik || ""
+      ).trim();
+
 
     const ozet =
-      String(data.ozet || "").trim();
+      String(
+        data.ozet ||
+        data.aciklama ||
+        ""
+      ).trim();
+
 
     const video_url =
-      String(data.video_url || "").trim();
+      String(
+        data.video_url ||
+        data.videoUrl ||
+        ""
+      ).trim();
+
 
     const kapak_resmi =
-      String(data.kapak_resmi || "").trim();
+      String(
+        data.kapak_resmi ||
+        data.resim ||
+        ""
+      ).trim();
+
 
     const kategori =
       String(
-        data.kategori || "Video Haber"
+        data.kategori ||
+        "Video Haber"
       ).trim();
+
 
     const tarih =
       String(
         data.tarih ||
-        new Date().toLocaleDateString("tr-TR")
+        new Date().toLocaleDateString(
+          "tr-TR"
+        )
       ).trim();
+
 
     const durum =
       String(
-        data.durum || "yayinda"
+        data.durum ||
+        "yayinda"
       ).trim();
+
 
     const manset =
       data.manset ? 1 : 0;
 
+
     if (!baslik) {
 
       return Response.json({
+
         success: false,
-        error: "Video başlığı boş olamaz."
+
+        error:
+          "Video başlığı boş olamaz."
+
       }, {
         status: 400
       });
 
     }
+
 
     if (!video_url) {
 
       return Response.json({
+
         success: false,
-        error: "Video bağlantısı boş olamaz."
+
+        error:
+          "Video bağlantısı boş olamaz."
+
       }, {
         status: 400
       });
 
     }
+
 
     const result =
       await env.DB
@@ -3635,17 +3725,28 @@ if (
         )
         .run();
 
+
     return Response.json({
+
       success: true,
-      message: "Video haber başarıyla kaydedildi.",
-      id: result.meta.last_row_id
+
+      message:
+        "Video haber başarıyla kaydedildi.",
+
+      id:
+        result.meta.last_row_id
+
     });
 
   } catch (error) {
 
     return Response.json({
+
       success: false,
-      error: error.message
+
+      error:
+        error.message
+
     }, {
       status: 500
     });
@@ -3670,69 +3771,112 @@ if (
     const id =
       url.searchParams.get("id");
 
+
     if (!id) {
 
       return Response.json({
+
         success: false,
-        error: "Video ID belirtilmedi."
+
+        error:
+          "Video ID belirtilmedi."
+
       }, {
         status: 400
       });
 
     }
+
 
     const data =
       await request.json();
 
+
     const baslik =
-      String(data.baslik || "").trim();
+      String(
+        data.baslik || ""
+      ).trim();
+
 
     const ozet =
-      String(data.ozet || "").trim();
+      String(
+        data.ozet ||
+        data.aciklama ||
+        ""
+      ).trim();
+
 
     const video_url =
-      String(data.video_url || "").trim();
+      String(
+        data.video_url ||
+        data.videoUrl ||
+        ""
+      ).trim();
+
 
     const kapak_resmi =
-      String(data.kapak_resmi || "").trim();
+      String(
+        data.kapak_resmi ||
+        data.resim ||
+        ""
+      ).trim();
+
 
     const kategori =
       String(
-        data.kategori || "Video Haber"
+        data.kategori ||
+        "Video Haber"
       ).trim();
 
+
     const tarih =
-      String(data.tarih || "").trim();
+      String(
+        data.tarih || ""
+      ).trim();
+
 
     const durum =
       String(
-        data.durum || "yayinda"
+        data.durum ||
+        "yayinda"
       ).trim();
+
 
     const manset =
       data.manset ? 1 : 0;
 
+
     if (!baslik) {
 
       return Response.json({
+
         success: false,
-        error: "Video başlığı boş olamaz."
+
+        error:
+          "Video başlığı boş olamaz."
+
       }, {
         status: 400
       });
 
     }
+
 
     if (!video_url) {
 
       return Response.json({
+
         success: false,
-        error: "Video bağlantısı boş olamaz."
+
+        error:
+          "Video bağlantısı boş olamaz."
+
       }, {
         status: 400
       });
 
     }
+
 
     const result =
       await env.DB
@@ -3762,28 +3906,48 @@ if (
         )
         .run();
 
-    if (result.meta.changes === 0) {
+
+    if (
+      result.meta.changes === 0
+    ) {
 
       return Response.json({
+
         success: false,
-        error: "Video bulunamadı."
+
+        error:
+          "Video bulunamadı veya değişiklik yapılmadı."
+
       }, {
         status: 404
       });
 
     }
 
+
     return Response.json({
+
       success: true,
-      message: "Video başarıyla güncellendi.",
-      id
+
+      message:
+        "Video başarıyla güncellendi.",
+
+      id,
+
+      changes:
+        result.meta.changes
+
     });
 
   } catch (error) {
 
     return Response.json({
+
       success: false,
-      error: error.message
+
+      error:
+        error.message
+
     }, {
       status: 500
     });
@@ -3808,16 +3972,22 @@ if (
     const id =
       url.searchParams.get("id");
 
+
     if (!id) {
 
       return Response.json({
+
         success: false,
-        error: "Video ID belirtilmedi."
+
+        error:
+          "Video ID belirtilmedi."
+
       }, {
         status: 400
       });
 
     }
+
 
     const result =
       await env.DB
@@ -3828,28 +3998,45 @@ if (
         .bind(id)
         .run();
 
-    if (result.meta.changes === 0) {
+
+    if (
+      result.meta.changes === 0
+    ) {
 
       return Response.json({
+
         success: false,
-        error: "Silinecek video bulunamadı."
+
+        error:
+          "Silinecek video bulunamadı."
+
       }, {
         status: 404
       });
 
     }
 
+
     return Response.json({
+
       success: true,
-      message: "Video başarıyla silindi.",
+
+      message:
+        "Video başarıyla silindi.",
+
       id
+
     });
 
   } catch (error) {
 
     return Response.json({
+
       success: false,
-      error: error.message
+
+      error:
+        error.message
+
     }, {
       status: 500
     });
@@ -3862,6 +4049,7 @@ if (
 // ---------------------------------------------------------
 // VİDEO İSTATİSTİKLERİ
 // GET /api/video-istatistik
+// SADECE ADMIN
 // ---------------------------------------------------------
 
 if (
@@ -3875,16 +4063,24 @@ if (
       ADMIN_COOKIE
     );
 
-  if (auth !== "ok") {
+
+  if (
+    auth !== "ok"
+  ) {
 
     return Response.json({
+
       success: false,
-      error: "Yetkisiz erişim."
+
+      error:
+        "Yetkisiz erişim."
+
     }, {
       status: 401
     });
 
   }
+
 
   try {
 
@@ -3906,13 +4102,19 @@ if (
         `)
         .all();
 
+
     const toplam =
       result.results.reduce(
         (sum, video) =>
           sum +
-          (Number(video.izlenme) || 0),
+          (
+            Number(
+              video.izlenme
+            ) || 0
+          ),
         0
       );
+
 
     return Response.json({
 
@@ -3935,7 +4137,8 @@ if (
 
       success: false,
 
-      error: error.message
+      error:
+        error.message
 
     }, {
       status: 500
@@ -3944,164 +4147,33 @@ if (
   }
 
 }
-  try {
-
-    const id = url.searchParams.get("id");
-
-    if (!id) {
-
-      return Response.json({
-        success: false,
-        error: "Video ID belirtilmedi."
-      }, {
-        status: 400
-      });
-
-    }
-
-    const result = await env.DB
-      .prepare(`
-        DELETE FROM video_haberler
-        WHERE id = ?
-      `)
-      .bind(id)
-      .run();
-
-    if (result.meta.changes === 0) {
-
-      return Response.json({
-        success: false,
-        error: "Silinecek video bulunamadı."
-      }, {
-        status: 404
-      });
-
-    }
-
-    return Response.json({
-      success: true,
-      message: "Video başarıyla silindi.",
-      id
-    });
-
-  } catch (error) {
-
-    return Response.json({
-      success: false,
-      error: error.message
-    }, {
-      status: 500
-    });
-
-  }
-
-}
 
 
-// ---------------------------------------------------------
-// VİDEO İSTATİSTİKLERİ
-// GET /api/video-istatistik
-// ---------------------------------------------------------
+// =========================================================
+// ESKİ HABER ADRESLERİ
+// =========================================================
 
 if (
-  url.pathname === "/api/video-istatistik" &&
-  request.method === "GET"
+  url.pathname === "/haber.html" ||
+  url.pathname === "/pages/haber.html"
 ) {
 
-  const auth =
-    cookieOku(
-      request,
-      ADMIN_COOKIE
-    );
+  const yeniUrl =
+    new URL(request.url);
 
-  if (auth !== "ok") {
+  yeniUrl.pathname =
+    "/pages/haber.html";
 
-    return Response.json({
-      success: false,
-      error: "Yetkisiz erişim."
-    }, {
-      status: 401
-    });
 
-  }
+  return env.ASSETS.fetch(
+    new Request(
+      yeniUrl.toString(),
+      request
+    )
+  );
 
-  try {
+}
 
-    const result = await env.DB
-      .prepare(`
-        SELECT
-          id,
-          baslik,
-          kategori,
-          tarih,
-          durum,
-          izlenme
-        FROM video_haberler
-        ORDER BY
-          izlenme DESC,
-          id DESC
-      `)
-      .all();
-
-    const toplam =
-      result.results.reduce(
-        (sum, video) =>
-          sum +
-          (Number(video.izlenme) || 0),
-        0
-      );
-
-    return Response.json({
-
-      success: true,
-
-      toplam_izlenme:
-        toplam,
-
-      toplam_video:
-        result.results.length,
-
-      videolar:
-        result.results
-
-    });
-
-  } catch (error) {
-
-    return Response.json({
-
-      success: false,
-
-      error: error.message
-    }, {
-      status: 500
-    });
-
-  }
-  
-  // =========================================================
-  // ESKİ HABER ADRESLERİ
-  // =========================================================
-
-  if (
-    url.pathname === "/haber.html" ||
-    url.pathname === "/pages/haber.html"
-  ) {
-
-    const yeniUrl =
-      new URL(request.url);
-
-    yeniUrl.pathname =
-      "/pages/haber.html";
-
-    return env.ASSETS.fetch(
-      new Request(
-        yeniUrl.toString(),
-        request
-      )
-    );
-
-  }
 
 // =========================================================
 // ADMIN ÇIKIŞ
@@ -4118,11 +4190,15 @@ if (
       status: 302,
 
       headers: {
-        "Location": "/admin-giris",
+
+        "Location":
+          "/admin-giris",
 
         "Set-Cookie":
           "dg_admin_auth=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0"
+
       }
+
     }
   );
 
@@ -4132,16 +4208,8 @@ if (
 // =========================================================
 // WEB SİTESİ
 // =========================================================
-//
 // API olmayan tüm normal istekleri
-// Cloudflare Pages dosyalarına gönderir.
-//
-// index.html
-// pages/
-// style.css
-// admin.js
-// resimler
-// vb.
+// Cloudflare Pages dosyalarına gönder.
 // =========================================================
 
 return env.ASSETS.fetch(
@@ -4151,4 +4219,3 @@ return env.ASSETS.fetch(
   }
 
 };
-    
