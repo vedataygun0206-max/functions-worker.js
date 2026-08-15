@@ -169,7 +169,6 @@ if (
       );
     }
 
-    // BURADAN SONRA MEVCUT KODUN DEVAM EDECEK
 export default {
   async fetch(request, env) {
 
