@@ -4073,47 +4073,35 @@ if (
       success: false,
 
       error: error.message
-
     }, {
       status: 500
     });
 
   }
   
-     // =========================================================
-    // ESKİ HABER ADRESLERİ
-    // =========================================================
-    //
-    // Eski:
-    // /haber.html?id=4
-    //
-    // Yeni:
-    // /pages/haber.html?id=4
-    //
-    // Böylece eski bağlantılar da çalışmaya devam eder.
-    // =========================================================
+  // =========================================================
+  // ESKİ HABER ADRESLERİ
+  // =========================================================
 
-    if (
-      url.pathname === "/haber.html" ||
-      url.pathname === "/pages/haber.html"
-    ) {
+  if (
+    url.pathname === "/haber.html" ||
+    url.pathname === "/pages/haber.html"
+  ) {
 
-      const yeniUrl =
-        new URL(request.url);
+    const yeniUrl =
+      new URL(request.url);
 
+    yeniUrl.pathname =
+      "/pages/haber.html";
 
-      yeniUrl.pathname =
-        "/pages/haber.html";
+    return env.ASSETS.fetch(
+      new Request(
+        yeniUrl.toString(),
+        request
+      )
+    );
 
-
-      return env.ASSETS.fetch(
-        new Request(
-          yeniUrl.toString(),
-          request
-        )
-      );
-
-    }
+  }
 
 // =========================================================
 // ADMIN ÇIKIŞ
