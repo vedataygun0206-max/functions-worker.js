@@ -169,9 +169,6 @@ if (
       );
     }
 
-  async fetch(request, env) {
-
-    const url = new URL(request.url);
 
     // =========================================================
     // GOOGLE ROBOTS.TXT
