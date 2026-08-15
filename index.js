@@ -4185,7 +4185,7 @@ if (
   request.method === "GET"
 ) {
 
-  return new Response(
+  return new Response({
     null,
     {
       status: 302,
