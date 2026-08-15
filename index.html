@@ -113,6 +113,124 @@ body{
   </div>
 
 </section>
+  /* =====================================================
+   API HABERLERİ - EN ÜST
+===================================================== */
+
+.api-haberler{
+  max-width:1200px;
+  margin:0 auto;
+  padding:28px 20px 10px;
+}
+
+.api-haber-baslik{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:18px;
+}
+
+.api-haber-baslik h2{
+  display:inline-block;
+  margin:0 0 5px 8px;
+  font-size:26px;
+}
+
+.api-haber-baslik p{
+  margin:0;
+  color:#777;
+}
+
+.api-haber-baslik a{
+  background:#e30613;
+  color:#fff;
+  text-decoration:none;
+  padding:11px 18px;
+  border-radius:10px;
+  font-weight:700;
+}
+
+.api-haber-grid{
+  display:grid;
+  grid-template-columns:
+    repeat(auto-fit,minmax(280px,1fr));
+  gap:18px;
+}
+
+.api-haber-karti{
+  background:#fff;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 5px 20px #00000012;
+  border:1px solid #eee;
+}
+
+.api-haber-karti img{
+  width:100%;
+  height:200px;
+  object-fit:cover;
+  display:block;
+}
+
+.api-haber-icerik{
+  padding:18px;
+}
+
+.api-haber-etiket{
+  display:inline-block;
+  background:#e30613;
+  color:#fff;
+  padding:6px 10px;
+  border-radius:7px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.api-haber-karti h3{
+  font-size:19px;
+  line-height:1.35;
+  margin:12px 0 8px;
+}
+
+.api-haber-karti p{
+  color:#666;
+  line-height:1.55;
+}
+
+.api-haber-karti a{
+  display:inline-block;
+  margin-top:10px;
+  color:#e30613;
+  text-decoration:none;
+  font-weight:700;
+}
+
+@media(max-width:768px){
+
+  .api-haberler{
+    padding:22px 16px 5px;
+  }
+
+  .api-haber-baslik{
+    align-items:flex-start;
+    gap:12px;
+  }
+
+  .api-haber-baslik h2{
+    font-size:22px;
+  }
+
+  .api-haber-baslik a{
+    font-size:13px;
+    padding:9px 12px;
+    white-space:nowrap;
+  }
+
+  .api-haber-karti img{
+    height:190px;
+  }
+
+}
 /* ================================
    HAMBURGER
 ================================ */
