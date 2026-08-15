@@ -4,6 +4,35 @@ export default {
     const url = new URL(request.url);
 
     // =========================================================
+    // API TEST
+    // =========================================================
+
+    if (
+      url.pathname === "/api/health" &&
+      request.method === "GET"
+    ) {
+      return new Response(
+        JSON.stringify({
+          success: true,
+          service: "digital-gundem",
+          api: "aktif"
+        }),
+        {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json; charset=UTF-8"
+          }
+        }
+      );
+    }
+
+    // BURADAN SONRA MEVCUT KODUN DEVAM EDECEK
+export default {
+  async fetch(request, env) {
+
+    const url = new URL(request.url);
+
+    // =========================================================
     // GOOGLE ROBOTS.TXT
     // =========================================================
 
