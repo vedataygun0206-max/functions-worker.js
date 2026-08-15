@@ -4185,10 +4185,9 @@ if (
   request.method === "GET"
 ) {
 
-  return new Response({
-    null,
-    {
-      status: 302,
+  return new Response(null, {
+  
+     status: 302,
 
       headers: {
 
@@ -4197,6 +4196,7 @@ if (
 
         "Set-Cookie":
           "dg_admin_auth=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0"
+        
 
       }
 
