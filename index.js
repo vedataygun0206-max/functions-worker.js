@@ -2,7 +2,150 @@ export default {
   async fetch(request, env) {
 
     const url = new URL(request.url);
+// =========================================================
+// 🔧 SİSTEM GENEL SAĞLIK TESTİ
+// GET /api/sistem-test
+// =========================================================
 
+if (
+  url.pathname === "/api/sistem-test" &&
+  request.method === "GET"
+) {
+
+  const testler = [];
+
+  function testSonucu(ad, durum, detay = "") {
+    testler.push({
+      test: ad,
+      durum: durum ? "OK" : "HATA",
+      detay
+    });
+  }
+
+  // -------------------------------------------------------
+  // WORKER
+  // -------------------------------------------------------
+
+  testSonucu(
+    "Worker",
+    true,
+    "Worker çalışıyor."
+  );
+
+
+  // -------------------------------------------------------
+  // D1 BAĞLANTISI
+  // -------------------------------------------------------
+
+  try {
+
+    await env.DB
+      .prepare("SELECT 1")
+      .first();
+
+    testSonucu(
+      "D1 Veritabanı",
+      true,
+      "D1 bağlantısı çalışıyor."
+    );
+
+  } catch (error) {
+
+    testSonucu(
+      "D1 Veritabanı",
+      false,
+      error.message
+    );
+
+  }
+
+
+  // -------------------------------------------------------
+  // TABLO TESTLERİ
+  // -------------------------------------------------------
+
+  const tablolar = [
+    "haberler",
+    "video_haberler",
+    "firmalar",
+    "ziyaretler"
+  ];
+
+
+  for (const tablo of tablolar) {
+
+    try {
+
+      const sonuc =
+        await env.DB
+          .prepare(
+            `SELECT COUNT(*) AS toplam FROM ${tablo}`
+          )
+          .first();
+
+      testSonucu(
+        `Tablo: ${tablo}`,
+        true,
+        `Tablo çalışıyor. Kayıt: ${sonuc?.toplam || 0}`
+      );
+
+    } catch (error) {
+
+      testSonucu(
+        `Tablo: ${tablo}`,
+        false,
+        error.message
+      );
+
+    }
+
+  }
+
+
+  // -------------------------------------------------------
+  // ADMIN ŞİFRESİ
+  // -------------------------------------------------------
+
+  testSonucu(
+    "Admin şifresi",
+    !!env.ADMIN_PASSWORD,
+    env.ADMIN_PASSWORD
+      ? "ADMIN_PASSWORD tanımlı."
+      : "ADMIN_PASSWORD bulunamadı."
+  );
+
+
+  // -------------------------------------------------------
+  // SONUÇ
+  // -------------------------------------------------------
+
+  const hataSayisi =
+    testler.filter(
+      x => x.durum === "HATA"
+    ).length;
+
+
+  return Response.json({
+
+    success:
+      hataSayisi === 0,
+
+    sistem:
+      hataSayisi === 0
+        ? "SAĞLIKLI"
+        : "HATA VAR",
+
+    toplam_test:
+      testler.length,
+
+    hata:
+      hataSayisi,
+
+    testler
+
+  });
+
+}
     // =========================================================
     // API TEST
     // =========================================================
