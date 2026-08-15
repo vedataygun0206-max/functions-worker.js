@@ -1381,7 +1381,99 @@ footer p{
 </footer>
 
 <script>
+/* =====================================================
+   API HABERLERİNİ ANA SAYFANIN EN ÜSTÜNE GETİR
+===================================================== */
 
+function apiHaberleriUsteGetir(){
+
+  const alan =
+    document.getElementById("apiHaberlerAlani");
+
+  if(!alan) return;
+
+  if(!tumHaberler.length){
+
+    alan.innerHTML = `
+      <div class="bos-haber">
+        📰 Henüz güncel haber bulunmuyor.
+      </div>
+    `;
+
+    return;
+  }
+
+  alan.innerHTML = `
+
+    <div class="api-haber-grid">
+
+      ${
+        tumHaberler.slice(0,6).map(h => {
+
+          const img =
+            h.resim?.trim() ||
+            "https://picsum.photos/600/350";
+
+          return `
+
+            <article class="api-haber-karti">
+
+              <img
+                src="${escapeHTML(img)}"
+                alt="${escapeHTML(
+                  h.baslik || "Haber"
+                )}"
+                loading="lazy"
+              >
+
+              <div class="api-haber-icerik">
+
+                <span class="api-haber-etiket">
+
+                  ${escapeHTML(
+                    h.kategori || "Gündem"
+                  )}
+
+                </span>
+
+                <h3>
+
+                  ${escapeHTML(
+                    h.baslik ||
+                    "Başlıksız Haber"
+                  )}
+
+                </h3>
+
+                <p>
+
+                  ${escapeHTML(
+                    h.ozet || ""
+                  )}
+
+                </p>
+
+                <a
+                  href="pages/haber.html?id=${encodeURIComponent(h.id)}"
+                >
+
+                  Haberi Oku →
+
+                </a>
+
+              </div>
+
+            </article>
+
+          `;
+
+        }).join("")
+      }
+
+    </div>
+
+  `;
+}
 /* =========================================
    API
 ========================================= */
