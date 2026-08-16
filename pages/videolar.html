@@ -3,41 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Haberleri Yönetimi | Digital Gündem</title>
+    <title>Video Haberler - Digital Gündem</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; }
-        .geri-don { display: inline-block; margin-bottom: 20px; color: #111827; text-decoration: none; background: #e5e7eb; padding: 8px 15px; border-radius: 6px; font-size: 14px; font-weight: bold; }
-        h1 { color: #111827; border-bottom: 2px solid #d60000; padding-bottom: 10px; margin-top: 0; }
-        
-        .video-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; padding: 20px; border: 1px solid #e5e7eb; }
-        .video-meta-top { font-size: 13px; color: #6b7280; margin-bottom: 10px; display: flex; gap: 15px; align-items: center; }
-        .video-title { font-size: 18px; font-weight: bold; color: #1f2937; margin: 0 0 15px 0; }
-        
-        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 15px; }
+        body { font-family: Arial, sans-serif; background: #111827; color: #f8fafc; margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .geri-don { display: inline-block; margin-bottom: 20px; color: #cbd5e1; text-decoration: none; background: #334155; padding: 8px 15px; border-radius: 6px; font-size: 14px; }
+        h1 { color: #ffffff; border-bottom: 2px solid #d60000; padding-bottom: 10px; }
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-top: 20px; }
+        .video-card { background: #1e293b; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; flex-direction: column; border: 1px solid #334155; }
+        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; }
         .video-container iframe, .video-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-
-        .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; color: white; }
-        
-        .btn-goruntule { background: #6b7280; }
-        .btn-goruntule:hover { background: #4b5563; }
-        
-        .btn-duzenle { background: #2563eb; }
-        .btn-duzenle:hover { background: #1d4ed8; }
-        
-        .btn-sil { background: #dc2626; }
-        .btn-sil:hover { background: #b91c1c; }
-
-        .yok { text-align: center; color: #666; padding: 40px; font-size: 16px; }
+        .video-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .video-title { font-size: 17px; font-weight: bold; color: #ffffff; margin: 0 0 10px 0; line-height: 1.4; }
+        .video-meta { font-size: 13px; color: #94a3b8; display: flex; justify-content: space-between; }
+        .yok { text-align: center; color: #94a3b8; padding: 40px; font-size: 16px; grid-column: 1 / -1; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <a href="admin.html" class="geri-don">⬅️ Yönetim Paneline Dön</a>
-    <h1>🎥 Video Haberleri Yönetimi</h1>
-    <div id="videoListesi">
+    <a href="../index.html" class="geri-don">⬅️ Ana Sayfaya Dön</a>
+    <h1>🎥 Video Haberler</h1>
+    <div id="videoListesi" class="video-grid">
         <p class="yok">Videolar yükleniyor...</p>
     </div>
 </div>
@@ -76,21 +63,15 @@
 
                 html += `
                     <div class="video-card">
-                        <div class="video-meta-top">
-                            <span>📁 Video Haber</span> 
-                            <span>📅 ${video.tarih || ''}</span>
-                            <span>👁️ ${video.izlenme || 0} İzlenme</span>
-                        </div>
-                        <h3 class="video-title">${video.baslik}</h3>
-                        
                         <div class="video-container">
                             ${embedHtml}
                         </div>
-
-                        <div class="btn-group">
-                            <a href="${vUrl}" target="_blank" class="btn btn-goruntule">👁️ Görüntüle</a>
-                            <button class="btn btn-duzenle" onclick="videoDuzenle(${video.id})">✏️ Düzenle</button>
-                            <button class="btn btn-sil" onclick="videoSil(${video.id})">🗑️ Sil</button>
+                        <div class="video-content">
+                            <h3 class="video-title">${video.baslik}</h3>
+                            <div class="video-meta">
+                                <span>📅 ${video.tarih || ''}</span>
+                                <span>👁️ ${video.izlenme || 0} İzlenme</span>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -104,32 +85,8 @@
         }
     }
 
-    async function videoSil(id) {
-        if (!confirm('Bu video haberi silmek istediğinize emin misiniz?')) return;
-
-        try {
-            const cevap = await fetch(`/api/videolar-sil?id=${id}`, { method: 'DELETE' });
-            const sonuc = await cevap.json();
-
-            if (sonuc.success) {
-                alert('Video başarıyla silindi.');
-                videolariGetir();
-            } else {
-                alert('Silme başarısız: ' + (sonuc.error || 'Bilinmeyen hata'));
-            }
-        } catch (error) {
-            console.error('Silme hatası:', error);
-            alert('Silinirken bir hata oluştu.');
-        }
-    }
-
-    function videoDuzenle(id) {
-        alert('Düzenleme özelliği yakında eklenecek. (ID: ' + id + ')');
-    }
-
     videolariGetir();
 </script>
 
 </body>
 </html>
-
