@@ -2,26 +2,34 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Video Haberleri Yönetimi | Digital Gündem</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Haberleri | Digital Gündem</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; }
         .container { max-width: 800px; margin: 0 auto; }
-        .geri-don { display: inline-block; margin-bottom: 20px; color: #111827; text-decoration: none; background: #e5e7eb; padding: 8px 15px; border-radius: 6px; font-weight: bold; }
-        .video-card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .duzenle-form { display: none; background: #f8fafc; padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px solid #ddd; }
-        input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
-        .btn { padding: 10px 15px; border: none; border-radius: 6px; cursor: pointer; color: white; font-weight: bold; }
+        .geri-don { display: inline-block; margin-bottom: 20px; color: #111827; text-decoration: none; background: #e5e7eb; padding: 8px 15px; border-radius: 6px; font-size: 14px; font-weight: bold; }
+        h1 { color: #111827; border-bottom: 2px solid #d60000; padding-bottom: 10px; margin-top: 0; }
+        
+        .video-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; padding: 20px; border: 1px solid #e5e7eb; }
+        .video-title { font-size: 18px; font-weight: bold; color: #1f2937; margin: 0 0 15px 0; }
+        
+        /* Düzenleme Formu Stili */
+        .duzenle-form { display: none; background: #f8fafc; padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px solid #cbd5e1; }
+        .duzenle-form input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        
+        .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; text-align: center; color: white; }
         .btn-duzenle { background: #2563eb; }
         .btn-sil { background: #dc2626; }
-        .btn-kaydet { background: #16a34a; }
+        .btn-kaydet { background: #16a34a; padding: 10px; margin-top: 5px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <a href="../admin.html" class="geri-don">⬅️ Yönetime Dön</a>
+    <a href="admin.html" class="geri-don">⬅️ Yönetim Paneline Dön</a>
     <h1>🎥 Video Haberleri Yönetimi</h1>
-    <div id="videoListesi">Videolar yükleniyor...</div>
+    <div id="videoListesi"><p>Videolar yükleniyor...</p></div>
 </div>
 
 <script>
@@ -30,14 +38,21 @@
         const sonuc = await cevap.json();
         const listeDiv = document.getElementById('videoListesi');
         
+        if (!sonuc.videolar || sonuc.videolar.length === 0) {
+            listeDiv.innerHTML = '<p>Henüz video bulunmuyor.</p>';
+            return;
+        }
+
         let html = '';
         sonuc.videolar.forEach(video => {
             html += `
                 <div class="video-card">
-                    <h3>${video.baslik}</h3>
-                    <button class="btn btn-duzenle" onclick="formuAc(${video.id})">✏️ Düzenle</button>
-                    <button class="btn btn-sil" onclick="videoSil(${video.id})">🗑️ Sil</button>
-                    
+                    <h3 class="video-title">${video.baslik}</h3>
+                    <div class="btn-group">
+                        <button class="btn btn-duzenle" onclick="formuGoster(${video.id})">✏️ Düzenle</button>
+                        <button class="btn btn-sil" onclick="videoSil(${video.id})">🗑️ Sil</button>
+                    </div>
+                    <!-- Düzenleme Formu -->
                     <div class="duzenle-form" id="form-${video.id}">
                         <input type="text" id="edit-baslik-${video.id}" value="${video.baslik}">
                         <input type="text" id="edit-url-${video.id}" value="${video.video_url}">
@@ -49,22 +64,27 @@
         listeDiv.innerHTML = html;
     }
 
-    function formuAc(id) { document.getElementById(`form-${id}`).style.display = 'block'; }
+    function formuGoster(id) {
+        document.getElementById(`form-${id}`).style.display = 'block';
+    }
 
     async function videoGuncelle(id) {
         const baslik = document.getElementById(`edit-baslik-${id}`).value;
         const url = document.getElementById(`edit-url-${id}`).value;
+        
         await fetch('/api/videolar-guncelle', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id, baslik, video_url: url })
         });
-        location.reload();
+        alert('Güncellendi!');
+        videolariGetir();
     }
 
     async function videoSil(id) {
+        if (!confirm('Silmek istediğine emin misin?')) return;
         await fetch(`/api/videolar-sil?id=${id}`, { method: 'DELETE' });
-        location.reload();
+        videolariGetir();
     }
 
     videolariGetir();
