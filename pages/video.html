@@ -2,91 +2,72 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Haberler - Digital Gündem</title>
+    <title>Video Haberleri Yönetimi | Digital Gündem</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #111827; color: #f8fafc; margin: 0; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; }
-        .geri-don { display: inline-block; margin-bottom: 20px; color: #cbd5e1; text-decoration: none; background: #334155; padding: 8px 15px; border-radius: 6px; font-size: 14px; }
-        h1 { color: #ffffff; border-bottom: 2px solid #d60000; padding-bottom: 10px; }
-        .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-top: 20px; }
-        .video-card { background: #1e293b; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; flex-direction: column; border: 1px solid #334155; }
-        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; }
-        .video-container iframe, .video-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-        .video-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .video-title { font-size: 17px; font-weight: bold; color: #ffffff; margin: 0 0 10px 0; line-height: 1.4; }
-        .video-meta { font-size: 13px; color: #94a3b8; display: flex; justify-content: space-between; }
-        .yok { text-align: center; color: #94a3b8; padding: 40px; font-size: 16px; grid-column: 1 / -1; }
+        body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .geri-don { display: inline-block; margin-bottom: 20px; color: #111827; text-decoration: none; background: #e5e7eb; padding: 8px 15px; border-radius: 6px; font-weight: bold; }
+        .video-card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .duzenle-form { display: none; background: #f8fafc; padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px solid #ddd; }
+        input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        .btn { padding: 10px 15px; border: none; border-radius: 6px; cursor: pointer; color: white; font-weight: bold; }
+        .btn-duzenle { background: #2563eb; }
+        .btn-sil { background: #dc2626; }
+        .btn-kaydet { background: #16a34a; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <a href="../index.html" class="geri-don">⬅️ Ana Sayfaya Dön</a>
-    <h1>🎥 Video Haberler</h1>
-    <div id="videoListesi" class="video-grid">
-        <p class="yok">Videolar yükleniyor...</p>
-    </div>
+    <a href="../admin.html" class="geri-don">⬅️ Yönetime Dön</a>
+    <h1>🎥 Video Haberleri Yönetimi</h1>
+    <div id="videoListesi">Videolar yükleniyor...</div>
 </div>
 
 <script>
     async function videolariGetir() {
-        try {
-            const cevap = await fetch('/api/videolar');
-            const sonuc = await cevap.json();
-            
-            const listeDiv = document.getElementById('videoListesi');
-            
-            if (!sonuc.success || !sonuc.videolar || sonuc.videolar.length === 0) {
-                listeDiv.innerHTML = '<p class="yok">Henüz eklenmiş video haber bulunmuyor.</p>';
-                return;
-            }
-
-            let html = '';
-            sonuc.videolar.forEach(video => {
-                let embedHtml = '';
-                const vUrl = video.video_url || '';
-
-                if (vUrl.includes('youtube.com') || vUrl.includes('youtu.be')) {
-                    let videoId = '';
-                    if (vUrl.includes('youtu.be/')) {
-                        videoId = vUrl.split('youtu.be/')[1].split('?')[0];
-                    } else if (vUrl.includes('watch?v=')) {
-                        videoId = vUrl.split('watch?v=')[1].split('&')[0];
-                    } else if (vUrl.includes('embed/')) {
-                        videoId = vUrl.split('embed/')[1].split('?')[0];
-                    }
-                    embedHtml = `<iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>`;
-                } else {
-                    embedHtml = `<video src="${vUrl}" controls poster="${video.kapak_resmi || ''}"></video>`;
-                }
-
-                html += `
-                    <div class="video-card">
-                        <div class="video-container">
-                            ${embedHtml}
-                        </div>
-                        <div class="video-content">
-                            <h3 class="video-title">${video.baslik}</h3>
-                            <div class="video-meta">
-                                <span>📅 ${video.tarih || ''}</span>
-                                <span>👁️ ${video.izlenme || 0} İzlenme</span>
-                            </div>
-                        </div>
+        const cevap = await fetch('/api/videolar');
+        const sonuc = await cevap.json();
+        const listeDiv = document.getElementById('videoListesi');
+        
+        let html = '';
+        sonuc.videolar.forEach(video => {
+            html += `
+                <div class="video-card">
+                    <h3>${video.baslik}</h3>
+                    <button class="btn btn-duzenle" onclick="formuAc(${video.id})">✏️ Düzenle</button>
+                    <button class="btn btn-sil" onclick="videoSil(${video.id})">🗑️ Sil</button>
+                    
+                    <div class="duzenle-form" id="form-${video.id}">
+                        <input type="text" id="edit-baslik-${video.id}" value="${video.baslik}">
+                        <input type="text" id="edit-url-${video.id}" value="${video.video_url}">
+                        <button class="btn btn-kaydet" onclick="videoGuncelle(${video.id})">💾 Kaydet</button>
                     </div>
-                `;
-            });
+                </div>
+            `;
+        });
+        listeDiv.innerHTML = html;
+    }
 
-            listeDiv.innerHTML = html;
+    function formuAc(id) { document.getElementById(`form-${id}`).style.display = 'block'; }
 
-        } catch (error) {
-            console.error('Video yükleme hatası:', error);
-            document.getElementById('videoListesi').innerHTML = '<p class="yok">Videolar yüklenirken bir hata oluştu.</p>';
-        }
+    async function videoGuncelle(id) {
+        const baslik = document.getElementById(`edit-baslik-${id}`).value;
+        const url = document.getElementById(`edit-url-${id}`).value;
+        await fetch('/api/videolar-guncelle', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, baslik, video_url: url })
+        });
+        location.reload();
+    }
+
+    async function videoSil(id) {
+        await fetch(`/api/videolar-sil?id=${id}`, { method: 'DELETE' });
+        location.reload();
     }
 
     videolariGetir();
 </script>
-
 </body>
 </html>
