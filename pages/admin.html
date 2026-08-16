@@ -32,6 +32,12 @@
     color: #cbd5e1;
 }
 
+.dash-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
 
 /* =========================================
    EN ÇOK OKUNAN HABERLER
@@ -179,7 +185,7 @@
 
 
 /* =========================================
-   YENİ HABER FORMU
+   YENİ HABER VE VİDEO FORMU
 ========================================= */
 
 .yeni-haber {
@@ -385,7 +391,7 @@
 
 
         <li>
-            <a href="#">
+            <a href="videolar.html">
                 🎥 Video Haberleri
             </a>
         </li>
@@ -431,22 +437,22 @@
                 🚪 Siteye Dön
             </a>
         </li>
-<li>
-    <a
-        href="/admin-cikis"
-        style="
-            color:#ffffff;
-            background:#dc2626;
-            font-weight:bold;
-            border-radius:8px;
-            display:block;
-            margin-top:10px;
-            text-align:center;
-        "
-    >
-        🚪 Çıkış Yap
-    </a>
-</li>
+        <li>
+            <a
+                href="/admin-cikis"
+                style="
+                    color:#ffffff;
+                    background:#dc2626;
+                    font-weight:bold;
+                    border-radius:8px;
+                    display:block;
+                    margin-top:10px;
+                    text-align:center;
+                "
+            >
+                🚪 Çıkış Yap
+            </a>
+        </li>
     </ul>
 
 </aside>
@@ -562,21 +568,23 @@
 
         <!-- VİDEOLAR -->
 
-        <div class="dash-card">
+        <a href="videolar.html" class="dash-link">
+            <div class="dash-card">
 
-            <h3>
-                🎥 Videolar
-            </h3>
+                <h3>
+                    🎥 Videolar
+                </h3>
 
-            <h1>
-                0
-            </h1>
+                <h1 id="videoSayisi">
+                    0
+                </h1>
 
-            <p>
-                Video Haber
-            </p>
+                <p>
+                    Video Haber
+                </p>
 
-        </div>
+            </div>
+        </a>
 
 
 
@@ -856,6 +864,86 @@
     </section>
 
 
+
+    <!-- =====================================
+         YENİ VİDEO HABER EKLE
+    ====================================== -->
+
+    <section class="yeni-haber">
+
+
+        <h2>
+            🎥 Yeni Video Haber Ekle
+        </h2>
+
+
+        <form id="videoForm" onsubmit="videoYayinla(event)">
+
+
+            <input
+                type="text"
+                id="vBaslik"
+                placeholder="Video Başlığı"
+                required
+            >
+
+
+            <input
+                type="text"
+                id="vUrl"
+                placeholder="YouTube veya Video Bağlantısı (Örn: https://www.youtube.com/watch?v=...)"
+                required
+            >
+
+
+            <input
+                type="text"
+                id="vKapak"
+                placeholder="Kapak Resmi URL (İsteğe bağlı)"
+            >
+
+
+            <select id="vKategori">
+                <option>Video Haber</option>
+                <option>Gündem</option>
+                <option>Teknoloji</option>
+                <option>Özel Röportaj</option>
+            </select>
+
+
+            <textarea
+                id="vOzet"
+                rows="3"
+                placeholder="Video Kısa Açıklaması"
+            ></textarea>
+
+
+            <label>
+
+                <input
+                    type="checkbox"
+                    id="vManset"
+                >
+
+                ⭐ Manşete Çıkar
+
+            </label>
+
+
+            <button
+                type="submit"
+                style="background: #d60000; color: #ffffff;"
+            >
+                🎥 Video Haberi Yayınla
+            </button>
+
+
+        </form>
+
+
+    </section>
+
+
 </main>
 
 
@@ -869,6 +957,41 @@
 
 <script src="../admin.js"></script>
 
+<script>
+async function videoYayinla(event) {
+    event.preventDefault();
+
+    const veri = {
+        baslik: document.getElementById('vBaslik').value.trim(),
+        video_url: document.getElementById('vUrl').value.trim(),
+        kapak_resmi: document.getElementById('vKapak').value.trim(),
+        kategori: document.getElementById('vKategori').value,
+        ozet: document.getElementById('vOzet').value.trim(),
+        manset: document.getElementById('vManset').checked ? 1 : 0,
+        durum: 'yayinda'
+    };
+
+    try {
+        const cevap = await fetch('/api/video', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(veri)
+        });
+
+        const sonuc = await cevap.json();
+
+        if (sonuc.success) {
+            alert('✅ Video haber başarıyla yayınlandı!');
+            document.getElementById('videoForm').reset();
+        } else {
+            alert('❌ Hata: ' + (sonuc.error || 'Video kaydedilemedi.'));
+        }
+    } catch (hata) {
+        console.error('Bağlantı hatası:', hata);
+        alert('Sunucuyla iletişim kurulamadı.');
+    }
+}
+</script>
 
 </body>
 </html>
