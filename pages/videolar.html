@@ -29,6 +29,13 @@
         .btn-sil { background: #dc2626; }
         .btn-sil:hover { background: #b91c1c; }
 
+        /* Düzenleme Alanı */
+        .duzenle-form { display: none; background: #f8fafc; padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px solid #cbd5e1; }
+        .duzenle-form input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        .btn-kaydet { background: #16a34a; color: white; width: 100%; padding: 10px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .btn-kaydet:hover { background: #15803d; }
+        .btn-iptal { background: #64748b; color: white; width: 100%; padding: 8px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 5px; }
+
         .yok { text-align: center; color: #666; padding: 40px; font-size: 16px; }
     </style>
 </head>
@@ -75,22 +82,33 @@
                 }
 
                 html += `
-                    <div class="video-card">
+                    <div class="video-card" id="card-${video.id}">
                         <div class="video-meta-top">
                             <span>📁 Video Haber</span> 
                             <span>📅 ${video.tarih || ''}</span>
                             <span>👁️ ${video.izlenme || 0} İzlenme</span>
                         </div>
-                        <h3 class="video-title">${video.baslik}</h3>
+                        <h3 class="video-title" id="title-text-${video.id}">${video.baslik}</h3>
                         
                         <div class="video-container">
                             ${embedHtml}
                         </div>
 
-                        <div class="btn-group">
+                        <div class="btn-group" id="buttons-${video.id}">
                             <a href="${vUrl}" target="_blank" class="btn btn-goruntule">👁️ Görüntüle</a>
-                            <button class="btn btn-duzenle" onclick="videoDuzenle(${video.id})">✏️ Düzenle</button>
+                            <button class="btn btn-duzenle" onclick="formuAc(${video.id})">✏️ Düzenle</button>
                             <button class="btn btn-sil" onclick="videoSil(${video.id})">🗑️ Sil</button>
+                        </div>
+
+                        <!-- Düzenleme Formu -->
+                        <div class="duzenle-form" id="form-${video.id}">
+                            <h4>Video Düzenle</h4>
+                            <label>Başlık:</label>
+                            <input type="text" id="edit-baslik-${video.id}" value="${video.baslik}">
+                            <label>Video URL:</label>
+                            <input type="text" id="edit-url-${video.id}" value="${video.video_url}">
+                            <button class="btn-kaydet" onclick="videoGuncelle(${video.id})">💾 Kaydet</button>
+                            <button class="btn-iptal" onclick="formuKapat(${video.id})">İptal</button>
                         </div>
                     </div>
                 `;
@@ -101,6 +119,38 @@
         } catch (error) {
             console.error('Video yükleme hatası:', error);
             document.getElementById('videoListesi').innerHTML = '<p class="yok">Videolar yüklenirken bir hata oluştu.</p>';
+        }
+    }
+
+    function formuAc(id) {
+        document.getElementById(`form-${id}`).style.display = 'block';
+    }
+
+    function formuKapat(id) {
+        document.getElementById(`form-${id}`).style.display = 'none';
+    }
+
+    async function videoGuncelle(id) {
+        const yeniBaslik = document.getElementById(`edit-baslik-${id}`).value;
+        const yeniUrl = document.getElementById(`edit-url-${id}`).value;
+
+        try {
+            const cevap = await fetch('/api/videolar-guncelle', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: id, baslik: yeniBaslik, video_url: yeniUrl })
+            });
+            const sonuc = await cevap.json();
+
+            if (sonuc.success) {
+                alert('Video başarıyla güncellendi.');
+                videolariGetir();
+            } else {
+                alert('Güncelleme başarısız: ' + (sonuc.error || 'Bilinmeyen hata'));
+            }
+        } catch (error) {
+            console.error('Güncelleme hatası:', error);
+            alert('Güncellenirken bir hata oluştu.');
         }
     }
 
@@ -121,10 +171,6 @@
             console.error('Silme hatası:', error);
             alert('Silinirken bir hata oluştu.');
         }
-    }
-
-    function videoDuzenle(id) {
-        alert('Düzenleme özelliği yakında eklenecek. (ID: ' + id + ')');
     }
 
     videolariGetir();
