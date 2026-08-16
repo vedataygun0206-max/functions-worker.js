@@ -11,125 +11,83 @@
         h1 { color: #111827; border-bottom: 2px solid #d60000; padding-bottom: 10px; margin-top: 0; }
         
         .video-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; padding: 20px; border: 1px solid #e5e7eb; }
-        .video-meta-top { font-size: 13px; color: #6b7280; margin-bottom: 10px; display: flex; gap: 15px; align-items: center; }
         .video-title { font-size: 18px; font-weight: bold; color: #1f2937; margin: 0 0 15px 0; }
         
-        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 15px; }
-        .video-container iframe, .video-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-
-        /* Buton Stilleri (Gönderdiğin görselle birebir aynı) */
+        /* Düzenleme Formu Stili */
+        .duzenle-form { display: none; background: #f8fafc; padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px solid #cbd5e1; }
+        .duzenle-form input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        
         .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; color: white; }
-        
-        .btn-goruntule { background: #6b7280; }
-        .btn-goruntule:hover { background: #4b5563; }
-        
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; text-align: center; color: white; }
         .btn-duzenle { background: #2563eb; }
-        .btn-duzenle:hover { background: #1d4ed8; }
-        
         .btn-sil { background: #dc2626; }
-        .btn-sil:hover { background: #b91c1c; }
-
-        .yok { text-align: center; color: #666; padding: 40px; font-size: 16px; }
+        .btn-kaydet { background: #16a34a; padding: 10px; margin-top: 5px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <a href="admin.html" class="geri-don">⬅️ Yönetim Paneline Dön</a>
-    <h1>🎥 Video Haberleri</h1>
-    <div id="videoListesi">
-        <p class="yok">Videolar yükleniyor...</p>
-    </div>
+    <h1>🎥 Video Haberleri Yönetimi</h1>
+    <div id="videoListesi"><p>Videolar yükleniyor...</p></div>
 </div>
 
 <script>
     async function videolariGetir() {
-        try {
-            const cevap = await fetch('/api/videolar');
-            const sonuc = await cevap.json();
-            
-            const listeDiv = document.getElementById('videoListesi');
-            
-            if (!sonuc.success || !sonuc.videolar || sonuc.videolar.length === 0) {
-                listeDiv.innerHTML = '<p class="yok">Henüz eklenmiş video haber bulunmuyor.</p>';
-                return;
-            }
-
-            let html = '';
-            sonuc.videolar.forEach(video => {
-                let embedHtml = '';
-                const vUrl = video.video_url || '';
-
-                if (vUrl.includes('youtube.com') || vUrl.includes('youtu.be')) {
-                    let videoId = '';
-                    if (vUrl.includes('youtu.be/')) {
-                        videoId = vUrl.split('youtu.be/')[1].split('?')[0];
-                    } else if (vUrl.includes('watch?v=')) {
-                        videoId = vUrl.split('watch?v=')[1].split('&')[0];
-                    } else if (vUrl.includes('embed/')) {
-                        videoId = vUrl.split('embed/')[1].split('?')[0];
-                    }
-                    embedHtml = `<iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>`;
-                } else {
-                    embedHtml = `<video src="${vUrl}" controls poster="${video.kapak_resmi || ''}"></video>`;
-                }
-
-                html += `
-                    <div class="video-card">
-                        <div class="video-meta-top">
-                            <span>📁 Video Haber</span> 
-                            <span>📅 ${video.tarih || ''}</span>
-                            <span>👁️ ${video.izlenme || 0} İzlenme</span>
-                        </div>
-                        <h3 class="video-title">${video.baslik}</h3>
-                        
-                        <div class="video-container">
-                            ${embedHtml}
-                        </div>
-
-                        <div class="btn-group">
-                            <a href="${vUrl}" target="_blank" class="btn btn-goruntule">👁️ Görüntüle</a>
-                            <button class="btn btn-duzenle" onclick="videoDuzenle(${video.id})">✏️ Düzenle</button>
-                            <button class="btn btn-sil" onclick="videoSil(${video.id})">🗑️ Sil</button>
-                        </div>
-                    </div>
-                `;
-            });
-
-            listeDiv.innerHTML = html;
-
-        } catch (error) {
-            console.error('Video yükleme hatası:', error);
-            document.getElementById('videoListesi').innerHTML = '<p class="yok">Videolar yüklenirken bir hata oluştu.</p>';
+        const cevap = await fetch('/api/videolar');
+        const sonuc = await cevap.json();
+        const listeDiv = document.getElementById('videoListesi');
+        
+        if (!sonuc.videolar || sonuc.videolar.length === 0) {
+            listeDiv.innerHTML = '<p>Henüz video bulunmuyor.</p>';
+            return;
         }
+
+        let html = '';
+        sonuc.videolar.forEach(video => {
+            html += `
+                <div class="video-card">
+                    <h3 class="video-title">${video.baslik}</h3>
+                    <div class="btn-group">
+                        <button class="btn btn-duzenle" onclick="formuGoster(${video.id})">✏️ Düzenle</button>
+                        <button class="btn btn-sil" onclick="videoSil(${video.id})">🗑️ Sil</button>
+                    </div>
+                    <!-- Düzenleme Formu -->
+                    <div class="duzenle-form" id="form-${video.id}">
+                        <input type="text" id="edit-baslik-${video.id}" value="${video.baslik}">
+                        <input type="text" id="edit-url-${video.id}" value="${video.video_url}">
+                        <button class="btn btn-kaydet" onclick="videoGuncelle(${video.id})">💾 Kaydet</button>
+                    </div>
+                </div>
+            `;
+        });
+        listeDiv.innerHTML = html;
+    }
+
+    function formuGoster(id) {
+        document.getElementById(`form-${id}`).style.display = 'block';
+    }
+
+    async function videoGuncelle(id) {
+        const baslik = document.getElementById(`edit-baslik-${id}`).value;
+        const url = document.getElementById(`edit-url-${id}`).value;
+        
+        await fetch('/api/videolar-guncelle', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, baslik, video_url: url })
+        });
+        alert('Güncellendi!');
+        videolariGetir();
     }
 
     async function videoSil(id) {
-        if (!confirm('Bu video haberi silmek istediğinize emin misiniz?')) return;
-
-        try {
-            const cevap = await fetch(`/api/videolar-sil?id=${id}`, { method: 'DELETE' });
-            const sonuc = await cevap.json();
-
-            if (sonuc.success) {
-                alert('Video başarıyla silindi.');
-                videolariGetir();
-            } else {
-                alert('Silme başarısız: ' + (sonuc.error || 'Bilinmeyen hata'));
-            }
-        } catch (error) {
-            console.error('Silme hatası:', error);
-            alert('Silinirken bir hata oluştu.');
-        }
-    }
-
-    function videoDuzenle(id) {
-        alert('Düzenleme özelliği yakında eklenecek. (ID: ' + id + ')');
+        if (!confirm('Silmek istediğine emin misin?')) return;
+        await fetch(`/api/videolar-sil?id=${id}`, { method: 'DELETE' });
+        videolariGetir();
     }
 
     videolariGetir();
 </script>
-
 </body>
 </html>
