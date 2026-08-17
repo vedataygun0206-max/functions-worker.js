@@ -120,6 +120,7 @@ if (
     ).trim();
 
     if (!q) {
+
       return Response.json({
         success: true,
         arama: "",
@@ -128,6 +129,7 @@ if (
         firmalar: [],
         videolar: []
       });
+
     }
 
     const arama = `%${q}%`;
@@ -262,10 +264,6 @@ if (
       firmalar.length +
       videolar.length;
 
-    // =====================================================
-    // 📦 SONUÇ
-    // =====================================================
-
     return Response.json({
 
       success: true,
@@ -305,25 +303,18 @@ if (
 
       success: false,
 
-      error: error.message,
-
-      arama:
-        url.searchParams.get("q") || ""
+      error: error.message
 
     }, {
 
-      status: 500,
-
-      headers: {
-        "Content-Type":
-          "application/json; charset=UTF-8"
-      }
+      status: 500
 
     });
 
   }
 
 }
+
     // =========================================================
     // API TEST
     // =========================================================
