@@ -654,7 +654,46 @@ if (
     // =========================================================
     // TÜRKİYE GÜNDEM API /api/gundem
     // =========================================================
+if (url.pathname === "/api/dunya" && request.method === "GET") {
+  try {
+    const cevap = await fetch(
+      "https://www.aa.com.tr/tr/rss/default?cat=dunya"
+    );
 
+    const xml = await cevap.text();
+
+    const items = xml.match(/<item[\s\S]*?<\/item>/gi) || [];
+
+    const haberler = items.slice(0, 20).map(item => ({
+      baslik: (
+        item.match(/<title[^>]*>([\s\S]*?)<\/title>/i) || [, ""]
+      )[1].replace(/<!\[CDATA\[|\]\]>/g, "").trim(),
+
+      url: (
+        item.match(/<link[^>]*>([\s\S]*?)<\/link>/i) || [, ""]
+      )[1].trim(),
+
+      tarih: (
+        item.match(/<pubDate[^>]*>([\s\S]*?)<\/pubDate>/i) || [, ""]
+      )[1].trim(),
+
+      kategori: "Dünya",
+      kaynak: "Anadolu Ajansı"
+    }));
+
+    return Response.json({
+      success: true,
+      toplam: haberler.length,
+      haberler
+    });
+
+  } catch (error) {
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+  }
+}
     if (
       url.pathname === "/api/gundem" &&
       request.method === "GET"
