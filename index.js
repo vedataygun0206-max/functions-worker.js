@@ -368,76 +368,8 @@ if (
 
       const metin =
         (
-// =========================================================
-// 🔎 DIGITAL GÜNDEM GELİŞMİŞ ARAMA API
-// /api/arama?q=Kastamonu
-// =========================================================
 
-if (
-  url.pathname === "/api/arama" &&
-  request.method === "GET"
-) {
-
-  try {
-
-    const q =
-      url.searchParams
-        .get("q")
-        ?.trim() || "";
-
-    if (!q) {
-
-      return Response.json({
-        success: true,
-        arama: "",
-        toplam: 0,
-        haberler: [],
-        firmalar: [],
-        videolar: []
-      });
-
-    }
-
-    const arama =
-      `%${q}%`;
-
-
-    // =====================================================
-    // 📰 HABERLER
-    // =====================================================
-
-    const haberSonuclari =
-      await env.DB.prepare(`
-        SELECT
-          id,
-          baslik,
-          ozet,
-          icerik,
-          kategori,
-          resim,
-          tarih,
-          okunma
-        FROM haberler
-        WHERE
-          durum = 'yayinda'
-          AND (
-            baslik LIKE ?
-            OR ozet LIKE ?
-            OR icerik LIKE ?
-            OR kategori LIKE ?
-          )
-        ORDER BY id DESC
-        LIMIT 20
-      `)
-      .bind(
-        arama,
-        arama,
-        arama,
-        arama
-      )
-      .all();
-
-
+    
     // =====================================================
     // 🏢 FİRMALAR
     // =====================================================
@@ -468,74 +400,6 @@ if (
             OR il LIKE ?
             OR ilce LIKE ?
             OR mahalle LIKE ?
-            OR adres LIKE ?
-            OR aciklama LIKE ?
-          )
-        ORDER BY id DESC
-        LIMIT 20
-      `)
-      .bind(
-        arama,
-        arama,
-        arama,
-        arama,
-        arama,
-        arama,
-        arama
-      )
-      .all();
-
-
-    // =====================================================
-    // 🎥 VİDEOLAR
-    // =====================================================
-
-    const videoSonuclari =
-      await env.DB.prepare(`
-        SELECT
-          id,
-          baslik,
-          ozet,
-          video_url,
-          kapak_resmi,
-          kategori,
-          tarih,
-          izlenme,
-          created_at
-        FROM video_haberler
-        WHERE
-          durum = 'yayinda'
-          AND (
-            baslik LIKE ?
-            OR ozet LIKE ?
-            OR kategori LIKE ?
-          )
-        ORDER BY id DESC
-        LIMIT 20
-      `)
-      .bind(
-        arama,
-        arama,
-        arama
-      )
-      .all();
-
-
-    const haberler =
-      haberSonuclari.results || [];
-
-    const firmalar =
-      firmaSonuclari.results || [];
-
-    const videolar =
-      videoSonuclari.results || [];
-
-
-    const toplam =
-      haberler.length +
-      firmalar.length +
-      videolar.length;
-
 
     // =====================================================
     // 📦 SONUÇ
