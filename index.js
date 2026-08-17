@@ -663,8 +663,7 @@ if (
   try {
 
     const rssUrl =
-      "https://www.aa.com.tr/tr/rss/default?cat=turkiye";
-
+  "https://www.aa.com.tr/tr/teyithatti/rss/news?cat=0";
     const cevap =
       await fetch(
         rssUrl,
