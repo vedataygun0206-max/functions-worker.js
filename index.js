@@ -661,138 +661,11 @@ if (
   url.pathname === "/api/turkiye" &&
   request.method === "GET"
 ) {
-  try {
-
-    const rssUrl =
-  "https://www.aa.com.tr/tr/rss/default?cat=gundem"
-    const cevap =
-      await fetch(
-        rssUrl,
-        {
-          headers: {
-            "User-Agent":
-              "Mozilla/5.0 Digital-Gundem/1.0"
-          }
-        }
-      );
-
-    if (!cevap.ok) {
-      return Response.json({
-        success: false,
-        error:
-          "Türkiye haber kaynağına ulaşılamadı.",
-        status:
-          cevap.status
-      }, {
-        status: 502
-      });
-    }
-
-    const xml =
-      await cevap.text();
-
-    const items =
-      xml.match(
-        /<item[\s\S]*?<\/item>/gi
-      ) || [];
-
-    const haberler = [];
-
-    for (
-      const item of items.slice(0, 20)
-    ) {
-
-      const titleMatch =
-        item.match(
-          /<title[^>]*>([\s\S]*?)<\/title>/i
-        );
-
-      const linkMatch =
-        item.match(
-          /<link[^>]*>([\s\S]*?)<\/link>/i
-        );
-
-      const dateMatch =
-        item.match(
-          /<pubDate[^>]*>([\s\S]*?)<\/pubDate>/i
-        );
-
-      const descriptionMatch =
-        item.match(
-          /<description[^>]*>([\s\S]*?)<\/description>/i
-        );
-
-      const baslik =
-        titleMatch
-          ? titleMatch[1]
-                      .replace(
-          /<[^>]*>/g,
-          ""
-        )
-        .trim()
-      : "";
-
-    if (
-      baslik &&
-      link
-    ) {
-
-      haberler.push({
-        baslik: baslik,
-        ozet: ozet,
-        url: link,
-        kaynak: "Anadolu Ajansı",
-        kategori: "Dünya",
-        tarih: tarih
-      });
-
-    }
-
-  }
-
-  return Response.json({
-    success: true,
-    kategori: "Dünya",
-    kaynak: "Anadolu Ajansı RSS",
-    toplam: haberler.length,
-    haberler: haberler
-  }, {
-    headers: {
-      "Content-Type": "application/json; charset=UTF-8",
-      "Cache-Control": "public, max-age=300"
-    }
-  });
-
-} catch (error) {
-
-  console.error(
-    "DÜNYA API HATASI:",
-    error
-  );
-
-  return Response.json({
-    success: false,
-    error: error.message
-  }, {
-    status: 500
-  });
-
-}
-}
-// =========================================================
-// 🇹🇷 TÜRKİYE GÜNDEM API
-// /api/turkiye
-// =========================================================
-
-if (
-  url.pathname === "/api/turkiye" &&
-  request.method === "GET"
-) {
 
   try {
 
     const rssUrl =
-      "https://www.aa.com.tr/tr/teyithatti/rss/news?cat=0";
+      "https://www.aa.com.tr/tr/rss/default?cat=gundem";
 
     const cevap =
       await fetch(
@@ -808,15 +681,11 @@ if (
     if (!cevap.ok) {
 
       return Response.json({
-
         success: false,
-
         error:
           "Türkiye haber kaynağına ulaşılamadı.",
-
         status:
           cevap.status
-
       }, {
         status: 502
       });
@@ -869,12 +738,18 @@ if (
 
       const link =
         linkMatch
-          ? linkMatch[1].trim()
+          ? linkMatch[1]
+              .replace(
+                /<!\[CDATA\[|\]\]>/g,
+                ""
+              )
+              .trim()
           : "";
 
       const tarih =
         dateMatch
-          ? dateMatch[1].trim()
+          ? dateMatch[1]
+              .trim()
           : "";
 
       const ozet =
@@ -897,22 +772,12 @@ if (
       ) {
 
         haberler.push({
-
           baslik: baslik,
-
           ozet: ozet,
-
           url: link,
-
-          kaynak:
-            "Anadolu Ajansı",
-
-          kategori:
-            "Türkiye",
-
-          tarih:
-            tarih
-
+          kaynak: "Anadolu Ajansı",
+          kategori: "Türkiye",
+          tarih: tarih
         });
 
       }
@@ -923,11 +788,9 @@ if (
 
       success: true,
 
-      kategori:
-        "Türkiye",
+      kategori: "Türkiye",
 
-      kaynak:
-        "Anadolu Ajansı RSS",
+      kaynak: "Anadolu Ajansı RSS",
 
       toplam:
         haberler.length,
