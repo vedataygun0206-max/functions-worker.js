@@ -101,6 +101,7 @@ export default {
       });
 
     }
+  }
 // =========================================================
 // 🔎 DIGITAL GÜNDEM GELİŞMİŞ ARAMA API
 // /api/arama?q=kastamonu
