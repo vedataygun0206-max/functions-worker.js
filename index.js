@@ -725,29 +725,60 @@ if (
       const baslik =
         titleMatch
           ? titleMatch[1]
-              .replace(
-                /<!\[CDATA\[|\]\]>/g,
-                ""
-              )
-              .trim()
-          : "";
+                      .replace(
+          /<[^>]*>/g,
+          ""
+        )
+        .trim()
+      : "";
 
-      const link =
-        linkMatch
-          ? linkMatch[1].trim()
-          : "";
+    if (
+      baslik &&
+      link
+    ) {
 
-      const tarih =
-        dateMatch
-          ? dateMatch[1].trim()
-          : "";
+      haberler.push({
+        baslik: baslik,
+        ozet: ozet,
+        url: link,
+        kaynak: "Anadolu Ajansı",
+        kategori: "Dünya",
+        tarih: tarih
+      });
 
-      const ozet =
-        descriptionMatch
-          ? descriptionMatch[1]
-              .replace(
-                /<!\[CDATA\[|\]\]>/g,
-                ""
+    }
+
+  }
+
+  return Response.json({
+    success: true,
+    kategori: "Dünya",
+    kaynak: "Anadolu Ajansı RSS",
+    toplam: haberler.length,
+    haberler: haberler
+  }, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      "Cache-Control": "public, max-age=300"
+    }
+  });
+
+} catch (error) {
+
+  console.error(
+    "DÜNYA API HATASI:",
+    error
+  );
+
+  return Response.json({
+    success: false,
+    error: error.message
+  }, {
+    status: 500
+  });
+
+}
+}
 // =========================================================
 // 🇹🇷 TÜRKİYE GÜNDEM API
 // /api/turkiye
