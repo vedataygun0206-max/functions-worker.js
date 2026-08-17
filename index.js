@@ -664,7 +664,7 @@ if (
   try {
 
     const rssUrl =
-  "https://www.aa.com.tr/tr/teyithatti/rss/news?cat=0";
+  "https://www.aa.com.tr/tr/rss/default?cat=gundem"
     const cevap =
       await fetch(
         rssUrl,
