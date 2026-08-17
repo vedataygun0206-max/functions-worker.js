@@ -237,11 +237,21 @@ async function haberleriGetir() {
       throw new Error("API bağlantısı başarısız");
     }
 
-    const haberler = await cevap.json();
+    const data = await cevap.json();
 
-    if (!Array.isArray(haberler) || haberler.length === 0) {
+    console.log("Türkiye API:", data);
+
+    const haberler = data.haberler || [];
+
+    if (
+      !data.success ||
+      !Array.isArray(haberler) ||
+      haberler.length === 0
+    ) {
+
       alan.innerHTML =
         '<div class="error">🇹🇷 Türkiye haberleri bulunamadı.</div>';
+
       return;
     }
 
@@ -249,7 +259,9 @@ async function haberleriGetir() {
 
     haberler.forEach(haber => {
 
-      const kart = document.createElement("article");
+      const kart =
+        document.createElement("article");
+
       kart.className = "news";
 
       const resim =
@@ -258,34 +270,85 @@ async function haberleriGetir() {
         haber.gorsel ||
         "";
 
+      const baslik =
+        haber.baslik ||
+        haber.title ||
+        "Başlık bulunamadı";
+
+      const ozet =
+        haber.ozet ||
+        haber.summary ||
+        haber.description ||
+        "";
+
+      const tarih =
+        haber.tarih ||
+        haber.created_at ||
+        "";
+
       kart.innerHTML = `
 
         ${
           resim
-          ? `<img src="${resim}" alt="${haber.title || "Türkiye haberi"}">`
-          : `<div class="no-image">🇹🇷</div>`
+          ? `
+            <img
+              src="${resim}"
+              alt="${baslik}"
+            >
+          `
+          : `
+            <div class="no-image">
+              🇹🇷
+            </div>
+          `
         }
 
         <div class="content">
 
-          <span class="category">TÜRKİYE</span>
+          <span class="category">
+            TÜRKİYE
+          </span>
 
           <h2>
-            ${haber.title || haber.baslik || "Başlık bulunamadı"}
+            ${baslik}
           </h2>
 
           <div class="summary">
-            ${
-              haber.summary ||
-              haber.description ||
-              haber.ozet ||
-              ""
-            }
+            ${ozet}
           </div>
 
           ${
-            haber.created_at
-            ? `<div class="date">${new Date(haber.created_at).toLocaleString("tr-TR")}</div>`
+            tarih
+            ? `
+              <div class="date">
+                ${new Date(tarih).toLocaleString("tr-TR")}
+              </div>
+            `
+            : ""
+          }
+
+          ${
+            haber.url
+            ? `
+              <p style="margin-top:25px;">
+                <a
+                  href="${haber.url}"
+                  target="_blank"
+                  rel="noopener"
+                  style="
+                    display:inline-block;
+                    background:#d90000;
+                    color:white;
+                    padding:12px 20px;
+                    border-radius:8px;
+                    text-decoration:none;
+                    font-weight:bold;
+                  "
+                >
+                  Haberin Kaynağı →
+                </a>
+              </p>
+            `
             : ""
           }
 
@@ -298,13 +361,16 @@ async function haberleriGetir() {
 
   } catch (hata) {
 
-    console.error(hata);
+    console.error(
+      "Türkiye haberleri hatası:",
+      hata
+    );
 
     alan.innerHTML = `
       <div class="error">
         ❌ Türkiye haberleri yüklenemedi.
         <br>
-        Lütfen daha sonra tekrar deneyin.
+        <small>${hata.message}</small>
       </div>
     `;
 
@@ -315,6 +381,5 @@ async function haberleriGetir() {
 haberleriGetir();
 
 </script>
-
 </body>
 </html>
