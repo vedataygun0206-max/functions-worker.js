@@ -101,7 +101,209 @@ export default {
       });
 
     }
+// =========================================================
+// 🔎 DIGITAL GÜNDEM ARAMA API
+// /api/arama?q=kastamonu
+// =========================================================
 
+if (
+  url.pathname === "/api/arama" &&
+  request.method === "GET"
+) {
+
+  try {
+
+    const q =
+      url.searchParams
+        .get("q")
+        ?.trim()
+        .toLowerCase() || "";
+
+    if (!q) {
+      return Response.json({
+        success: true,
+        toplam: 0,
+        arama: "",
+        haberler: [],
+        firmalar: [],
+        isletmeler: [],
+        videolar: [],
+        fotograflar: []
+      });
+    }
+
+    // -----------------------------------------------------
+    // Şimdilik Türkiye haber API'sinden arama
+    // -----------------------------------------------------
+
+    const rssUrl =
+      "https://www.aa.com.tr/tr/rss/default?cat=gundem";
+
+    const cevap =
+      await fetch(
+        rssUrl,
+        {
+          headers: {
+            "User-Agent":
+              "Mozilla/5.0 Digital-Gundem/1.0"
+          }
+        }
+      );
+
+    if (!cevap.ok) {
+      throw new Error(
+        "Haber kaynağına ulaşılamadı."
+      );
+    }
+
+    const xml =
+      await cevap.text();
+
+    const items =
+      xml.match(
+        /<item[\s\S]*?<\/item>/gi
+      ) || [];
+
+    const haberler = [];
+
+    for (
+      const item of items
+    ) {
+
+      const titleMatch =
+        item.match(
+          /<title[^>]*>([\s\S]*?)<\/title>/i
+        );
+
+      const linkMatch =
+        item.match(
+          /<link[^>]*>([\s\S]*?)<\/link>/i
+        );
+
+      const dateMatch =
+        item.match(
+          /<pubDate[^>]*>([\s\S]*?)<\/pubDate>/i
+        );
+
+      const descriptionMatch =
+        item.match(
+          /<description[^>]*>([\s\S]*?)<\/description>/i
+        );
+
+      const baslik =
+        titleMatch
+          ? titleMatch[1]
+              .replace(
+                /<!\[CDATA\[|\]\]>/g,
+                ""
+              )
+              .trim()
+          : "";
+
+      const link =
+        linkMatch
+          ? linkMatch[1].trim()
+          : "";
+
+      const tarih =
+        dateMatch
+          ? dateMatch[1].trim()
+          : "";
+
+      const ozet =
+        descriptionMatch
+          ? descriptionMatch[1]
+              .replace(
+                /<!\[CDATA\[|\]\]>/g,
+                ""
+              )
+              .replace(
+                /<[^>]*>/g,
+                ""
+              )
+              .trim()
+          : "";
+
+      const metin =
+        (
+          baslik +
+          " " +
+          ozet
+        ).toLowerCase();
+
+      if (
+        baslik &&
+        link &&
+        metin.includes(q)
+      ) {
+
+        haberler.push({
+          baslik: baslik,
+          ozet: ozet,
+          url: link,
+          kaynak:
+            "Anadolu Ajansı",
+          kategori:
+            "Türkiye",
+          tarih:
+            tarih
+        });
+
+      }
+
+    }
+
+    return Response.json({
+
+      success: true,
+
+      arama: q,
+
+      toplam:
+        haberler.length,
+
+      haberler:
+        haberler.slice(0, 20),
+
+      firmalar: [],
+
+      isletmeler: [],
+
+      videolar: [],
+
+      fotograflar: []
+
+    }, {
+      headers: {
+        "Content-Type":
+          "application/json; charset=UTF-8",
+
+        "Cache-Control":
+          "public, max-age=60"
+      }
+    });
+
+  } catch (error) {
+
+    console.error(
+      "ARAMA API HATASI:",
+      error
+    );
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        error.message
+
+    }, {
+      status: 500
+    });
+
+  }
+
+}
     // =========================================================
     // API TEST
     // =========================================================
