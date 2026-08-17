@@ -1,1 +1,995 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
 
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>81 İl Rehberi | Digital Gündem</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f3f4f6;
+  color: #111827;
+}
+
+/* HEADER */
+
+header {
+  background: #111827;
+  color: white;
+  padding: 30px 25px;
+}
+
+.logo {
+  font-size: 38px;
+  font-weight: bold;
+}
+
+.logo span {
+  color: #e00000;
+}
+
+.subtitle {
+  margin-top: 10px;
+  font-size: 19px;
+}
+
+/* NAV */
+
+nav {
+  background: #d90000;
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 17px 20px;
+}
+
+nav a:hover {
+  background: #b00000;
+}
+
+/* CONTAINER */
+
+.container {
+  max-width: 1000px;
+  margin: 35px auto;
+  padding: 0 15px;
+}
+
+/* INTRO */
+
+.intro {
+  background: white;
+  border-left: 7px solid #d90000;
+  border-radius: 18px;
+  padding: 25px;
+  margin-bottom: 20px;
+}
+
+.intro h1 {
+  margin: 0;
+  font-size: 34px;
+}
+
+.intro p {
+  color: #666;
+  font-size: 18px;
+  margin-bottom: 0;
+}
+
+/* SEARCH */
+
+.search-box {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.search {
+  width: 100%;
+  padding: 17px 20px 17px 48px;
+  border: 1px solid #ddd;
+  border-radius: 14px;
+  font-size: 18px;
+  outline: none;
+  background: white;
+}
+
+.search:focus {
+  border-color: #d90000;
+}
+
+.search-icon {
+  position: absolute;
+  left: 17px;
+  top: 16px;
+  font-size: 20px;
+}
+
+/* STATS */
+
+.stats {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.stat {
+  flex: 1;
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  text-align: center;
+}
+
+.stat strong {
+  display: block;
+  font-size: 25px;
+}
+
+.stat span {
+  color: #777;
+  font-size: 14px;
+}
+
+/* IL */
+
+.il {
+  background: white;
+  border-radius: 14px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+
+.il-header {
+  width: 100%;
+  border: 0;
+  background: white;
+  padding: 17px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  text-align: left;
+}
+
+.il-header:hover {
+  background: #fafafa;
+}
+
+.il-sol {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.il-plaka {
+  width: 38px;
+  height: 30px;
+  background: #111827;
+  color: white;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.il-adi {
+  font-size: 19px;
+  font-weight: bold;
+}
+
+.ok {
+  font-size: 18px;
+  transition: transform .2s;
+}
+
+.il.acik .ok {
+  transform: rotate(90deg);
+}
+
+/* CONTENT */
+
+.il-content {
+  display: none;
+  border-top: 1px solid #eee;
+  padding: 18px;
+}
+
+.il.acik .il-content {
+  display: block;
+}
+
+/* API INFO */
+
+.il-info {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 13px;
+  margin-bottom: 12px;
+  color: #555;
+  font-size: 14px;
+}
+
+/* CATEGORIES */
+
+.kategoriler {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.kategori {
+  text-decoration: none;
+  color: #111827;
+  background: #f3f4f6;
+  padding: 15px;
+  border-radius: 10px;
+  transition: .2s;
+}
+
+.kategori:hover {
+  background: #d90000;
+  color: white;
+}
+
+.kategori strong {
+  display: block;
+  font-size: 16px;
+}
+
+.kategori small {
+  display: block;
+  margin-top: 5px;
+  color: #777;
+}
+
+.kategori:hover small {
+  color: white;
+}
+
+/* LOADING */
+
+.loading {
+  text-align: center;
+  padding: 25px;
+  color: #777;
+}
+
+/* ERROR */
+
+.error {
+  background: white;
+  padding: 25px;
+  border-radius: 14px;
+  color: #c00000;
+  text-align: center;
+}
+
+/* FOOTER */
+
+.footer {
+  text-align: center;
+  color: #777;
+  padding: 30px 10px;
+}
+
+/* MOBİL */
+
+@media(max-width:600px) {
+
+  .logo {
+    font-size: 32px;
+  }
+
+  .subtitle {
+    font-size: 16px;
+  }
+
+  .intro h1 {
+    font-size: 28px;
+  }
+
+  .stats {
+    gap: 6px;
+  }
+
+  .stat {
+    padding: 12px 5px;
+  }
+
+  .stat strong {
+    font-size: 20px;
+  }
+
+  .stat span {
+    font-size: 12px;
+  }
+
+  .il-adi {
+    font-size: 17px;
+  }
+
+  .kategoriler {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+  <div class="logo">
+    Digital <span>Gündem</span>
+  </div>
+
+  <div class="subtitle">
+    Türkiye'nin Dijital Haber Platformu
+  </div>
+
+</header>
+
+
+<nav>
+
+  <a href="/">Ana Sayfa</a>
+
+  <a href="/pages/son-dakika.html">
+    Son Dakika
+  </a>
+
+  <a href="/pages/turkiye.html">
+    Türkiye
+  </a>
+
+  <a href="/pages/dunya.html">
+    Dünya
+  </a>
+
+  <a href="/pages/rehber.html">
+    81 İl Rehberi
+  </a>
+
+  <a href="/pages/video.html">
+    Video
+  </a>
+
+</nav>
+
+
+<div class="container">
+
+
+  <div class="intro">
+
+    <h1>🇹🇷 81 İl Rehberi</h1>
+
+    <p>
+      Türkiye'nin 81 ilinden haberler,
+      firmalar, işletmeler ve yerel bilgiler.
+    </p>
+
+  </div>
+
+
+  <div class="search-box">
+
+    <span class="search-icon">🔎</span>
+
+    <input
+      id="arama"
+      class="search"
+      type="text"
+      placeholder="İl ara... İstanbul, Kastamonu, Ankara..."
+    >
+
+  </div>
+
+
+  <div class="stats">
+
+    <div class="stat">
+      <strong id="ilSayisi">81</strong>
+      <span>İl</span>
+    </div>
+
+    <div class="stat">
+      <strong id="sonucSayisi">81</strong>
+      <span>Sonuç</span>
+    </div>
+
+    <div class="stat">
+      <strong>🇹🇷</strong>
+      <span>Türkiye</span>
+    </div>
+
+  </div>
+
+
+  <div id="iller">
+
+    <div class="loading">
+      🇹🇷 İl rehberi hazırlanıyor...
+    </div>
+
+  </div>
+
+
+</div>
+
+
+<div class="footer">
+
+  © 2026 Digital Gündem
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   81 İL
+===================================================== */
+
+const iller = [
+
+  ["Adana","01"],
+  ["Adıyaman","02"],
+  ["Afyonkarahisar","03"],
+  ["Ağrı","04"],
+  ["Amasya","05"],
+  ["Ankara","06"],
+  ["Antalya","07"],
+  ["Artvin","08"],
+  ["Aydın","09"],
+  ["Balıkesir","10"],
+  ["Bilecik","11"],
+  ["Bingöl","12"],
+  ["Bitlis","13"],
+  ["Bolu","14"],
+  ["Burdur","15"],
+  ["Bursa","16"],
+  ["Çanakkale","17"],
+  ["Çankırı","18"],
+  ["Çorum","19"],
+  ["Denizli","20"],
+  ["Diyarbakır","21"],
+  ["Edirne","22"],
+  ["Elazığ","23"],
+  ["Erzincan","24"],
+  ["Erzurum","25"],
+  ["Eskişehir","26"],
+  ["Gaziantep","27"],
+  ["Giresun","28"],
+  ["Gümüşhane","29"],
+  ["Hakkari","30"],
+  ["Hatay","31"],
+  ["Isparta","32"],
+  ["Mersin","33"],
+  ["İstanbul","34"],
+  ["İzmir","35"],
+  ["Kars","36"],
+  ["Kastamonu","37"],
+  ["Kayseri","38"],
+  ["Kırklareli","39"],
+  ["Kırşehir","40"],
+  ["Kocaeli","41"],
+  ["Konya","42"],
+  ["Kütahya","43"],
+  ["Malatya","44"],
+  ["Manisa","45"],
+  ["Kahramanmaraş","46"],
+  ["Mardin","47"],
+  ["Muğla","48"],
+  ["Muş","49"],
+  ["Nevşehir","50"],
+  ["Niğde","51"],
+  ["Ordu","52"],
+  ["Rize","53"],
+  ["Sakarya","54"],
+  ["Samsun","55"],
+  ["Siirt","56"],
+  ["Sinop","57"],
+  ["Sivas","58"],
+  ["Tekirdağ","59"],
+  ["Tokat","60"],
+  ["Trabzon","61"],
+  ["Tunceli","62"],
+  ["Şanlıurfa","63"],
+  ["Uşak","64"],
+  ["Van","65"],
+  ["Yozgat","66"],
+  ["Zonguldak","67"],
+  ["Aksaray","68"],
+  ["Bayburt","69"],
+  ["Karaman","70"],
+  ["Kırıkkale","71"],
+  ["Batman","72"],
+  ["Şırnak","73"],
+  ["Bartın","74"],
+  ["Ardahan","75"],
+  ["Iğdır","76"],
+  ["Yalova","77"],
+  ["Karabük","78"],
+  ["Kilis","79"],
+  ["Osmaniye","80"],
+  ["Düzce","81"]
+
+];
+
+
+/* =====================================================
+   ELEMENTLER
+===================================================== */
+
+const alan =
+  document.getElementById("iller");
+
+const arama =
+  document.getElementById("arama");
+
+const sonucSayisi =
+  document.getElementById("sonucSayisi");
+
+
+/* =====================================================
+   API
+===================================================== */
+
+async function ilApiGetir(il) {
+
+  try {
+
+    const cevap =
+      await fetch(
+        "/api/rehber?il=" +
+        encodeURIComponent(il)
+      );
+
+    if (!cevap.ok) {
+      return null;
+    }
+
+    const veri =
+      await cevap.json();
+
+    return veri;
+
+  } catch (error) {
+
+    console.log(
+      "API bağlantısı:",
+      error
+    );
+
+    return null;
+
+  }
+
+}
+
+
+/* =====================================================
+   İL KARTI
+===================================================== */
+
+function ilKartOlustur(il, plaka) {
+
+  const kutu =
+    document.createElement("div");
+
+  kutu.className = "il";
+
+
+  const header =
+    document.createElement("button");
+
+  header.className =
+    "il-header";
+
+
+  header.innerHTML = `
+
+    <div class="il-sol">
+
+      <div class="il-plaka">
+        ${plaka}
+      </div>
+
+      <div class="il-adi">
+        ${il}
+      </div>
+
+    </div>
+
+    <div class="ok">
+      ▶
+    </div>
+
+  `;
+
+
+  const content =
+    document.createElement("div");
+
+  content.className =
+    "il-content";
+
+
+  content.innerHTML = `
+
+    <div class="loading">
+      ${il} bilgileri yükleniyor...
+    </div>
+
+  `;
+
+
+  header.addEventListener(
+    "click",
+    async function() {
+
+      const acik =
+        kutu.classList.contains("acik");
+
+
+      /*
+       * Açılıyorsa API'ye git
+       */
+
+      if (!acik) {
+
+        kutu.classList.add("acik");
+
+        await ilBilgileriniGetir(
+          il,
+          content
+        );
+
+      } else {
+
+        kutu.classList.remove("acik");
+
+      }
+
+    }
+  );
+
+
+  kutu.appendChild(header);
+
+  kutu.appendChild(content);
+
+  return kutu;
+
+}
+
+
+/* =====================================================
+   API VERİSİNİ GÖSTER
+===================================================== */
+
+async function ilBilgileriniGetir(
+  il,
+  content
+) {
+
+  content.innerHTML = `
+
+    <div class="loading">
+      🔄 ${il} bilgileri yükleniyor...
+    </div>
+
+  `;
+
+
+  const veri =
+    await ilApiGetir(il);
+
+
+  /*
+   * API henüz yoksa
+   * temel menüyü göster
+   */
+
+  if (!veri) {
+
+    content.innerHTML = `
+
+      <div class="il-info">
+        🇹🇷 <strong>${il}</strong>
+        rehberi
+      </div>
+
+      ${kategoriMenusu(il)}
+
+    `;
+
+    return;
+
+  }
+
+
+  /*
+   * API geldiyse
+   */
+
+  const sayilar =
+    veri.sayilar || {};
+
+
+  content.innerHTML = `
+
+    <div class="il-info">
+
+      🇹🇷 <strong>${il}</strong>
+
+      ${
+        veri.aciklama ||
+        "Yerel haberler ve rehber bilgileri."
+      }
+
+    </div>
+
+    ${kategoriMenusu(
+      il,
+      sayilar
+    )}
+
+  `;
+
+}
+
+
+/* =====================================================
+   KATEGORİ MENÜSÜ
+===================================================== */
+
+function kategoriMenusu(
+  il,
+  sayilar = {}
+) {
+
+  const base =
+    "/pages/";
+
+  return `
+
+    <div class="kategoriler">
+
+
+      <a
+        class="kategori"
+        href="${base}turkiye.html?il=${encodeURIComponent(il)}"
+      >
+
+        <strong>📰 Haberler</strong>
+
+        <small>
+          ${
+            sayilar.haber ||
+            sayilar.haberler ||
+            "Yerel haberler"
+          }
+        </small>
+
+      </a>
+
+
+      <a
+        class="kategori"
+        href="/pages/firma.html?il=${encodeURIComponent(il)}"
+      >
+
+        <strong>🏢 Firma Rehberi</strong>
+
+        <small>
+          ${
+            sayilar.firma ||
+            sayilar.firmalar ||
+            "Firmalar"
+          }
+        </small>
+
+      </a>
+
+
+      <a
+        class="kategori"
+        href="/pages/isletme.html?il=${encodeURIComponent(il)}"
+      >
+
+        <strong>🏪 İşletmeler</strong>
+
+        <small>
+          ${
+            sayilar.isletme ||
+            sayilar.isletmeler ||
+            "İşletmeler"
+          }
+        </small>
+
+      </a>
+
+
+      <a
+        class="kategori"
+        href="/pages/yerel.html?il=${encodeURIComponent(il)}"
+      >
+
+        <strong>📍 Yerel Gündem</strong>
+
+        <small>
+          ${
+            sayilar.yerel ||
+            "Yerel gelişmeler"
+          }
+        </small>
+
+      </a>
+
+
+      <a
+        class="kategori"
+        href="/pages/video.html?il=${encodeURIComponent(il)}"
+      >
+
+        <strong>🎥 Videolar</strong>
+
+        <small>
+          ${
+            sayilar.video ||
+            "Yerel videolar"
+          }
+        </small>
+
+      </a>
+
+
+      <a
+        class="kategori"
+        href="/pages/fotograf.html?il=${encodeURIComponent(il)}"
+      >
+
+        <strong>📷 Fotoğraflar</strong>
+
+        <small>
+          ${
+            sayilar.fotograf ||
+            "Fotoğraf galerisi"
+          }
+        </small>
+
+      </a>
+
+
+    </div>
+
+  `;
+
+}
+
+
+/* =====================================================
+   İLLERİ GÖSTER
+===================================================== */
+
+function illeriGoster(liste) {
+
+  alan.innerHTML = "";
+
+  sonucSayisi.textContent =
+    liste.length;
+
+
+  if (liste.length === 0) {
+
+    alan.innerHTML = `
+
+      <div class="error">
+
+        🔎 Aradığınız il bulunamadı.
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  liste.forEach(
+    ([il, plaka]) => {
+
+      alan.appendChild(
+        ilKartOlustur(
+          il,
+          plaka
+        )
+      );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   ARAMA
+===================================================== */
+
+arama.addEventListener(
+  "input",
+  function() {
+
+    const kelime =
+      this.value
+        .toLocaleLowerCase(
+          "tr-TR"
+        )
+        .trim();
+
+
+    const filtre =
+      iller.filter(
+        ([il]) =>
+
+          il
+            .toLocaleLowerCase(
+              "tr-TR"
+            )
+            .includes(kelime)
+
+      );
+
+
+    illeriGoster(
+      filtre
+    );
+
+  }
+);
+
+
+/* =====================================================
+   BAŞLAT
+===================================================== */
+
+document.getElementById(
+  "ilSayisi"
+).textContent =
+  iller.length;
+
+
+illeriGoster(
+  iller
+);
+
+</script>
+
+</body>
+</html>
