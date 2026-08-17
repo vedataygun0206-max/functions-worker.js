@@ -102,6 +102,170 @@ export default {
 
     }
   }
+  // =========================================================
+// 🔎 DIGITAL GÜNDEM ARAMA API
+// =========================================================
+
+if (
+  url.pathname === "/api/arama" &&
+  request.method === "GET"
+) {
+
+  try {
+
+    const q =
+      (url.searchParams.get("q") || "").trim();
+
+    if (!q) {
+      return Response.json({
+        success: true,
+        arama: "",
+        toplam: 0,
+        haberler: [],
+        firmalar: [],
+        videolar: []
+      });
+    }
+
+    const arama = `%${q}%`;
+
+    const haberSonuclari =
+      await env.DB.prepare(`
+        SELECT
+          id,
+          baslik,
+          ozet,
+          icerik,
+          kategori,
+          resim,
+          tarih,
+          okunma
+        FROM haberler
+        WHERE durum = 'yayinda'
+        AND (
+          baslik LIKE ?
+          OR ozet LIKE ?
+          OR icerik LIKE ?
+          OR kategori LIKE ?
+        )
+        ORDER BY id DESC
+        LIMIT 20
+      `)
+      .bind(arama, arama, arama, arama)
+      .all();
+
+    const firmaSonuclari =
+      await env.DB.prepare(`
+        SELECT
+          id,
+          firma_adi,
+          kategori,
+          il,
+          ilce,
+          mahalle,
+          adres,
+          telefon,
+          whatsapp,
+          email,
+          website,
+          aciklama,
+          logo,
+          durum,
+          tarih
+        FROM firmalar
+        WHERE durum = 'yayinda'
+        AND (
+          firma_adi LIKE ?
+          OR kategori LIKE ?
+          OR il LIKE ?
+          OR ilce LIKE ?
+          OR mahalle LIKE ?
+          OR adres LIKE ?
+          OR telefon LIKE ?
+          OR aciklama LIKE ?
+        )
+        ORDER BY id DESC
+        LIMIT 20
+      `)
+      .bind(
+        arama,
+        arama,
+        arama,
+        arama,
+        arama,
+        arama,
+        arama,
+        arama
+      )
+      .all();
+
+    const videoSonuclari =
+      await env.DB.prepare(`
+        SELECT
+          id,
+          baslik,
+          ozet,
+          video_url,
+          kapak_resmi,
+          kategori,
+          tarih,
+          durum,
+          manset,
+          izlenme,
+          created_at
+        FROM video_haberler
+        WHERE durum = 'yayinda'
+        AND (
+          baslik LIKE ?
+          OR ozet LIKE ?
+          OR kategori LIKE ?
+        )
+        ORDER BY id DESC
+        LIMIT 20
+      `)
+      .bind(arama, arama, arama)
+      .all();
+
+    const haberler =
+      haberSonuclari.results || [];
+
+    const firmalar =
+      firmaSonuclari.results || [];
+
+    const videolar =
+      videoSonuclari.results || [];
+
+    const toplam =
+      haberler.length +
+      firmalar.length +
+      videolar.length;
+
+    return Response.json({
+      success: true,
+      arama: q,
+      toplam: toplam,
+      haberler: haberler,
+      firmalar: firmalar,
+      videolar: videolar
+    });
+
+  } catch (error) {
+
+    console.error(
+      "ARAMA API HATASI:",
+      error
+    );
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, {
+      status: 500
+    });
+
+  }
+
+}
 // =========================================================
 // 🔎 DIGITAL GÜNDEM GELİŞMİŞ ARAMA API
 // /api/arama?q=kastamonu
