@@ -102,7 +102,7 @@ export default {
 
     }
 // =========================================================
-// 🔎 DIGITAL GÜNDEM ARAMA API
+// 🔎 DIGITAL GÜNDEM GELİŞMİŞ ARAMA API
 // /api/arama?q=kastamonu
 // =========================================================
 
@@ -116,21 +116,163 @@ if (
     const q =
       url.searchParams
         .get("q")
-        ?.trim()
-        .toLowerCase() || "";
+        ?.trim() || "";
 
     if (!q) {
+
       return Response.json({
         success: true,
-        toplam: 0,
         arama: "",
+        toplam: 0,
         haberler: [],
         firmalar: [],
-        isletmeler: [],
-        videolar: [],
-        fotograflar: []
+        videolar: []
       });
+
     }
+
+    const arama =
+      `%${q}%`;
+
+    // =====================================================
+    // 📰 HABERLER
+    // =====================================================
+
+    const haberSonuclari =
+      await env.DB.prepare(`
+        SELECT *
+        FROM haberler
+        WHERE
+          baslik LIKE ?
+          OR ozet LIKE ?
+        ORDER BY id DESC
+        LIMIT 20
+      `)
+      .bind(
+        arama,
+        arama
+      )
+      .all();
+
+
+    // =====================================================
+    // 🏢 FİRMALAR
+    // =====================================================
+
+    const firmaSonuclari =
+      await env.DB.prepare(`
+        SELECT *
+        FROM firmalar
+        WHERE
+          ad LIKE ?
+          OR il LIKE ?
+          OR ilce LIKE ?
+          OR kategori LIKE ?
+        ORDER BY id DESC
+        LIMIT 20
+      `)
+      .bind(
+        arama,
+        arama,
+        arama,
+        arama
+      )
+      .all();
+
+
+    // =====================================================
+    // 🎥 VİDEOLAR
+    // =====================================================
+
+    const videoSonuclari =
+      await env.DB.prepare(`
+        SELECT *
+        FROM video_haberler
+        WHERE
+          baslik LIKE ?
+          OR aciklama LIKE ?
+        ORDER BY id DESC
+        LIMIT 20
+      `)
+      .bind(
+        arama,
+        arama
+      )
+      .all();
+
+
+    const haberler =
+      haberSonuclari.results || [];
+
+    const firmalar =
+      firmaSonuclari.results || [];
+
+    const videolar =
+      videoSonuclari.results || [];
+
+
+    const toplam =
+      haberler.length +
+      firmalar.length +
+      videolar.length;
+
+
+    return Response.json({
+
+      success: true,
+
+      arama:
+        q,
+
+      toplam:
+        toplam,
+
+      haberler:
+        haberler,
+
+      firmalar:
+        firmalar,
+
+      videolar:
+        videolar
+
+    }, {
+
+      headers: {
+
+        "Content-Type":
+          "application/json; charset=UTF-8",
+
+        "Cache-Control":
+          "public, max-age=60"
+
+      }
+
+    });
+
+  } catch (error) {
+
+    console.error(
+      "ARAMA API HATASI:",
+      error
+    );
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        error.message
+
+    }, {
+
+      status: 500
+
+    });
+
+  }
+
+}
 
     // -----------------------------------------------------
     // Şimdilik Türkiye haber API'sinden arama
