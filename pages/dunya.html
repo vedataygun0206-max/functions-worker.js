@@ -1,1 +1,478 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Dünya Haberleri | Digital Gündem</title>
+
+<meta name="description"
+content="Dünyadan son dakika gelişmeleri, uluslararası haberler ve küresel gündem Digital Gündem'de.">
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f5f7;
+    color:#222;
+}
+
+header{
+    background:#111827;
+    color:white;
+    padding:18px 20px;
+}
+
+.header-inner{
+    max-width:1200px;
+    margin:auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.logo{
+    font-size:25px;
+    font-weight:bold;
+}
+
+.logo span{
+    color:#e00000;
+}
+
+nav{
+    background:#d60000;
+    overflow-x:auto;
+    white-space:nowrap;
+}
+
+nav .nav-inner{
+    max-width:1200px;
+    margin:auto;
+    display:flex;
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+    padding:14px 16px;
+    display:block;
+    font-weight:bold;
+}
+
+nav a:hover,
+nav a.active{
+    background:#a90000;
+}
+
+.container{
+    max-width:1200px;
+    margin:25px auto;
+    padding:0 15px;
+}
+
+.baslik{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+    border-left:6px solid #d60000;
+}
+
+.baslik h1{
+    margin:0 0 8px;
+    font-size:28px;
+}
+
+.baslik p{
+    margin:0;
+    color:#666;
+}
+
+#durum{
+    text-align:center;
+    padding:25px;
+    color:#666;
+}
+
+.haberler{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.haber{
+    background:white;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+    transition:.2s;
+}
+
+.haber:hover{
+    transform:translateY(-3px);
+    box-shadow:0 6px 18px rgba(0,0,0,.12);
+}
+
+.haber-ust{
+    height:190px;
+    background:#ddd;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+}
+
+.haber-ust img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.resim-yok{
+    font-size:55px;
+}
+
+.haber-icerik{
+    padding:16px;
+}
+
+.kategori{
+    display:inline-block;
+    background:#d60000;
+    color:white;
+    padding:5px 9px;
+    border-radius:5px;
+    font-size:12px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.haber h2{
+    margin:0 0 10px;
+    font-size:19px;
+    line-height:1.3;
+}
+
+.haber p{
+    color:#666;
+    line-height:1.5;
+    margin:0 0 12px;
+}
+
+.tarih{
+    color:#888;
+    font-size:13px;
+}
+
+.haber a{
+    display:inline-block;
+    margin-top:12px;
+    color:#d60000;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+footer{
+    margin-top:40px;
+    background:#111827;
+    color:white;
+    text-align:center;
+    padding:25px 15px;
+}
+
+@media(max-width:900px){
+    .haberler{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:600px){
+    .header-inner{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .haberler{
+        grid-template-columns:1fr;
+    }
+
+    .haber-ust{
+        height:210px;
+    }
+
+    .baslik h1{
+        font-size:24px;
+    }
+
+    nav a{
+        padding:12px;
+        font-size:14px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+        <div class="logo">
+            Digital <span>Gündem</span>
+        </div>
+
+        <div>
+            Türkiye'nin Dijital Haber Platformu
+        </div>
+    </div>
+</header>
+
+<nav>
+    <div class="nav-inner">
+        <a href="/">Ana Sayfa</a>
+        <a href="/pages/sondakika.html">Son Dakika</a>
+        <a href="/pages/turkiye.html">Türkiye</a>
+        <a href="/pages/dunya.html" class="active">Dünya</a>
+        <a href="/pages/video.html">Video</a>
+        <a href="/pages/rehber.html">Rehber</a>
+        <a href="/pages/firmalar.html">Firmalar</a>
+        <a href="/pages/yazarlar.html">Yazarlar</a>
+    </div>
+</nav>
+
+<main class="container">
+
+    <section class="baslik">
+        <h1>🌍 Dünya Haberleri</h1>
+        <p>
+            Dünyadan son gelişmeler, uluslararası gündem ve küresel haberler.
+        </p>
+    </section>
+
+    <div id="durum">
+        Dünya haberleri yükleniyor...
+    </div>
+
+    <section
+        id="haberler"
+        class="haberler">
+    </section>
+
+</main>
+
+<footer>
+    © 2026 Digital Gündem — Türkiye'nin Dijital Haber Platformu
+</footer>
+
+<script>
+
+const API = "/api/dunya";
+
+async function dunyaHaberleriniGetir(){
+
+    const durum =
+        document.getElementById("durum");
+
+    const liste =
+        document.getElementById("haberler");
+
+    try{
+
+        const cevap =
+            await fetch(API, {
+                cache:"no-store"
+            });
+
+        if(!cevap.ok){
+            throw new Error(
+                "API HTTP " + cevap.status
+            );
+        }
+
+        const veri =
+            await cevap.json();
+
+        if(
+            !veri.success ||
+            !Array.isArray(veri.haberler)
+        ){
+
+            throw new Error(
+                veri.error ||
+                "Haber verisi alınamadı."
+            );
+
+        }
+
+        durum.style.display = "none";
+
+        liste.innerHTML = "";
+
+        if(veri.haberler.length === 0){
+
+            durum.style.display = "block";
+
+            durum.innerHTML =
+                "🌍 Henüz Dünya haberi bulunmuyor.";
+
+            return;
+
+        }
+
+        veri.haberler.forEach(haber => {
+
+            const kart =
+                document.createElement("article");
+
+            kart.className = "haber";
+
+            const baslik =
+                guvenliMetin(
+                    haber.baslik ||
+                    haber.title ||
+                    "Dünya Haberi"
+                );
+
+            const ozet =
+                guvenliMetin(
+                    haber.ozet ||
+                    haber.aciklama ||
+                    ""
+                );
+
+            const tarih =
+                guvenliMetin(
+                    haber.tarih ||
+                    ""
+                );
+
+            const resim =
+                haber.resim ||
+                haber.kapak_resmi ||
+                haber.image ||
+                "";
+
+            let resimHTML =
+                `<div class="resim-yok">🌍</div>`;
+
+            if(resim){
+
+                resimHTML =
+                    `<img
+                        src="${escapeAttribute(resim)}"
+                        alt="${escapeAttribute(baslik)}"
+                        loading="lazy"
+                        onerror="this.parentElement.innerHTML='<div class=&quot;resim-yok&quot;>🌍</div>'"
+                    >`;
+
+            }
+
+            kart.innerHTML = `
+
+                <div class="haber-ust">
+                    ${resimHTML}
+                </div>
+
+                <div class="haber-icerik">
+
+                    <span class="kategori">
+                        DÜNYA
+                    </span>
+
+                    <h2>
+                        ${baslik}
+                    </h2>
+
+                    ${
+                        ozet
+                        ? `<p>${ozet}</p>`
+                        : ""
+                    }
+
+                    ${
+                        tarih
+                        ? `<div class="tarih">
+                            ${tarih}
+                           </div>`
+                        : ""
+                    }
+
+                    ${
+                        haber.id
+                        ? `<a href="/pages/haber.html?id=${encodeURIComponent(haber.id)}">
+                            Haberi Oku →
+                           </a>`
+                        : ""
+                    }
+
+                </div>
+            `;
+
+            liste.appendChild(kart);
+
+        });
+
+    }
+    catch(hata){
+
+        console.error(
+            "Dünya haberleri:",
+            hata
+        );
+
+        durum.style.display = "block";
+
+        durum.innerHTML = `
+            ❌ Dünya haberleri yüklenemedi.<br>
+            <small>
+                Lütfen daha sonra tekrar deneyin.
+            </small>
+        `;
+
+    }
+
+}
+
+
+/*
+ * HTML güvenliği
+ */
+
+function guvenliMetin(metin){
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        String(metin);
+
+    return div.innerHTML;
+
+}
+
+function escapeAttribute(metin){
+
+    return String(metin)
+        .replace(/&/g,"&amp;")
+        .replace(/"/g,"&quot;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;");
+
+}
+
+
+/*
+ * Sayfa açıldığında haberleri getir
+ */
+
+dunyaHaberleriniGetir();
+
+</script>
+
+</body>
+</html>
