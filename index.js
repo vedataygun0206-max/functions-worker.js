@@ -5382,7 +5382,1560 @@ if (
 
       }
     }
+// =========================================================
+// ✍️ YAZARLAR SİSTEMİ
+// 81 İL · 81 SES · TÜRKİYE'NİN DİJİTAL GÜNDEMİ
+// =========================================================
 
+
+// =========================================================
+// GET /api/yazarlar
+// Aktif yazarları getir
+// =========================================================
+
+if (
+  url.pathname === "/api/yazarlar" &&
+  request.method === "GET"
+) {
+
+  try {
+
+    const result =
+      await env.DB
+        .prepare(`
+          SELECT
+            id,
+            ad_soyad,
+            il,
+            ilce,
+            fotograf,
+            biyografi,
+            email,
+            durum,
+            tarih
+          FROM yazarlar
+          WHERE durum = 'aktif'
+          ORDER BY il ASC, ad_soyad ASC
+        `)
+        .all();
+
+    return Response.json({
+
+      success: true,
+
+      toplam:
+        result.results?.length || 0,
+
+      yazarlar:
+        result.results || []
+
+    }, {
+
+      headers: {
+        "Content-Type":
+          "application/json; charset=UTF-8",
+        "Cache-Control":
+          "public, max-age=300"
+      }
+
+    });
+
+  } catch (error) {
+
+    console.error(
+      "YAZARLAR API HATASI:",
+      error
+    );
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        error.message
+
+    }, {
+      status: 500
+    });
+
+  }
+
+}
+
+
+// =========================================================
+// GET /api/yazar
+// Tek yazar
+// =========================================================
+
+if (
+  url.pathname === "/api/yazar" &&
+  request.method === "GET"
+) {
+
+  try {
+
+    const id =
+      url.searchParams.get("id");
+
+    if (!id) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Yazar ID belirtilmedi."
+
+      }, {
+        status: 400
+      });
+
+    }
+
+    const yazar =
+      await env.DB
+        .prepare(`
+          SELECT
+            id,
+            ad_soyad,
+            il,
+            ilce,
+            fotograf,
+            biyografi,
+            email,
+            durum,
+            tarih
+          FROM yazarlar
+          WHERE id = ?
+          AND durum = 'aktif'
+          LIMIT 1
+        `)
+        .bind(id)
+        .first();
+
+    if (!yazar) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Yazar bulunamadı."
+
+      }, {
+        status: 404
+      });
+
+    }
+
+    return Response.json({
+
+      success: true,
+
+      yazar
+
+    }, {
+
+      headers: {
+        "Content-Type":
+          "application/json; charset=UTF-8",
+        "Cache-Control":
+          "public, max-age=300"
+      }
+
+    });
+
+  } catch (error) {
+
+    console.error(
+      "TEK YAZAR API HATASI:",
+      error
+    );
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        error.message
+
+    }, {
+      status: 500
+    });
+
+  }
+
+}
+
+
+// =========================================================
+// GET /api/yazar-yazilari
+// Yayındaki yazar yazıları
+//
+// Kullanım:
+// /api/yazar-yazilari
+// /api/yazar-yazilari?yazar_id=1
+// =========================================================
+
+if (
+  url.pathname === "/api/yazar-yazilari" &&
+  request.method === "GET"
+) {
+
+  try {
+
+    const yazar_id =
+      url.searchParams.get("yazar_id");
+
+    let result;
+
+    if (yazar_id) {
+
+      result =
+        await env.DB
+          .prepare(`
+            SELECT
+              yy.id,
+              yy.yazar_id,
+              yy.baslik,
+              yy.icerik,
+              yy.il,
+              yy.ilce,
+              yy.resim,
+              yy.durum,
+              yy.red_nedeni,
+              yy.editor_notu,
+              yy.tarih,
+              yy.yayin_tarihi,
+              y.ad_soyad,
+              y.fotograf,
+              y.biyografi
+            FROM yazar_yazilari yy
+            INNER JOIN yazarlar y
+              ON y.id = yy.yazar_id
+            WHERE
+              yy.durum = 'yayinda'
+              AND y.durum = 'aktif'
+              AND yy.yazar_id = ?
+            ORDER BY
+              yy.id DESC
+          `)
+          .bind(yazar_id)
+          .all();
+
+    } else {
+
+      result =
+        await env.DB
+          .prepare(`
+            SELECT
+              yy.id,
+              yy.yazar_id,
+              yy.baslik,
+              yy.icerik,
+              yy.il,
+              yy.ilce,
+              yy.resim,
+              yy.durum,
+              yy.red_nedeni,
+              yy.editor_notu,
+              yy.tarih,
+              yy.yayin_tarihi,
+              y.ad_soyad,
+              y.fotograf,
+              y.biyografi
+            FROM yazar_yazilari yy
+            INNER JOIN yazarlar y
+              ON y.id = yy.yazar_id
+            WHERE
+              yy.durum = 'yayinda'
+              AND y.durum = 'aktif'
+            ORDER BY
+              yy.id DESC
+          `)
+          .all();
+
+    }
+
+    return Response.json({
+
+      success: true,
+
+      toplam:
+        result.results?.length || 0,
+
+      yazilar:
+        result.results || []
+
+    }, {
+
+      headers: {
+        "Content-Type":
+          "application/json; charset=UTF-8",
+        "Cache-Control":
+          "public, max-age=300"
+      }
+
+    });
+
+  } catch (error) {
+
+    console.error(
+      "YAZAR YAZILARI API HATASI:",
+      error
+    );
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        error.message
+
+    }, {
+      status: 500
+    });
+
+  }
+
+}
+
+
+// =========================================================
+// GET /api/yazar-yazisi
+// Tek yayınlanmış yazı
+// =========================================================
+
+if (
+  url.pathname === "/api/yazar-yazisi" &&
+  request.method === "GET"
+) {
+
+  try {
+
+    const id =
+      url.searchParams.get("id");
+
+    if (!id) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Yazı ID belirtilmedi."
+
+      }, {
+        status: 400
+      });
+
+    }
+
+    const yazi =
+      await env.DB
+        .prepare(`
+          SELECT
+            yy.id,
+            yy.yazar_id,
+            yy.baslik,
+            yy.icerik,
+            yy.il,
+            yy.ilce,
+            yy.resim,
+            yy.durum,
+            yy.tarih,
+            yy.yayin_tarihi,
+
+            y.ad_soyad,
+            y.fotograf,
+            y.biyografi,
+            y.il AS yazar_il,
+            y.ilce AS yazar_ilce
+
+          FROM yazar_yazilari yy
+
+          INNER JOIN yazarlar y
+            ON y.id = yy.yazar_id
+
+          WHERE
+            yy.id = ?
+            AND yy.durum = 'yayinda'
+            AND y.durum = 'aktif'
+
+          LIMIT 1
+        `)
+        .bind(id)
+        .first();
+
+    if (!yazi) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Yayınlanmış yazı bulunamadı."
+
+      }, {
+        status: 404
+      });
+
+    }
+
+    return Response.json({
+
+      success: true,
+
+      yazi
+
+    }, {
+
+      headers: {
+        "Content-Type":
+          "application/json; charset=UTF-8",
+        "Cache-Control":
+          "public, max-age=300"
+      }
+
+    });
+
+  } catch (error) {
+
+    console.error(
+      "TEK YAZAR YAZISI API HATASI:",
+      error
+    );
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        error.message
+
+    }, {
+      status: 500
+    });
+
+  }
+
+}
+
+
+// =========================================================
+// POST /api/yazar-yazisi
+// Yazar yazı gönderir
+//
+// ÖNEMLİ:
+// Yazı otomatik yayınlanmaz.
+// Her zaman "beklemede" olarak kaydedilir.
+// =========================================================
+
+if (
+  url.pathname === "/api/yazar-yazisi" &&
+  request.method === "POST"
+) {
+
+  try {
+
+    const data =
+      await request.json();
+
+    const yazar_id =
+      Number(data.yazar_id || 0);
+
+    const baslik =
+      String(
+        data.baslik || ""
+      ).trim();
+
+    const icerik =
+      String(
+        data.icerik || ""
+      ).trim();
+
+    const il =
+      String(
+        data.il || ""
+      ).trim();
+
+    const ilce =
+      String(
+        data.ilce || ""
+      ).trim();
+
+    const resim =
+      String(
+        data.resim || ""
+      ).trim();
+
+    if (!yazar_id) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Yazar ID belirtilmedi."
+
+      }, {
+        status: 400
+      });
+
+    }
+
+    if (!baslik) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Yazı başlığı boş olamaz."
+
+      }, {
+        status: 400
+      });
+
+    }
+
+    if (!icerik) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Yazı içeriği boş olamaz."
+
+      }, {
+        status: 400
+      });
+
+    }
+
+    // YAZAR KONTROLÜ
+
+    const yazar =
+      await env.DB
+        .prepare(`
+          SELECT
+            id,
+            ad_soyad,
+            il,
+            ilce,
+            durum
+          FROM yazarlar
+          WHERE id = ?
+          LIMIT 1
+        `)
+        .bind(yazar_id)
+        .first();
+
+    if (!yazar) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Yazar bulunamadı."
+
+      }, {
+        status: 404
+      });
+
+    }
+
+    if (yazar.durum !== "aktif") {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Bu yazar şu anda aktif değil."
+
+      }, {
+        status: 403
+      });
+
+    }
+
+    const tarih =
+      new Intl.DateTimeFormat(
+        "tr-TR",
+        {
+          timeZone:
+            "Europe/Istanbul"
+        }
+      ).format(
+        new Date()
+      );
+
+    const result =
+      await env.DB
+        .prepare(`
+          INSERT INTO yazar_yazilari
+          (
+            yazar_id,
+            baslik,
+            icerik,
+            il,
+            ilce,
+            resim,
+            durum,
+            red_nedeni,
+            editor_notu,
+            tarih,
+            yayin_tarihi
+          )
+          VALUES
+          (?, ?, ?, ?, ?, ?, 'beklemede', '', '', ?, NULL)
+        `)
+        .bind(
+          yazar_id,
+          baslik,
+          icerik,
+          il || yazar.il,
+          ilce || yazar.ilce,
+          resim,
+          tarih
+        )
+        .run();
+
+    return Response.json({
+
+      success: true,
+
+      message:
+        "Yazınız editör incelemesine gönderildi.",
+
+      durum:
+        "beklemede",
+
+      id:
+        result.meta.last_row_id
+
+    });
+
+  } catch (error) {
+
+    console.error(
+      "YAZI GÖNDERME HATASI:",
+      error
+    );
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        error.message
+
+    }, {
+      status: 500
+    });
+
+  }
+
+}
+
+
+// =========================================================
+// GET /api/admin/yazarlar
+// Editör paneli için TÜM yazarlar
+// =========================================================
+
+if (
+  url.pathname === "/api/admin/yazarlar" &&
+  request.method === "GET"
+) {
+
+  const auth =
+    cookieOku(
+      request,
+      ADMIN_COOKIE
+    );
+
+  if (auth !== "ok") {
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        "Yetkisiz erişim."
+
+    }, {
+      status: 401
+    });
+
+  }
+
+  try {
+
+    const result =
+      await env.DB
+        .prepare(`
+          SELECT
+            id,
+            ad_soyad,
+            il,
+            ilce,
+            fotograf,
+            biyografi,
+            email,
+            durum,
+            tarih
+          FROM yazarlar
+          ORDER BY id DESC
+        `)
+        .all();
+
+    return Response.json({
+
+      success: true,
+
+      toplam:
+        result.results?.length || 0,
+
+      yazarlar:
+        result.results || []
+
+    });
+
+  } catch (error) {
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        error.message
+
+    }, {
+      status: 500
+    });
+
+  }
+
+}
+
+
+// =========================================================
+// GET /api/admin/yazar-yazilari
+// Editör paneli için BEKLEYEN + YAYINLANAN + REDDEDİLEN
+// =========================================================
+
+if (
+  url.pathname === "/api/admin/yazar-yazilari" &&
+  request.method === "GET"
+) {
+
+  const auth =
+    cookieOku(
+      request,
+      ADMIN_COOKIE
+    );
+
+  if (auth !== "ok") {
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        "Yetkisiz erişim."
+
+    }, {
+      status: 401
+    });
+
+  }
+
+  try {
+
+    const durum =
+      url.searchParams.get("durum");
+
+    let result;
+
+    if (
+      durum === "beklemede" ||
+      durum === "yayinda" ||
+      durum === "reddedildi"
+    ) {
+
+      result =
+        await env.DB
+          .prepare(`
+            SELECT
+              yy.*,
+
+              y.ad_soyad,
+              y.fotograf AS yazar_fotograf,
+              y.il AS yazar_il,
+              y.ilce AS yazar_ilce
+
+            FROM yazar_yazilari yy
+
+            INNER JOIN yazarlar y
+              ON y.id = yy.yazar_id
+
+            WHERE yy.durum = ?
+
+            ORDER BY yy.id DESC
+          `)
+          .bind(durum)
+          .all();
+
+    } else {
+
+      result =
+        await env.DB
+          .prepare(`
+            SELECT
+              yy.*,
+
+              y.ad_soyad,
+              y.fotograf AS yazar_fotograf,
+              y.il AS yazar_il,
+              y.ilce AS yazar_ilce
+
+            FROM yazar_yazilari yy
+
+            INNER JOIN yazarlar y
+              ON y.id = yy.yazar_id
+
+            ORDER BY yy.id DESC
+          `)
+          .all();
+
+    }
+
+    return Response.json({
+
+      success: true,
+
+      toplam:
+        result.results?.length || 0,
+
+      yazilar:
+        result.results || []
+
+    });
+
+  } catch (error) {
+
+    console.error(
+      "ADMIN YAZAR YAZILARI HATASI:",
+      error
+    );
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        error.message
+
+    }, {
+      status: 500
+    });
+
+  }
+
+}
+
+
+// =========================================================
+// GET /api/admin/yazar-yazisi
+// Editör bir yazının tamamını görür
+// =========================================================
+
+if (
+  url.pathname === "/api/admin/yazar-yazisi" &&
+  request.method === "GET"
+) {
+
+  const auth =
+    cookieOku(
+      request,
+      ADMIN_COOKIE
+    );
+
+  if (auth !== "ok") {
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        "Yetkisiz erişim."
+
+    }, {
+      status: 401
+    });
+
+  }
+
+  try {
+
+    const id =
+      url.searchParams.get("id");
+
+    if (!id) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Yazı ID belirtilmedi."
+
+      }, {
+        status: 400
+      });
+
+    }
+
+    const yazi =
+      await env.DB
+        .prepare(`
+          SELECT
+            yy.*,
+
+            y.ad_soyad,
+            y.fotograf AS yazar_fotograf,
+            y.il AS yazar_il,
+            y.ilce AS yazar_ilce,
+            y.biyografi AS yazar_biyografi
+
+          FROM yazar_yazilari yy
+
+          INNER JOIN yazarlar y
+            ON y.id = yy.yazar_id
+
+          WHERE yy.id = ?
+
+          LIMIT 1
+        `)
+        .bind(id)
+        .first();
+
+    if (!yazi) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Yazı bulunamadı."
+
+      }, {
+        status: 404
+      });
+
+    }
+
+    return Response.json({
+
+      success: true,
+
+      yazi
+
+    });
+
+  } catch (error) {
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        error.message
+
+    }, {
+      status: 500
+    });
+
+  }
+
+}
+
+
+// =========================================================
+// PUT /api/admin/yazar-yazisi
+//
+// EDITÖR İŞLEMİ:
+//
+// durum = yayinda
+// durum = reddedildi
+// durum = beklemede
+//
+// Yayınlanınca yayın_tarihi otomatik yazılır.
+// =========================================================
+
+if (
+  url.pathname === "/api/admin/yazar-yazisi" &&
+  request.method === "PUT"
+) {
+
+  const auth =
+    cookieOku(
+      request,
+      ADMIN_COOKIE
+    );
+
+  if (auth !== "ok") {
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        "Yetkisiz erişim."
+
+    }, {
+      status: 401
+    });
+
+  }
+
+  try {
+
+    const id =
+      url.searchParams.get("id");
+
+    if (!id) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Yazı ID belirtilmedi."
+
+      }, {
+        status: 400
+      });
+
+    }
+
+    const data =
+      await request.json();
+
+    const yeniDurum =
+      String(
+        data.durum || ""
+      ).trim();
+
+    const editor_notu =
+      String(
+        data.editor_notu || ""
+      ).trim();
+
+    const red_nedeni =
+      String(
+        data.red_nedeni || ""
+      ).trim();
+
+    const izinVerilenDurumlar = [
+      "beklemede",
+      "yayinda",
+      "reddedildi"
+    ];
+
+    if (
+      !izinVerilenDurumlar.includes(
+        yeniDurum
+      )
+    ) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Geçersiz durum. beklemede, yayinda veya reddedildi olabilir."
+
+      }, {
+        status: 400
+      });
+
+    }
+
+    const mevcut =
+      await env.DB
+        .prepare(`
+          SELECT
+            id,
+            durum
+          FROM yazar_yazilari
+          WHERE id = ?
+          LIMIT 1
+        `)
+        .bind(id)
+        .first();
+
+    if (!mevcut) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Yazı bulunamadı."
+
+      }, {
+        status: 404
+      });
+
+    }
+
+    let yayin_tarihi = null;
+
+    if (
+      yeniDurum === "yayinda"
+    ) {
+
+      yayin_tarihi =
+        new Intl.DateTimeFormat(
+          "tr-TR",
+          {
+            timeZone:
+              "Europe/Istanbul",
+            dateStyle:
+              "short",
+            timeStyle:
+              "short"
+          }
+        ).format(
+          new Date()
+        );
+
+    }
+
+    if (
+      yeniDurum === "reddedildi"
+    ) {
+
+      if (!red_nedeni) {
+
+        return Response.json({
+
+          success: false,
+
+          error:
+            "Reddedilen yazı için red nedeni belirtilmelidir."
+
+        }, {
+          status: 400
+        });
+
+      }
+
+    }
+
+    const result =
+      await env.DB
+        .prepare(`
+          UPDATE yazar_yazilari
+          SET
+            durum = ?,
+            red_nedeni = ?,
+            editor_notu = ?,
+            yayin_tarihi = ?
+          WHERE id = ?
+        `)
+        .bind(
+          yeniDurum,
+          red_nedeni,
+          editor_notu,
+          yayin_tarihi,
+          id
+        )
+        .run();
+
+    if (
+      result.meta.changes === 0
+    ) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Yazı güncellenemedi."
+
+      }, {
+        status: 404
+      });
+
+    }
+
+    let mesaj =
+      "Yazı beklemeye alındı.";
+
+    if (
+      yeniDurum === "yayinda"
+    ) {
+
+      mesaj =
+        "Yazı başarıyla yayınlandı.";
+
+    }
+
+    if (
+      yeniDurum === "reddedildi"
+    ) {
+
+      mesaj =
+        "Yazı reddedildi.";
+
+    }
+
+    return Response.json({
+
+      success: true,
+
+      message:
+        mesaj,
+
+      id,
+
+      durum:
+        yeniDurum,
+
+      yayin_tarihi
+
+    });
+
+  } catch (error) {
+
+    console.error(
+      "EDITÖR YAZI İŞLEMİ HATASI:",
+      error
+    );
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        error.message
+
+    }, {
+      status: 500
+    });
+
+  }
+
+}
+
+
+// =========================================================
+// PUT /api/admin/yazar
+// Editör yazarın durumunu değiştirir
+//
+// aktif
+// beklemede
+// pasif
+// =========================================================
+
+if (
+  url.pathname === "/api/admin/yazar" &&
+  request.method === "PUT"
+) {
+
+  const auth =
+    cookieOku(
+      request,
+      ADMIN_COOKIE
+    );
+
+  if (auth !== "ok") {
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        "Yetkisiz erişim."
+
+    }, {
+      status: 401
+    });
+
+  }
+
+  try {
+
+    const id =
+      url.searchParams.get("id");
+
+    if (!id) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Yazar ID belirtilmedi."
+
+      }, {
+        status: 400
+      });
+
+    }
+
+    const data =
+      await request.json();
+
+    const durum =
+      String(
+        data.durum || ""
+      ).trim();
+
+    const izinVerilen = [
+      "aktif",
+      "beklemede",
+      "pasif"
+    ];
+
+    if (
+      !izinVerilen.includes(
+        durum
+      )
+    ) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Geçersiz yazar durumu."
+
+      }, {
+        status: 400
+      });
+
+    }
+
+    const result =
+      await env.DB
+        .prepare(`
+          UPDATE yazarlar
+          SET durum = ?
+          WHERE id = ?
+        `)
+        .bind(
+          durum,
+          id
+        )
+        .run();
+
+    if (
+      result.meta.changes === 0
+    ) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Yazar bulunamadı."
+
+      }, {
+        status: 404
+      });
+
+    }
+
+    return Response.json({
+
+      success: true,
+
+      message:
+        "Yazar durumu güncellendi.",
+
+      id,
+
+      durum
+
+    });
+
+  } catch (error) {
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        error.message
+
+    }, {
+      status: 500
+    });
+
+  }
+
+}
+
+
+// =========================================================
+// GET /api/yazar-istatistik
+// Editör paneli için özet
+// =========================================================
+
+if (
+  url.pathname === "/api/yazar-istatistik" &&
+  request.method === "GET"
+) {
+
+  const auth =
+    cookieOku(
+      request,
+      ADMIN_COOKIE
+    );
+
+  if (auth !== "ok") {
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        "Yetkisiz erişim."
+
+    }, {
+      status: 401
+    });
+
+  }
+
+  try {
+
+    const yazarlar =
+      await env.DB
+        .prepare(`
+          SELECT
+            COUNT(*) AS toplam,
+            SUM(
+              CASE
+                WHEN durum = 'aktif'
+                THEN 1
+                ELSE 0
+              END
+            ) AS aktif,
+            SUM(
+              CASE
+                WHEN durum = 'beklemede'
+                THEN 1
+                ELSE 0
+              END
+            ) AS beklemede
+          FROM yazarlar
+        `)
+        .first();
+
+    const yazilar =
+      await env.DB
+        .prepare(`
+          SELECT
+            COUNT(*) AS toplam,
+            SUM(
+              CASE
+                WHEN durum = 'beklemede'
+                THEN 1
+                ELSE 0
+              END
+            ) AS beklemede,
+            SUM(
+              CASE
+                WHEN durum = 'yayinda'
+                THEN 1
+                ELSE 0
+              END
+            ) AS yayinda,
+            SUM(
+              CASE
+                WHEN durum = 'reddedildi'
+                THEN 1
+                ELSE 0
+              END
+            ) AS reddedildi
+          FROM yazar_yazilari
+        `)
+        .first();
+
+    return Response.json({
+
+      success: true,
+
+      yazarlar: {
+
+        toplam:
+          Number(
+            yazarlar?.toplam
+          ) || 0,
+
+        aktif:
+          Number(
+            yazarlar?.aktif
+          ) || 0,
+
+        beklemede:
+          Number(
+            yazarlar?.beklemede
+          ) || 0
+
+      },
+
+      yazilar: {
+
+        toplam:
+          Number(
+            yazilar?.toplam
+          ) || 0,
+
+        beklemede:
+          Number(
+            yazilar?.beklemede
+          ) || 0,
+
+        yayinda:
+          Number(
+            yazilar?.yayinda
+          ) || 0,
+
+        reddedildi:
+          Number(
+            yazilar?.reddedildi
+          ) || 0
+
+      }
+
+    });
+
+  } catch (error) {
+
+    return Response.json({
+
+      success: false,
+
+      error:
+        error.message
+
+    }, {
+      status: 500
+    });
+
+  }
+
+}
     // =========================================================
     // ESKİ HABER ADRESLERİ
     // =========================================================
