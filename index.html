@@ -16,31 +16,305 @@
 <a href="index.html">🏠 Ana Sayfa</a><a href="pages/sondakika.html">📰 Son Dakika</a><a href="pages/turkiye.html">🇹🇷 Türkiye</a><a href="pages/dunya.html">🌍 Dünya</a><a href="pages/rehber.html">📍 Türkiye Rehberi</a><a href="pages/firmalar.html">🏢 Firmalar</a><a href="pages/yazarlar.html">✍️ Yazarlar</a><a href="pages/video.html">🎥 Video</a><a href="/reklam-ver.html">📢 Reklam Ver</a><a href="pages/iletisim.html">📞 İletişim</a><a href="/admin-giris" class="yonetim">🔐 Yönetim Paneli</a>
 </nav></aside>
 <header class="site-header"><div class="header-inner"><button id="menuOpen" class="menu-btn">☰</button><a href="index.html" class="site-logo"><h1>Digital <span>Gündem</span></h1><p>TÜRKİYE'NİN DİJİTAL REHBERİ</p></a></div></header>
-<main>
-<!-- API HABERİ EN ÜSTTE -->
-<section class="headline"><div class="container"><div id="mansetHaber"><div class="api-yukleniyor">📰 Haberler yükleniyor...</div></div></div></section>
-<!-- API HABERLERİ MANŞETİN HEMEN ALTINDA -->
-<section class="api-haberler"><div class="container"><div class="api-haber-baslik"><div><span class="canli-nokta"></span><h2>Son Haberler</h2><p>Digital Gündem'e API üzerinden ulaşan güncel haberler</p></div><a href="pages/sondakika.html">Tüm Haberler →</a></div><div id="apiHaberlerAlani"><div class="api-yukleniyor">📰 Haberler yükleniyor...</div></div></div></section>
-<section class="search"><div class="container"><input id="haberArama" type="text" placeholder="🔎 Haber, il veya firma ara..."></div></section>
-<section class="news"><div class="container"><div class="section-title"><h2>📰 Öne Çıkan Haberler</h2></div><div id="haberListesi" class="news-grid"><div class="api-yukleniyor">📰 Haberler yükleniyor...</div></div></div></section>
-<section><div class="container"><div class="kisa-gundem"><div class="kisa-gundem-baslik"><div><span class="canli-nokta"></span><strong>30 SANİYEDE TÜRKİYE</strong></div><button id="gundemDinleBtn">🔊 Gündemi Dinle</button></div><div id="gundemDurum">🇹🇷 Türkiye gündemi yükleniyor...</div><div id="gundemHaberleri"></div></div></div></section>
-<section><div class="container"><div class="section-title"><div><h2>🏢 Firma Rehberi</h2><p>Türkiye'deki firmaları keşfedin</p></div><a href="pages/firmalar.html" class="firma-tum-btn">Tüm Firmalar →</a></div><div id="anasayfaFirmalar"><div class="api-yukleniyor">🏢 Firmalar yükleniyor...</div></div></div></section>
+></div><a href="pages/firmalar.html" class="firma-tum-btn">Tüm Firmalar →</a></div><div id="anasayfaFirmalar"><div class="api-yukleniyor">🏢 Firmalar yükleniyor...</div></div></div></section>
 <section><div class="container"><div class="section-title"><div><h2>📢 Reklamlar</h2><p>Digital Gündem'de yerinizi alın</p></div></div><div id="reklamIcerik"><div class="reklam-bos">📢 Reklamlar yükleniyor...</div></div></div></section>
 <section><div class="container"><div class="section-title"><h2>🎥 Digital Gündem Video</h2><a href="pages/video.html">Tüm Videolar →</a></div><div class="video-karti"><div><div style="font-size:48px">🎬</div><h2>Digital Gündem Videoları</h2><p>Güncel haberler, özel yayınlar ve Digital Gündem video içerikleri.</p><a href="pages/video.html">Videolara Git →</a></div></div></div></section>
 <section><div class="container"><div class="section-title"><div><h2>📍 Türkiye Rehberi</h2><p>81 il, ilçeler ve yerel rehber</p></div><a href="pages/rehber.html">Rehberi Aç →</a></div><div class="rehber-grid"><a href="pages/rehber.html?il=istanbul" class="rehber-karti">🏙️ İstanbul</a><a href="pages/rehber.html?il=ankara" class="rehber-karti">🏛️ Ankara</a><a href="pages/rehber.html?il=izmir" class="rehber-karti">🌊 İzmir</a><a href="pages/rehber.html" class="rehber-karti">🇹🇷 81 İl</a></div></div></section>
+<main>
+
+<!-- =========================================================
+     1. HABER ARA - EN ÜSTTE
+========================================================= -->
+<section class="search">
+  <div class="container">
+    <div class="search-box">
+      <span>🔎</span>
+      <input
+        id="haberArama"
+        type="text"
+        placeholder="Haber, il veya firma ara..."
+        autocomplete="off"
+      >
+    </div>
+    <div id="aramaSonuclari"></div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     2. 30 SANİYEDE TÜRKİYE
+========================================================= -->
+<section class="gundem-section">
+  <div class="container">
+
+    <div class="kisa-gundem">
+
+      <div class="kisa-gundem-baslik">
+
+        <div>
+          <span class="canli-nokta"></span>
+          <strong>30 SANİYEDE TÜRKİYE</strong>
+          <p>Türkiye gündeminin en önemli başlıkları</p>
+        </div>
+
+        <button id="gundemDinleBtn">
+          🔊 Gündemi Dinle
+        </button>
+
+      </div>
+
+      <div id="gundemDurum">
+        🇹🇷 Türkiye gündemi yükleniyor...
+      </div>
+
+      <div id="gundemHaberleri"></div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- =========================================================
+     3. VİDEO HABERLERİ
+========================================================= -->
+<section class="video-section">
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <div>
+        <h2>🎥 Video Haberleri</h2>
+        <p>Günün önemli gelişmelerinden video haberler</p>
+      </div>
+
+      <a href="pages/video.html">
+        Tüm Videolar →
+      </a>
+
+    </div>
+
+    <div id="videoHaberleri">
+
+      <div class="api-yukleniyor">
+        🎥 Video haberleri yükleniyor...
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     4. GERÇEK MANŞET HABER
+========================================================= -->
+<section class="headline">
+
+  <div class="container">
+
+    <div id="mansetHaber">
+
+      <div class="api-yukleniyor">
+        📰 Manşet haber yükleniyor...
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     5. SON HABERLER
+========================================================= -->
+<section class="api-haberler">
+
+  <div class="container">
+
+    <div class="api-haber-baslik">
+
+      <div>
+        <span class="canli-nokta"></span>
+
+        <div>
+          <h2>Son Haberler</h2>
+          <p>Digital Gündem'e ulaşan güncel haberler</p>
+        </div>
+      </div>
+
+      <a href="pages/sondakika.html">
+        Tüm Haberler →
+      </a>
+
+    </div>
+
+    <div id="apiHaberlerAlani">
+
+      <div class="api-yukleniyor">
+        📰 Haberler yükleniyor...
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     6. ÖNE ÇIKAN HABERLER
+========================================================= -->
+<section class="news">
+
+  <div class="container">
+
+    <div class="section-title">
+      <h2>📰 Öne Çıkan Haberler</h2>
+    </div>
+
+    <div
+      id="haberListesi"
+      class="news-grid"
+    >
+
+      <div class="api-yukleniyor">
+        📰 Haberler yükleniyor...
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     7. FİRMA REHBERİ
+========================================================= -->
+<section>
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <div>
+        <h2>🏢 Firma Rehberi</h2>
+        <p>Türkiye'deki firmaları keşfedin</p>
+      </div>
+
+      <a
+        href="pages/firmalar.html"
+        class="firma-tum-btn"
+      >
+        Tüm Firmalar →
+      </a>
+
+    </div>
+
+    <div id="anasayfaFirmalar">
+
+      <div class="api-yukleniyor">
+        🏢 Firmalar yükleniyor...
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     8. REKLAMLAR
+========================================================= -->
+<section>
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <div>
+        <h2>📢 Reklamlar</h2>
+        <p>Digital Gündem'de yerinizi alın</p>
+      </div>
+
+    </div>
+
+    <div id="reklamIcerik">
+
+      <div class="reklam-bos">
+        📢 Reklamlar yükleniyor...
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     9. TÜRKİYE REHBERİ
+========================================================= -->
+<section>
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <div>
+        <h2>📍 Türkiye Rehberi</h2>
+        <p>81 il, ilçeler ve yerel rehber</p>
+      </div>
+
+      <a href="pages/rehber.html">
+        Rehberi Aç →
+      </a>
+
+    </div>
+
+    <div class="rehber-grid">
+
+      <a
+        href="pages/rehber.html?il=istanbul"
+        class="rehber-karti"
+      >
+        🏙️ İstanbul
+      </a>
+
+      <a
+        href="pages/rehber.html?il=ankara"
+        class="rehber-karti"
+      >
+        🏛️ Ankara
+      </a>
+
+      <a
+        href="pages/rehber.html?il=izmir"
+        class="rehber-karti"
+      >
+        🌊 İzmir
+      </a>
+
+      <a
+        href="pages/rehber.html"
+        class="rehber-karti"
+      >
+        🇹🇷 81 İl
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
 </main>
-<footer><h2>Digital Gündem</h2><p>Türkiye'nin Dijital Rehberi</p><p>Tarafsız bakar, doğruyu yayınlar.</p><p>© 2026 Digital Gündem</p></footer>
-<script>
-"use strict";
-const HABER_API="/api/haberler",FIRMA_API="/api/firmalar",REKLAM_API="/api/reklamlar";
-let tumHaberler=[],gundemHaberleri=[],reklamlar=[],reklamIndex=0,reklamTimer=null;
-const $=id=>document.getElementById(id);
-function escapeHTML(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
-function apiListe(d,names=[]){if(Array.isArray(d))return d;for(const n of names)if(Array.isArray(d?.[n]))return d[n];if(Array.isArray(d?.data))return d.data;if(Array.isArray(d?.items))return d.items;if(Array.isArray(d?.results))return d.results;return []}
-function normalizeHaber(h,i){return{id:h?.id??h?.haber_id??i,baslik:h?.baslik??h?.title??h?.name??"Başlıksız Haber",ozet:h?.ozet??h?.summary??h?.description??h?.aciklama??"",icerik:h?.icerik??h?.content??"",resim:h?.resim??h?.resim_url??h?.image??h?.image_url??"",kategori:h?.kategori??h?.category??"Gündem",tarih:h?.tarih??h?.date??h?.published_at??""}}
-function menuAc(){$("sideMenu").classList.add("aktif");$("menuOverlay").classList.add("aktif");document.body.style.overflow="hidden"}
-function menuKapat(){$("sideMenu").classList.remove("aktif");$("menuOverlay").classList.remove("aktif");document.body.style.overflow=""}
-$("menuOpen").onclick=menuAc;$("menuClose").onclick=menuKapat;$("menuOverlay").onclick=menuKapat;document.querySelectorAll(".menu-links a").forEach(a=>a.onclick=menuKapat);
+<footer><h2>Digital Gündem</h2><p>Türkiye'nin Dijital Rehberi</p><p>Tarafsız bakar, doğruyu yayınlar.</p><p>© 20ose").onclick=menuKapat;$("menuOverlay").onclick=menuKapat;document.querySelectorAll(".menu-links a").forEach(a=>a.onclick=menuKapat);
 async function haberleriGetir(){const liste=$("haberListesi"),manset=$("mansetHaber"),apiAlan=$("apiHaberlerAlani");try{const r=await fetch(HABER_API,{cache:"no-store",headers:{Accept:"application/json"}}),text=await r.text();let d;try{d=JSON.parse(text)}catch{throw Error("/api/haberler JSON döndürmedi.")}if(!r.ok)throw Error(d?.error||`API hatası: ${r.status}`);tumHaberler=apiListe(d,["haberler","news","articles"]).map(normalizeHaber);if(!tumHaberler.length){const b='<div class="bos-haber">📰 Henüz güncel haber bulunmuyor.</div>';manset.innerHTML=b;apiAlan.innerHTML=b;liste.innerHTML=b;return}const h=tumHaberler[0],img=h.resim.trim()||"https://picsum.photos/1200/600?random=1";manset.innerHTML=`<article class="headline-main"><img src="${escapeHTML(img)}" alt="${escapeHTML(h.baslik)}"><div class="headline-text"><span class="etiket">${escapeHTML(h.kategori)}</span><h2>${escapeHTML(h.baslik)}</h2><p>${escapeHTML(h.ozet)}</p>${h.tarih?`<div class="haber-tarih">📅 ${escapeHTML(h.tarih)}</div>`:""}<a class="btn" href="pages/haber.html?id=${encodeURIComponent(h.id)}">Haberi Oku →</a></div></article>`;apiAlan.innerHTML=`<div class="api-haber-grid">${tumHaberler.slice(0,6).map((x,i)=>`<article class="api-haber-karti"><img src="${escapeHTML(x.resim.trim()||`https://picsum.photos/600/350?random=${i+10}`)}" alt="${escapeHTML(x.baslik)}" loading="${i?"lazy":"eager"}"><div class="api-haber-icerik"><span class="api-haber-etiket">${escapeHTML(x.kategori)}</span><h3>${escapeHTML(x.baslik)}</h3><p>${escapeHTML(x.ozet)}</p><a href="pages/haber.html?id=${encodeURIComponent(x.id)}">Haberi Oku →</a></div></article>`).join("")}</div>`;haberleriListele(tumHaberler)}catch(e){console.error(e);const h=`<div class="api-hata">❌ Haberler yüklenemedi.<br><small>${escapeHTML(e.message)}</small></div>`;manset.innerHTML=h;apiAlan.innerHTML=h;liste.innerHTML=h}}
 function haberleriListele(arr){$("haberListesi").innerHTML=arr.length?arr.map((h,i)=>`<article class="news-card"><img src="${escapeHTML(h.resim.trim()||`https://picsum.photos/600/350?random=${i+30}`)}" alt="${escapeHTML(h.baslik)}" loading="lazy"><div class="news-card-content"><span class="etiket">${escapeHTML(h.kategori)}</span><h3>${escapeHTML(h.baslik)}</h3><p>${escapeHTML(h.ozet)}</p>${h.tarih?`<div class="haber-tarih">📅 ${escapeHTML(h.tarih)}</div>`:""}<a href="pages/haber.html?id=${encodeURIComponent(h.id)}">Devamını Oku →</a></div></article>`).join(""): '<div class="bos-haber">📰 Haber bulunamadı.</div>'}
 $("haberArama").oninput=function(){const q=this.value.toLocaleLowerCase("tr-TR").trim();haberleriListele(q?tumHaberler.filter(h=>`${h.baslik} ${h.ozet} ${h.icerik} ${h.kategori}`.toLocaleLowerCase("tr-TR").includes(q)):tumHaberler)};
