@@ -1,1 +1,560 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
 
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>Yazarlar | Digital Gündem</title>
+
+<meta
+  name="description"
+  content="Digital Gündem 81 il yazarları ve köşe yazarları."
+>
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f4f6f8;
+  color:#222;
+}
+
+/* HEADER */
+
+.header{
+  background:#d60000;
+  color:white;
+  padding:20px;
+  text-align:center;
+}
+
+.header h1{
+  margin:0;
+  font-size:30px;
+}
+
+.header p{
+  margin:8px 0 0;
+  opacity:.9;
+}
+
+/* CONTAINER */
+
+.container{
+  width:94%;
+  max-width:1200px;
+  margin:30px auto;
+}
+
+/* BAŞLIK */
+
+.sayfa-baslik{
+  text-align:center;
+  margin-bottom:30px;
+}
+
+.sayfa-baslik h2{
+  margin:0;
+  font-size:28px;
+}
+
+.sayfa-baslik p{
+  color:#666;
+}
+
+/* İL */
+
+.il-baslik{
+  background:#111827;
+  color:white;
+  padding:12px 16px;
+  border-radius:8px;
+  margin:25px 0 15px;
+  font-size:20px;
+}
+
+/* YAZAR GRID */
+
+.yazar-grid{
+  display:grid;
+  grid-template-columns:
+    repeat(auto-fit,minmax(260px,1fr));
+  gap:20px;
+}
+
+/* YAZAR KART */
+
+.yazar-kart{
+  background:white;
+  border-radius:12px;
+  padding:20px;
+  box-shadow:
+    0 3px 12px rgba(0,0,0,.08);
+  transition:.2s;
+}
+
+.yazar-kart:hover{
+  transform:translateY(-3px);
+  box-shadow:
+    0 6px 18px rgba(0,0,0,.12);
+}
+
+.yazar-foto{
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  object-fit:cover;
+  display:block;
+  margin:0 auto 15px;
+  border:3px solid #d60000;
+}
+
+.yazar-foto-yok{
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  background:#d60000;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto 15px;
+  font-size:35px;
+  font-weight:bold;
+}
+
+.yazar-adi{
+  text-align:center;
+  font-size:21px;
+  font-weight:bold;
+  margin-bottom:8px;
+}
+
+.yazar-konum{
+  text-align:center;
+  color:#d60000;
+  font-weight:bold;
+  margin-bottom:12px;
+}
+
+.yazar-biyografi{
+  color:#555;
+  line-height:1.5;
+  font-size:14px;
+  text-align:center;
+}
+
+/* DURUM */
+
+.durum{
+  text-align:center;
+  margin-top:12px;
+}
+
+.aktif{
+  display:inline-block;
+  background:#e8f7ed;
+  color:#16803c;
+  padding:5px 10px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+/* YÜKLENİYOR */
+
+.yukleniyor{
+  text-align:center;
+  padding:50px;
+  color:#666;
+}
+
+/* HATA */
+
+.hata{
+  background:#fff0f0;
+  color:#b00000;
+  padding:20px;
+  border-radius:10px;
+  text-align:center;
+}
+
+/* BOŞ */
+
+.bos{
+  background:white;
+  padding:40px;
+  text-align:center;
+  border-radius:10px;
+  color:#666;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header class="header">
+
+<h1>Digital Gündem</h1>
+
+<p>81 İl · 81 Ses · Türkiye'nin Dijital Gündemi</p>
+
+</header>
+
+
+<main class="container">
+
+<div class="sayfa-baslik">
+
+<h2>✍️ Yazarlarımız</h2>
+
+<p>
+Türkiye'nin 81 ilinden yazarlarımız
+</p>
+
+</div>
+
+
+<div id="yazarlar">
+
+<div class="yukleniyor">
+⏳ Yazarlar yükleniyor...
+</div>
+
+</div>
+
+</main>
+
+
+<script>
+
+const API =
+"https://functions-worker-js.vedataygun0206.workers.dev";
+
+
+async function yazarlarıGetir(){
+
+  const alan =
+    document.getElementById("yazarlar");
+
+  try{
+
+    const cevap =
+      await fetch(
+        API + "/api/yazarlar"
+      );
+
+    if(!cevap.ok){
+
+      throw new Error(
+        "API HTTP " + cevap.status
+      );
+
+    }
+
+    const veri =
+      await cevap.json();
+
+    if(
+      !veri.success
+    ){
+
+      throw new Error(
+        veri.error ||
+        "Yazarlar alınamadı."
+      );
+
+    }
+
+    const yazarlar =
+      veri.yazarlar || [];
+
+    /*
+      SADECE AKTİF YAZARLAR
+    */
+
+    const aktifYazarlar =
+      yazarlar.filter(
+        yazar =>
+          String(
+            yazar.durum || ""
+          ).toLowerCase()
+          === "aktif"
+      );
+
+    if(
+      aktifYazarlar.length === 0
+    ){
+
+      alan.innerHTML = `
+
+        <div class="bos">
+
+          <h3>Henüz aktif yazar bulunmuyor.</h3>
+
+          <p>
+            81 il yazar ağı için
+            başvurular başladığında
+            burada yayınlanacaktır.
+          </p>
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+    /*
+      İLLERE GÖRE GRUPLA
+    */
+
+    const iller = {};
+
+    aktifYazarlar.forEach(
+      yazar => {
+
+        const il =
+          yazar.il ||
+          "Diğer";
+
+        if(!iller[il]){
+
+          iller[il] = [];
+
+        }
+
+        iller[il].push(yazar);
+
+      }
+    );
+
+
+    /*
+      İLLERİ ALFABETİK SIRALA
+    */
+
+    const siraliIller =
+      Object.keys(iller).sort(
+        (a,b) =>
+          a.localeCompare(
+            b,
+            "tr"
+          )
+      );
+
+
+    let html = "";
+
+
+    siraliIller.forEach(
+      il => {
+
+        html += `
+
+          <section>
+
+            <div class="il-baslik">
+
+              📍 ${escapeHTML(il)}
+
+            </div>
+
+            <div class="yazar-grid">
+
+        `;
+
+
+        iller[il].forEach(
+          yazar => {
+
+            let fotograf =
+              yazar.fotograf || "";
+
+            let fotoHTML = "";
+
+
+            if(fotograf){
+
+              fotoHTML = `
+
+                <img
+                  class="yazar-foto"
+                  src="${escapeHTML(fotograf)}"
+                  alt="${escapeHTML(yazar.ad_soyad || "Yazar")}"
+                  loading="lazy"
+                >
+
+              `;
+
+            }else{
+
+              const harf =
+                (yazar.ad_soyad || "Y")
+                .trim()
+                .charAt(0)
+                .toUpperCase();
+
+              fotoHTML = `
+
+                <div class="yazar-foto-yok">
+
+                  ${escapeHTML(harf)}
+
+                </div>
+
+              `;
+
+            }
+
+
+            html += `
+
+              <article class="yazar-kart">
+
+                ${fotoHTML}
+
+                <div class="yazar-adi">
+
+                  ${escapeHTML(
+                    yazar.ad_soyad ||
+                    "İsimsiz Yazar"
+                  )}
+
+                </div>
+
+                <div class="yazar-konum">
+
+                  ${escapeHTML(
+                    yazar.ilce ||
+                    ""
+                  )}
+
+                </div>
+
+                <div class="yazar-biyografi">
+
+                  ${escapeHTML(
+                    yazar.biyografi ||
+                    "Digital Gündem yazarı."
+                  )}
+
+                </div>
+
+                <div class="durum">
+
+                  <span class="aktif">
+
+                    ● Aktif Yazar
+
+                  </span>
+
+                </div>
+
+              </article>
+
+            `;
+
+          }
+        );
+
+
+        html += `
+
+            </div>
+
+          </section>
+
+        `;
+
+      }
+    );
+
+
+    alan.innerHTML = html;
+
+
+  }catch(error){
+
+    console.error(
+      "Yazarlar API hatası:",
+      error
+    );
+
+    alan.innerHTML = `
+
+      <div class="hata">
+
+        ❌ Yazarlar yüklenirken
+        bir hata oluştu.
+
+        <br><br>
+
+        ${escapeHTML(
+          error.message
+        )}
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+/*
+  HTML GÜVENLİĞİ
+*/
+
+function escapeHTML(metin){
+
+  return String(
+    metin ?? ""
+  )
+  .replace(
+    /&/g,
+    "&amp;"
+  )
+  .replace(
+    /</g,
+    "&lt;"
+  )
+  .replace(
+    />/g,
+    "&gt;"
+  )
+  .replace(
+    /"/g,
+    "&quot;"
+  )
+  .replace(
+    /'/g,
+    "&#039;"
+  );
+
+}
+
+
+/*
+  SAYFA AÇILINCA
+*/
+
+yazarlarıGetir();
+
+</script>
+
+</body>
+</html>
