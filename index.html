@@ -21,311 +21,1136 @@
 <section><div class="container"><div class="section-title"><h2>🎥 Digital Gündem Video</h2><a href="pages/video.html">Tüm Videolar →</a></div><div class="video-karti"><div><div style="font-size:48px">🎬</div><h2>Digital Gündem Videoları</h2><p>Güncel haberler, özel yayınlar ve Digital Gündem video içerikleri.</p><a href="pages/video.html">Videolara Git →</a></div></div></div></section>
 <section><div class="container"><div class="section-title"><div><h2>📍 Türkiye Rehberi</h2><p>81 il, ilçeler ve yerel rehber</p></div><a href="pages/rehber.html">Rehberi Aç →</a></div><div class="rehber-grid"><a href="pages/rehber.html?il=istanbul" class="rehber-karti">🏙️ İstanbul</a><a href="pages/rehber.html?il=ankara" class="rehber-karti">🏛️ Ankara</a><a href="pages/rehber.html?il=izmir" class="rehber-karti">🌊 İzmir</a><a href="pages/rehber.html" class="rehber-karti">🇹🇷 81 İl</a></div></div></section>
 <main>
+  <footer>
+  <h2>Digital Gündem</h2>
+  <p>Türkiye'nin Dijital Rehberi</p>
+  <p>Tarafsız bakar, doğruyu yayınlar.</p>
+  <p>© 2026 Digital Gündem</p>
+</footer>
 
-<!-- =========================================================
-     1. HABER ARA - EN ÜSTTE
-========================================================= -->
-<section class="search">
-  <div class="container">
-    <div class="search-box">
-      <span>🔎</span>
-      <input
-        id="haberArama"
-        type="text"
-        placeholder="Haber, il veya firma ara..."
-        autocomplete="off"
-      >
-    </div>
-    <div id="aramaSonuclari"></div>
-  </div>
-</section>
+<script>
+
+"use strict";
+
+/* =========================================================
+   API ADRESLERİ
+========================================================= */
+
+const HABER_API = "/api/haberler";
+const VIDEO_API = "/api/video-haberler";
+const GUNDEM_API = "/api/gundem";
+const FIRMA_API = "/api/firmalar";
+const REKLAM_API = "/api/reklamlar";
 
 
-<!-- =========================================================
-     2. 30 SANİYEDE TÜRKİYE
-========================================================= -->
-<section class="gundem-section">
-  <div class="container">
+/* =========================================================
+   GLOBAL DEĞİŞKENLER
+========================================================= */
 
-    <div class="kisa-gundem">
+let tumHaberler = [];
+let gundemHaberleri = [];
+let reklamlar = [];
+let reklamIndex = 0;
+let reklamTimer = null;
 
-      <div class="kisa-gundem-baslik">
 
-        <div>
-          <span class="canli-nokta"></span>
-          <strong>30 SANİYEDE TÜRKİYE</strong>
-          <p>Türkiye gündeminin en önemli başlıkları</p>
+/* =========================================================
+   KISA DOM FONKSİYONU
+========================================================= */
+
+function $(id) {
+  return document.getElementById(id);
+}
+
+
+/* =========================================================
+   HTML GÜVENLİĞİ
+========================================================= */
+
+function escapeHTML(value) {
+
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+/* =========================================================
+   API LİSTE NORMALİZASYONU
+========================================================= */
+
+function apiListe(data, keys = []) {
+
+  if (Array.isArray(data)) {
+    return data;
+  }
+
+  for (const key of keys) {
+
+    if (Array.isArray(data?.[key])) {
+      return data[key];
+    }
+
+  }
+
+  if (Array.isArray(data?.data)) {
+    return data.data;
+  }
+
+  if (Array.isArray(data?.results)) {
+    return data.results;
+  }
+
+  return [];
+
+}
+
+
+/* =========================================================
+   HABER NORMALİZASYONU
+========================================================= */
+
+function normalizeHaber(h) {
+
+  return {
+
+    id:
+      h?.id ??
+      h?.haber_id ??
+      h?.news_id ??
+      "",
+
+    baslik:
+      h?.baslik ??
+      h?.title ??
+      h?.haber_baslik ??
+      "Başlıksız Haber",
+
+    ozet:
+      h?.ozet ??
+      h?.summary ??
+      h?.description ??
+      "",
+
+    icerik:
+      h?.icerik ??
+      h?.content ??
+      "",
+
+    kategori:
+      h?.kategori ??
+      h?.category ??
+      "Gündem",
+
+    resim:
+      h?.resim ??
+      h?.image ??
+      h?.image_url ??
+      h?.gorsel ??
+      "",
+
+    tarih:
+      h?.tarih ??
+      h?.created_at ??
+      h?.date ??
+      ""
+
+  };
+
+}
+
+
+/* =========================================================
+   MENÜ
+========================================================= */
+
+function menuAc() {
+
+  $("sideMenu")?.classList.add("aktif");
+  $("menuOverlay")?.classList.add("aktif");
+
+}
+
+function menuKapat() {
+
+  $("sideMenu")?.classList.remove("aktif");
+  $("menuOverlay")?.classList.remove("aktif");
+
+}
+
+$("menuOpen")?.addEventListener("click", menuAc);
+$("menuClose")?.addEventListener("click", menuKapat);
+$("menuOverlay")?.addEventListener("click", menuKapat);
+
+document
+  .querySelectorAll(".menu-links a")
+  .forEach(a => {
+
+    a.addEventListener("click", menuKapat);
+
+  });
+
+
+/* =========================================================
+   HABERLER
+========================================================= */
+
+async function haberleriGetir() {
+
+  const liste = $("haberListesi");
+  const manset = $("mansetHaber");
+  const apiAlan = $("apiHaberlerAlani");
+
+  try {
+
+    const r = await fetch(HABER_API, {
+
+      cache: "no-store",
+
+      headers: {
+        Accept: "application/json"
+      }
+
+    });
+
+    const text = await r.text();
+
+    let d;
+
+    try {
+
+      d = JSON.parse(text);
+
+    } catch {
+
+      throw new Error(
+        "/api/haberler JSON döndürmedi."
+      );
+
+    }
+
+    if (!r.ok) {
+
+      throw new Error(
+        d?.error ||
+        `API hatası: ${r.status}`
+      );
+
+    }
+
+    tumHaberler = apiListe(
+      d,
+      [
+        "haberler",
+        "news",
+        "articles"
+      ]
+    ).map(normalizeHaber);
+
+
+    if (!tumHaberler.length) {
+
+      const b = `
+        <div class="bos-haber">
+          📰 Henüz güncel haber bulunmuyor.
+        </div>
+      `;
+
+      if (manset) manset.innerHTML = b;
+      if (apiAlan) apiAlan.innerHTML = b;
+      if (liste) liste.innerHTML = b;
+
+      return;
+
+    }
+
+
+    /* MANŞET */
+
+    const h = tumHaberler[0];
+
+    const img =
+      h.resim.trim() ||
+      "https://picsum.photos/1200/600?random=1";
+
+
+    if (manset) {
+
+      manset.innerHTML = `
+
+        <article class="headline-main">
+
+          <img
+            src="${escapeHTML(img)}"
+            alt="${escapeHTML(h.baslik)}"
+          >
+
+          <div class="headline-text">
+
+            <span class="etiket">
+              ${escapeHTML(h.kategori)}
+            </span>
+
+            <h2>
+              ${escapeHTML(h.baslik)}
+            </h2>
+
+            <p>
+              ${escapeHTML(h.ozet)}
+            </p>
+
+            ${
+              h.tarih
+              ?
+              `<div class="haber-tarih">
+                📅 ${escapeHTML(h.tarih)}
+              </div>`
+              :
+              ""
+            }
+
+            <a
+              class="btn"
+              href="pages/haber.html?id=${encodeURIComponent(h.id)}"
+            >
+              Haberi Oku →
+            </a>
+
+          </div>
+
+        </article>
+
+      `;
+
+    }
+
+
+    /* SON HABERLER */
+
+    if (apiAlan) {
+
+      apiAlan.innerHTML = `
+
+        <div class="api-haber-grid">
+
+          ${
+            tumHaberler
+              .slice(0, 6)
+              .map((x, i) => `
+
+                <article class="api-haber-karti">
+
+                  <img
+                    src="${escapeHTML(
+                      x.resim.trim() ||
+                      `https://picsum.photos/600/350?random=${i + 10}`
+                    )}"
+                    alt="${escapeHTML(x.baslik)}"
+                    loading="${i ? "lazy" : "eager"}"
+                  >
+
+                  <div class="api-haber-icerik">
+
+                    <span class="api-haber-etiket">
+                      ${escapeHTML(x.kategori)}
+                    </span>
+
+                    <h3>
+                      ${escapeHTML(x.baslik)}
+                    </h3>
+
+                    <p>
+                      ${escapeHTML(x.ozet)}
+                    </p>
+
+                    <a
+                      href="pages/haber.html?id=${encodeURIComponent(x.id)}"
+                    >
+                      Haberi Oku →
+                    </a>
+
+                  </div>
+
+                </article>
+
+              `)
+              .join("")
+          }
+
         </div>
 
-        <button id="gundemDinleBtn">
-          🔊 Gündemi Dinle
-        </button>
+      `;
+
+    }
+
+
+    haberleriListele(tumHaberler);
+
+
+  } catch (e) {
+
+    console.error("HABER API:", e);
+
+    const hata = `
+
+      <div class="api-hata">
+
+        ❌ Haberler yüklenemedi.
+
+        <br>
+
+        <small>
+          ${escapeHTML(e.message)}
+        </small>
 
       </div>
 
-      <div id="gundemDurum">
-        🇹🇷 Türkiye gündemi yükleniyor...
+    `;
+
+    if (manset) manset.innerHTML = hata;
+    if (apiAlan) apiAlan.innerHTML = hata;
+    if (liste) liste.innerHTML = hata;
+
+  }
+
+}
+
+
+/* =========================================================
+   HABER LİSTELE
+========================================================= */
+
+function haberleriListele(arr) {
+
+  const alan = $("haberListesi");
+
+  if (!alan) return;
+
+  if (!arr.length) {
+
+    alan.innerHTML = `
+      <div class="bos-haber">
+        📰 Haber bulunamadı.
       </div>
+    `;
 
-      <div id="gundemHaberleri"></div>
+    return;
 
-    </div>
-
-  </div>
-</section>
+  }
 
 
-<!-- =========================================================
-     3. VİDEO HABERLERİ
-========================================================= -->
-<section class="video-section">
+  alan.innerHTML = arr.map((h, i) => `
 
-  <div class="container">
+    <article class="news-card">
 
-    <div class="section-title">
-
-      <div>
-        <h2>🎥 Video Haberleri</h2>
-        <p>Günün önemli gelişmelerinden video haberler</p>
-      </div>
-
-      <a href="pages/video.html">
-        Tüm Videolar →
-      </a>
-
-    </div>
-
-    <div id="videoHaberleri">
-
-      <div class="api-yukleniyor">
-        🎥 Video haberleri yükleniyor...
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =========================================================
-     4. GERÇEK MANŞET HABER
-========================================================= -->
-<section class="headline">
-
-  <div class="container">
-
-    <div id="mansetHaber">
-
-      <div class="api-yukleniyor">
-        📰 Manşet haber yükleniyor...
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =========================================================
-     5. SON HABERLER
-========================================================= -->
-<section class="api-haberler">
-
-  <div class="container">
-
-    <div class="api-haber-baslik">
-
-      <div>
-        <span class="canli-nokta"></span>
-
-        <div>
-          <h2>Son Haberler</h2>
-          <p>Digital Gündem'e ulaşan güncel haberler</p>
-        </div>
-      </div>
-
-      <a href="pages/sondakika.html">
-        Tüm Haberler →
-      </a>
-
-    </div>
-
-    <div id="apiHaberlerAlani">
-
-      <div class="api-yukleniyor">
-        📰 Haberler yükleniyor...
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =========================================================
-     6. ÖNE ÇIKAN HABERLER
-========================================================= -->
-<section class="news">
-
-  <div class="container">
-
-    <div class="section-title">
-      <h2>📰 Öne Çıkan Haberler</h2>
-    </div>
-
-    <div
-      id="haberListesi"
-      class="news-grid"
-    >
-
-      <div class="api-yukleniyor">
-        📰 Haberler yükleniyor...
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =========================================================
-     7. FİRMA REHBERİ
-========================================================= -->
-<section>
-
-  <div class="container">
-
-    <div class="section-title">
-
-      <div>
-        <h2>🏢 Firma Rehberi</h2>
-        <p>Türkiye'deki firmaları keşfedin</p>
-      </div>
-
-      <a
-        href="pages/firmalar.html"
-        class="firma-tum-btn"
+      <img
+        src="${escapeHTML(
+          h.resim.trim() ||
+          `https://picsum.photos/600/350?random=${i + 30}`
+        )}"
+        alt="${escapeHTML(h.baslik)}"
+        loading="lazy"
       >
-        Tüm Firmalar →
-      </a>
 
-    </div>
+      <div class="news-card-content">
 
-    <div id="anasayfaFirmalar">
+        <span class="etiket">
+          ${escapeHTML(h.kategori)}
+        </span>
 
-      <div class="api-yukleniyor">
-        🏢 Firmalar yükleniyor...
+        <h3>
+          ${escapeHTML(h.baslik)}
+        </h3>
+
+        <p>
+          ${escapeHTML(h.ozet)}
+        </p>
+
+        ${
+          h.tarih
+          ?
+          `<div class="haber-tarih">
+            📅 ${escapeHTML(h.tarih)}
+          </div>`
+          :
+          ""
+        }
+
+        <a
+          href="pages/haber.html?id=${encodeURIComponent(h.id)}"
+        >
+          Devamını Oku →
+        </a>
+
       </div>
 
-    </div>
+    </article>
 
-  </div>
+  `).join("");
 
-</section>
+}
 
 
-<!-- =========================================================
-     8. REKLAMLAR
-========================================================= -->
-<section>
+/* =========================================================
+   HABER ARAMA
+========================================================= */
 
-  <div class="container">
+$("haberArama")?.addEventListener(
+  "input",
+  function () {
 
-    <div class="section-title">
+    const q =
+      this.value
+        .toLocaleLowerCase("tr-TR")
+        .trim();
 
-      <div>
-        <h2>📢 Reklamlar</h2>
-        <p>Digital Gündem'de yerinizi alın</p>
+    const sonuc =
+      q
+      ?
+      tumHaberler.filter(h => {
+
+        const metin = `
+
+          ${h.baslik}
+          ${h.ozet}
+          ${h.icerik}
+          ${h.kategori}
+
+        `.toLocaleLowerCase("tr-TR");
+
+        return metin.includes(q);
+
+      })
+      :
+      tumHaberler;
+
+    haberleriListele(sonuc);
+
+  }
+);
+
+
+/* =========================================================
+   FİRMALAR
+========================================================= */
+
+async function firmalariGetir() {
+
+  const alan = $("anasayfaFirmalar");
+
+  if (!alan) return;
+
+  try {
+
+    const r = await fetch(
+      FIRMA_API,
+      {
+        cache: "no-store"
+      }
+    );
+
+    const d = await r.json();
+
+    if (!r.ok) {
+
+      throw new Error(
+        d?.error ||
+        `API hatası: ${r.status}`
+      );
+
+    }
+
+    const f = apiListe(
+      d,
+      [
+        "firmalar",
+        "companies"
+      ]
+    );
+
+
+    if (!f.length) {
+
+      alan.innerHTML = `
+        <div class="firma-bos">
+          🏢 Henüz yayınlanmış firma bulunmuyor.
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    alan.innerHTML = `
+
+      <div class="firma-grid">
+
+        ${
+          f.slice(0, 6)
+          .map(x => `
+
+            <article class="firma-karti">
+
+              ${
+                x.logo
+                ?
+                `<img
+                  class="firma-logo"
+                  src="${escapeHTML(x.logo)}"
+                  alt="Firma"
+                >`
+                :
+                `<div class="firma-logo-yok">
+                  🏢
+                </div>`
+              }
+
+              <div class="firma-kategori">
+                ${escapeHTML(x.kategori || "Diğer")}
+              </div>
+
+              <h3>
+                ${escapeHTML(
+                  x.firma_adi || "Firma"
+                )}
+              </h3>
+
+              ${
+                x.il || x.ilce
+                ?
+                `<div class="firma-konum">
+                  📍 ${escapeHTML(
+                    [x.il, x.ilce]
+                    .filter(Boolean)
+                    .join(" / ")
+                  )}
+                </div>`
+                :
+                ""
+              }
+
+              <a
+                class="firma-detay"
+                href="pages/firmalar.html?id=${encodeURIComponent(x.id ?? "")}"
+              >
+                Firma Detayı →
+              </a>
+
+            </article>
+
+          `)
+          .join("")
+        }
+
       </div>
 
-    </div>
+    `;
 
-    <div id="reklamIcerik">
 
+  } catch (e) {
+
+    console.error("FİRMA API:", e);
+
+    alan.innerHTML = `
+
+      <div class="api-hata">
+
+        ❌ Firma rehberi yüklenemedi.
+
+        <br>
+
+        <small>
+          ${escapeHTML(e.message)}
+        </small>
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+/* =========================================================
+   30 SANİYEDE TÜRKİYE
+========================================================= */
+
+async function gundemGetir() {
+
+  const durum = $("gundemDurum");
+  const alan = $("gundemHaberleri");
+
+  if (!durum || !alan) return;
+
+  try {
+
+    const r = await fetch(
+      GUNDEM_API,
+      {
+        cache: "no-store"
+      }
+    );
+
+    const d = await r.json();
+
+    if (!r.ok) {
+
+      throw new Error(
+        d?.error ||
+        `API hatası: ${r.status}`
+      );
+
+    }
+
+    gundemHaberleri =
+      apiListe(
+        d,
+        [
+          "haberler",
+          "news",
+          "articles"
+        ]
+      );
+
+
+    durum.innerHTML =
+      gundemHaberleri.length
+      ?
+      `✅ ${gundemHaberleri.length} güncel haber`
+      :
+      "📰 Şu anda gündem haberi bulunamadı.";
+
+
+    alan.innerHTML =
+      gundemHaberleri
+      .map(h => `
+
+        <article class="gundem-haber">
+
+          <strong>
+            ${escapeHTML(
+              h.baslik ||
+              h.title ||
+              "Haber"
+            )}
+          </strong>
+
+          <p>
+            ${escapeHTML(
+              h.ozet ||
+              h.summary ||
+              h.description ||
+              ""
+            )}
+          </p>
+
+          ${
+            h.url
+            ?
+            `<a
+              href="${escapeHTML(h.url)}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Kaynak →
+            </a>`
+            :
+            ""
+          }
+
+        </article>
+
+      `)
+      .join("");
+
+
+  } catch (e) {
+
+    console.error("GÜNDEM API:", e);
+
+    durum.innerHTML =
+      "❌ Türkiye gündemi yüklenemedi.";
+
+    alan.innerHTML = "";
+
+  }
+
+}
+
+
+/* =========================================================
+   GÜNDEMİ DİNLE
+========================================================= */
+
+$("gundemDinleBtn")?.addEventListener(
+  "click",
+  () => {
+
+    if (!gundemHaberleri.length) {
+
+      alert(
+        "Önce gündem haberlerinin yüklenmesini bekleyin."
+      );
+
+      return;
+
+    }
+
+    speechSynthesis.cancel();
+
+    const metin =
+      "30 saniyede Türkiye gündemi. " +
+      gundemHaberleri
+      .slice(0, 5)
+      .map(
+        (h, i) =>
+          `${i + 1}. ${
+            h.baslik ||
+            h.title ||
+            ""
+          }. ${
+            h.ozet ||
+            h.summary ||
+            ""
+          }`
+      )
+      .join(" ");
+
+
+    const u =
+      new SpeechSynthesisUtterance(metin);
+
+    u.lang = "tr-TR";
+    u.rate = 1.05;
+
+    speechSynthesis.speak(u);
+
+  }
+);
+
+
+/* =========================================================
+   REKLAM
+========================================================= */
+
+function reklamGecerli(r) {
+
+  if (!r) return false;
+
+  if (r.durum !== "aktif") {
+    return false;
+  }
+
+  const n = new Date();
+
+  if (
+    r.baslangic &&
+    n < new Date(
+      String(r.baslangic)
+      .replace(" ", "T")
+    )
+  ) {
+    return false;
+  }
+
+  if (
+    r.bitis &&
+    n > new Date(
+      String(r.bitis)
+      .replace(" ", "T")
+    )
+  ) {
+    return false;
+  }
+
+  return true;
+
+}
+
+
+function reklamGoster(i) {
+
+  const kartlar =
+    document.querySelectorAll(
+      ".reklam-karti"
+    );
+
+  const noktalar =
+    document.querySelectorAll(
+      ".reklam-nokta"
+    );
+
+
+  if (!kartlar.length) return;
+
+  reklamIndex =
+    (i + kartlar.length) %
+    kartlar.length;
+
+
+  kartlar.forEach(
+    (x, j) => {
+
+      x.classList.toggle(
+        "aktif",
+        j === reklamIndex
+      );
+
+    }
+  );
+
+
+  noktalar.forEach(
+    (x, j) => {
+
+      x.classList.toggle(
+        "aktif",
+        j === reklamIndex
+      );
+
+    }
+  );
+
+}
+
+
+function reklamTimerBaslat() {
+
+  clearInterval(reklamTimer);
+
+  if (reklamlar.length > 1) {
+
+    reklamTimer =
+      setInterval(
+        () =>
+          reklamGoster(
+            reklamIndex + 1
+          ),
+        7000
+      );
+
+  }
+
+}
+
+
+async function reklamGetir() {
+
+  const alan =
+    $("reklamIcerik");
+
+  if (!alan) return;
+
+  try {
+
+    const r =
+      await fetch(
+        REKLAM_API,
+        {
+          cache: "no-store"
+        }
+      );
+
+    const d =
+      await r.json();
+
+
+    if (!r.ok) {
+
+      throw new Error(
+        d?.error ||
+        `API hatası: ${r.status}`
+      );
+
+    }
+
+
+    reklamlar =
+      apiListe(
+        d,
+        [
+          "reklamlar",
+          "ads"
+        ]
+      )
+      .filter(reklamGecerli)
+      .filter(
+        x =>
+          !x.konum ||
+          x.konum === "anasayfa"
+      );
+
+
+    if (!reklamlar.length) {
+
+      alan.innerHTML = `
+        <div class="reklam-bos">
+          📢 Şu anda yayınlanan reklam bulunmuyor.
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    alan.innerHTML =
+      reklamlar
+      .map((r, i) => `
+
+        <div
+          class="reklam-karti ${
+            i === 0 ? "aktif" : ""
+          }"
+        >
+
+          <span class="reklam-etiket">
+            REKLAM
+          </span>
+
+          ${
+            r.link
+            ?
+            `<a
+              href="${escapeHTML(r.link)}"
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+            >
+
+              ${
+                r.resim
+                ?
+                `<img
+                  src="${escapeHTML(r.resim)}"
+                  alt="Reklam"
+                >`
+                :
+                `<div class="reklam-fallback">
+                  📢 ${escapeHTML(
+                    r.firma_adi ||
+                    "Reklam"
+                  )}
+                </div>`
+              }
+
+            </a>`
+            :
+            (
+              r.resim
+              ?
+              `<img
+                src="${escapeHTML(r.resim)}"
+                alt="Reklam"
+              >`
+              :
+              `<div class="reklam-fallback">
+                📢 ${escapeHTML(
+                  r.firma_adi ||
+                  "Reklam"
+                )}
+              </div>`
+            )
+          }
+
+        </div>
+
+      `)
+      .join("");
+
+
+    if (reklamlar.length > 1) {
+
+      alan.innerHTML += `
+
+        <div class="reklam-noktalar">
+
+          ${
+            reklamlar
+            .map(
+              (_, i) => `
+
+                <button
+                  class="reklam-nokta ${
+                    i === 0 ? "aktif" : ""
+                  }"
+                  data-i="${i}"
+                  type="button"
+                ></button>
+
+              `
+            )
+            .join("")
+          }
+
+        </div>
+
+      `;
+
+
+      alan
+        .querySelectorAll(
+          ".reklam-nokta"
+        )
+        .forEach(
+          b =>
+            b.onclick = () => {
+
+              reklamGoster(
+                Number(b.dataset.i)
+              );
+
+              reklamTimerBaslat();
+
+            }
+        );
+
+
+      reklamTimerBaslat();
+
+    }
+
+
+  } catch (e) {
+
+    console.error("REKLAM API:", e);
+
+    alan.innerHTML = `
       <div class="reklam-bos">
-        📢 Reklamlar yükleniyor...
+        📢 Reklam alanı şu anda kullanılamıyor.
       </div>
+    `;
 
-    </div>
+  }
 
-  </div>
-
-</section>
+}
 
 
-<!-- =========================================================
-     9. TÜRKİYE REHBERİ
-========================================================= -->
-<section>
+/* =========================================================
+   SAYFA AÇILINCA
+========================================================= */
 
-  <div class="container">
+window.addEventListener(
+  "DOMContentLoaded",
+  () => {
 
-    <div class="section-title">
+    haberleriGetir();
 
-      <div>
-        <h2>📍 Türkiye Rehberi</h2>
-        <p>81 il, ilçeler ve yerel rehber</p>
-      </div>
+    firmalariGetir();
 
-      <a href="pages/rehber.html">
-        Rehberi Aç →
-      </a>
+    gundemGetir();
 
-    </div>
+    reklamGetir();
 
-    <div class="rehber-grid">
+  }
+);
 
-      <a
-        href="pages/rehber.html?il=istanbul"
-        class="rehber-karti"
-      >
-        🏙️ İstanbul
-      </a>
-
-      <a
-        href="pages/rehber.html?il=ankara"
-        class="rehber-karti"
-      >
-        🏛️ Ankara
-      </a>
-
-      <a
-        href="pages/rehber.html?il=izmir"
-        class="rehber-karti"
-      >
-        🌊 İzmir
-      </a>
-
-      <a
-        href="pages/rehber.html"
-        class="rehber-karti"
-      >
-        🇹🇷 81 İl
-      </a>
-
-    </div>
-
-  </div>
-
-</section>
-
-</main>
-<footer><h2>Digital Gündem</h2><p>Türkiye'nin Dijital Rehberi</p><p>Tarafsız bakar, doğruyu yayınlar.</p><p>© 20ose").onclick=menuKapat;$("menuOverlay").onclick=menuKapat;document.querySelectorAll(".menu-links a").forEach(a=>a.onclick=menuKapat);
-async function haberleriGetir(){const liste=$("haberListesi"),manset=$("mansetHaber"),apiAlan=$("apiHaberlerAlani");try{const r=await fetch(HABER_API,{cache:"no-store",headers:{Accept:"application/json"}}),text=await r.text();let d;try{d=JSON.parse(text)}catch{throw Error("/api/haberler JSON döndürmedi.")}if(!r.ok)throw Error(d?.error||`API hatası: ${r.status}`);tumHaberler=apiListe(d,["haberler","news","articles"]).map(normalizeHaber);if(!tumHaberler.length){const b='<div class="bos-haber">📰 Henüz güncel haber bulunmuyor.</div>';manset.innerHTML=b;apiAlan.innerHTML=b;liste.innerHTML=b;return}const h=tumHaberler[0],img=h.resim.trim()||"https://picsum.photos/1200/600?random=1";manset.innerHTML=`<article class="headline-main"><img src="${escapeHTML(img)}" alt="${escapeHTML(h.baslik)}"><div class="headline-text"><span class="etiket">${escapeHTML(h.kategori)}</span><h2>${escapeHTML(h.baslik)}</h2><p>${escapeHTML(h.ozet)}</p>${h.tarih?`<div class="haber-tarih">📅 ${escapeHTML(h.tarih)}</div>`:""}<a class="btn" href="pages/haber.html?id=${encodeURIComponent(h.id)}">Haberi Oku →</a></div></article>`;apiAlan.innerHTML=`<div class="api-haber-grid">${tumHaberler.slice(0,6).map((x,i)=>`<article class="api-haber-karti"><img src="${escapeHTML(x.resim.trim()||`https://picsum.photos/600/350?random=${i+10}`)}" alt="${escapeHTML(x.baslik)}" loading="${i?"lazy":"eager"}"><div class="api-haber-icerik"><span class="api-haber-etiket">${escapeHTML(x.kategori)}</span><h3>${escapeHTML(x.baslik)}</h3><p>${escapeHTML(x.ozet)}</p><a href="pages/haber.html?id=${encodeURIComponent(x.id)}">Haberi Oku →</a></div></article>`).join("")}</div>`;haberleriListele(tumHaberler)}catch(e){console.error(e);const h=`<div class="api-hata">❌ Haberler yüklenemedi.<br><small>${escapeHTML(e.message)}</small></div>`;manset.innerHTML=h;apiAlan.innerHTML=h;liste.innerHTML=h}}
-function haberleriListele(arr){$("haberListesi").innerHTML=arr.length?arr.map((h,i)=>`<article class="news-card"><img src="${escapeHTML(h.resim.trim()||`https://picsum.photos/600/350?random=${i+30}`)}" alt="${escapeHTML(h.baslik)}" loading="lazy"><div class="news-card-content"><span class="etiket">${escapeHTML(h.kategori)}</span><h3>${escapeHTML(h.baslik)}</h3><p>${escapeHTML(h.ozet)}</p>${h.tarih?`<div class="haber-tarih">📅 ${escapeHTML(h.tarih)}</div>`:""}<a href="pages/haber.html?id=${encodeURIComponent(h.id)}">Devamını Oku →</a></div></article>`).join(""): '<div class="bos-haber">📰 Haber bulunamadı.</div>'}
-$("haberArama").oninput=function(){const q=this.value.toLocaleLowerCase("tr-TR").trim();haberleriListele(q?tumHaberler.filter(h=>`${h.baslik} ${h.ozet} ${h.icerik} ${h.kategori}`.toLocaleLowerCase("tr-TR").includes(q)):tumHaberler)};
-async function firmalariGetir(){const alan=$("anasayfaFirmalar");try{const r=await fetch(FIRMA_API,{cache:"no-store"}),d=await r.json();if(!r.ok)throw Error(d?.error||`API hatası: ${r.status}`);const f=apiListe(d,["firmalar","companies"]);if(!f.length){alan.innerHTML='<div class="firma-bos">🏢 Henüz yayınlanmış firma bulunmuyor.</div>';return}alan.innerHTML=`<div class="firma-grid">${f.slice(0,6).map(x=>`<article class="firma-karti">${x.logo?`<img class="firma-logo" src="${escapeHTML(x.logo)}" alt="Firma">`:'<div class="firma-logo-yok">🏢</div>'}<div class="firma-kategori">${escapeHTML(x.kategori||"Diğer")}</div><h3>${escapeHTML(x.firma_adi||"Firma")}</h3>${x.il||x.ilce?`<div class="firma-konum">📍 ${escapeHTML([x.il,x.ilce].filter(Boolean).join(" / "))}</div>`:""}<a class="firma-detay" href="pages/firmalar.html?id=${encodeURIComponent(x.id??"")}">Firma Detayı →</a></article>`).join("")}</div>`}catch(e){alan.innerHTML=`<div class="api-hata">❌ Firma rehberi yüklenemedi.<br><small>${escapeHTML(e.message)}</small></div>`}}
-async function gundemGetir(){const durum=$("gundemDurum"),alan=$("gundemHaberleri");try{const r=await fetch("/api/gundem",{cache:"no-store"}),d=await r.json();if(!r.ok)throw Error(d?.error||`API hatası: ${r.status}`);gundemHaberleri=apiListe(d,["haberler","news","articles"]);durum.innerHTML=gundemHaberleri.length?`✅ ${gundemHaberleri.length} güncel haber`:'📰 Şu anda gündem haberi bulunamadı.';alan.innerHTML=gundemHaberleri.map(h=>`<article class="gundem-haber"><strong>${escapeHTML(h.baslik||h.title||"Haber")}</strong><p>${escapeHTML(h.ozet||h.summary||h.description||"")}</p>${h.url?`<a href="${escapeHTML(h.url)}" target="_blank" rel="noopener noreferrer">Kaynak →</a>`:""}</article>`).join("")}catch(e){durum.innerHTML="❌ Türkiye gündemi yüklenemedi.";alan.innerHTML=""}}
-$("gundemDinleBtn").onclick=()=>{if(!gundemHaberleri.length)return alert("Önce gündem haberlerinin yüklenmesini bekleyin.");speechSynthesis.cancel();const u=new SpeechSynthesisUtterance("30 saniyede Türkiye gündemi. "+gundemHaberleri.slice(0,5).map((h,i)=>`${i+1}. ${h.baslik||h.title||""}. ${h.ozet||""}`).join(" "));u.lang="tr-TR";u.rate=1.05;speechSynthesis.speak(u)};
-function reklamGecerli(r){if(!r||r.durum!=="aktif")return false;const n=new Date();if(r.baslangic&&n<new Date(String(r.baslangic).replace(" ","T")))return false;if(r.bitis&&n>new Date(String(r.bitis).replace(" ","T")))return false;return true}
-function reklamGoster(i){const k=document.querySelectorAll(".reklam-karti"),n=document.querySelectorAll(".reklam-nokta");if(!k.length)return;reklamIndex=(i+k.length)%k.length;k.forEach((x,j)=>x.classList.toggle("aktif",j===reklamIndex));n.forEach((x,j)=>x.classList.toggle("aktif",j===reklamIndex))}
-function reklamTimerBaslat(){clearInterval(reklamTimer);if(reklamlar.length>1)reklamTimer=setInterval(()=>reklamGoster(reklamIndex+1),7000)}
-async function reklamGetir(){const alan=$("reklamIcerik");try{const r=await fetch(REKLAM_API,{cache:"no-store"}),d=await r.json();if(!r.ok)throw Error(d?.error||`API hatası: ${r.status}`);reklamlar=apiListe(d,["reklamlar","ads"]).filter(reklamGecerli).filter(x=>!x.konum||x.konum==="anasayfa");if(!reklamlar.length){alan.innerHTML='<div class="reklam-bos">📢 Şu anda yayınlanan reklam bulunmuyor.</div>';return}alan.innerHTML=reklamlar.map((r,i)=>`<div class="reklam-karti ${i===0?"aktif":""}"><span class="reklam-etiket">REKLAM</span>${r.link?`<a href="${escapeHTML(r.link)}" target="_blank" rel="noopener noreferrer sponsored">${r.resim?`<img src="${escapeHTML(r.resim)}" alt="Reklam">`:`<div class="reklam-fallback">📢 ${escapeHTML(r.firma_adi||"Reklam")}</div>`}</a>`:(r.resim?`<img src="${escapeHTML(r.resim)}" alt="Reklam">`:`<div class="reklam-fallback">📢 ${escapeHTML(r.firma_adi||"Reklam")}</div>`)}</div>`).join("");if(reklamlar.length>1){alan.innerHTML+=`<div class="reklam-noktalar">${reklamlar.map((_,i)=>`<button class="reklam-nokta ${i===0?"aktif":""}" data-i="${i}"></button>`).join("")}</div>`;alan.querySelectorAll(".reklam-nokta").forEach(b=>b.onclick=()=>{reklamGoster(+b.dataset.i);reklamTimerBaslat()});reklamTimerBaslat()}}catch(e){alan.innerHTML=`<div class="reklam-bos">📢 Reklam alanı şu anda kullanılamıyor.</div>`}}
-window.addEventListener("DOMContentLoaded",()=>{haberleriGetir();firmalariGetir();gundemGetir();reklamGetir()});
 </script>
+
 </body>
-</html>
+</html>  
