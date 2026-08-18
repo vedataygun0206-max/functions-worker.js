@@ -1,201 +1,367 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0"
->
-
-<title>Yazarlar | Digital Gündem</title>
-
-<meta
-  name="description"
-  content="Digital Gündem 81 il yazarları ve köşe yazarları."
->
+<title>Digital Gündem | Köşe Yazarları</title>
 
 <style>
 
-*{
-  box-sizing:border-box;
+* {
+    box-sizing: border-box;
 }
 
-body{
-  margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  background:#f4f6f8;
-  color:#222;
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #0f172a;
+    color: #f8fafc;
 }
 
-/* HEADER */
-
-.header{
-  background:#d60000;
-  color:white;
-  padding:20px;
-  text-align:center;
+.header {
+    background: #1e293b;
+    padding: 20px;
+    border-bottom: 1px solid #334155;
 }
 
-.header h1{
-  margin:0;
-  font-size:30px;
+.header-inner {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
 }
 
-.header p{
-  margin:8px 0 0;
-  opacity:.9;
+.logo h1 {
+    margin: 0;
+    font-size: 25px;
 }
 
-/* CONTAINER */
-
-.container{
-  width:94%;
-  max-width:1200px;
-  margin:30px auto;
+.logo p {
+    margin: 5px 0 0;
+    color: #94a3b8;
 }
 
-/* BAŞLIK */
-
-.sayfa-baslik{
-  text-align:center;
-  margin-bottom:30px;
+.btn {
+    display: inline-block;
+    text-decoration: none;
+    border: 0;
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
 }
 
-.sayfa-baslik h2{
-  margin:0;
-  font-size:28px;
+.btn:hover {
+    opacity: .9;
 }
 
-.sayfa-baslik p{
-  color:#666;
+.btn-danger {
+    background: #dc2626;
 }
 
-/* İL */
-
-.il-baslik{
-  background:#111827;
-  color:white;
-  padding:12px 16px;
-  border-radius:8px;
-  margin:25px 0 15px;
-  font-size:20px;
+.btn-warning {
+    background: #d97706;
 }
 
-/* YAZAR GRID */
-
-.yazar-grid{
-  display:grid;
-  grid-template-columns:
-    repeat(auto-fit,minmax(260px,1fr));
-  gap:20px;
+.btn-success {
+    background: #16a34a;
 }
 
-/* YAZAR KART */
-
-.yazar-kart{
-  background:white;
-  border-radius:12px;
-  padding:20px;
-  box-shadow:
-    0 3px 12px rgba(0,0,0,.08);
-  transition:.2s;
+.container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 15px;
 }
 
-.yazar-kart:hover{
-  transform:translateY(-3px);
-  box-shadow:
-    0 6px 18px rgba(0,0,0,.12);
+.page-title {
+    margin-bottom: 25px;
 }
 
-.yazar-foto{
-  width:100px;
-  height:100px;
-  border-radius:50%;
-  object-fit:cover;
-  display:block;
-  margin:0 auto 15px;
-  border:3px solid #d60000;
+.page-title h2 {
+    margin: 0 0 8px;
+    font-size: 28px;
 }
 
-.yazar-foto-yok{
-  width:100px;
-  height:100px;
-  border-radius:50%;
-  background:#d60000;
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin:0 auto 15px;
-  font-size:35px;
-  font-weight:bold;
+.page-title p {
+    color: #94a3b8;
+    margin: 0;
 }
 
-.yazar-adi{
-  text-align:center;
-  font-size:21px;
-  font-weight:bold;
-  margin-bottom:8px;
+
+/* FORM */
+
+.form-card {
+    background: #1e293b;
+    border-radius: 14px;
+    padding: 25px;
+    margin-bottom: 30px;
+    border: 1px solid #334155;
 }
 
-.yazar-konum{
-  text-align:center;
-  color:#d60000;
-  font-weight:bold;
-  margin-bottom:12px;
+.form-card h3 {
+    margin-top: 0;
 }
 
-.yazar-biyografi{
-  color:#555;
-  line-height:1.5;
-  font-size:14px;
-  text-align:center;
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
 }
 
-/* DURUM */
-
-.durum{
-  text-align:center;
-  margin-top:12px;
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
 }
 
-.aktif{
-  display:inline-block;
-  background:#e8f7ed;
-  color:#16803c;
-  padding:5px 10px;
-  border-radius:20px;
-  font-size:12px;
-  font-weight:bold;
+.form-group.full {
+    grid-column: 1 / -1;
 }
 
-/* YÜKLENİYOR */
-
-.yukleniyor{
-  text-align:center;
-  padding:50px;
-  color:#666;
+label {
+    font-weight: bold;
+    color: #e2e8f0;
 }
 
-/* HATA */
-
-.hata{
-  background:#fff0f0;
-  color:#b00000;
-  padding:20px;
-  border-radius:10px;
-  text-align:center;
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #475569;
+    background: #0f172a;
+    color: white;
+    font-size: 15px;
 }
 
-/* BOŞ */
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
 
-.bos{
-  background:white;
-  padding:40px;
-  text-align:center;
-  border-radius:10px;
-  color:#666;
+.form-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+
+/* İSTATİSTİK */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.stat-card h4 {
+    margin: 0 0 10px;
+    color: #94a3b8;
+}
+
+.stat-card strong {
+    font-size: 30px;
+}
+
+
+/* YAZARLAR */
+
+.yazarlar-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 14px;
+    padding: 25px;
+}
+
+.yazarlar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.yazarlar-header h3 {
+    margin: 0;
+}
+
+.arama {
+    max-width: 300px;
+}
+
+
+/* YAZAR KARTI */
+
+.yazar-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.yazar-card {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.yazar-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #334155;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    overflow: hidden;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.yazar-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.yazar-card h4 {
+    margin: 0 0 8px;
+    font-size: 19px;
+}
+
+.yazar-konum {
+    color: #60a5fa;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.yazar-biyografi {
+    color: #cbd5e1;
+    line-height: 1.5;
+    min-height: 45px;
+}
+
+.yazar-durum {
+    margin: 15px 0;
+}
+
+.badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.badge-aktif {
+    background: #14532d;
+    color: #86efac;
+}
+
+.badge-beklemede {
+    background: #78350f;
+    color: #fde68a;
+}
+
+.badge-pasif {
+    background: #7f1d1d;
+    color: #fecaca;
+}
+
+.yazar-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.yazar-actions button {
+    border: 0;
+    border-radius: 7px;
+    padding: 8px 10px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+
+/* MESAJ */
+
+#mesaj {
+    display: none;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.mesaj-success {
+    display: block !important;
+    background: #14532d;
+    color: #bbf7d0;
+}
+
+.mesaj-error {
+    display: block !important;
+    background: #7f1d1d;
+    color: #fecaca;
+}
+
+
+/* MOBİL */
+
+@media (max-width: 900px) {
+
+    .yazar-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .header-inner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .yazar-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .yazarlar-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .arama {
+        max-width: 100%;
+    }
+
 }
 
 </style>
@@ -204,357 +370,1061 @@ body{
 
 <body>
 
+
 <header class="header">
 
-<h1>Digital Gündem</h1>
+    <div class="header-inner">
 
-<p>81 İl · 81 Ses · Türkiye'nin Dijital Gündemi</p>
+        <div class="logo">
+
+            <h1>📰 Digital Gündem</h1>
+
+            <p>81 İl · 81 Ses · Köşe Yazarları Yönetimi</p>
+
+        </div>
+
+        <div>
+
+            <a href="admin.html" class="btn">
+                ← Yönetim Paneli
+            </a>
+
+        </div>
+
+    </div>
 
 </header>
 
 
-<main class="container">
+<div class="container">
 
-<div class="sayfa-baslik">
 
-<h2>✍️ Yazarlarımız</h2>
+    <div class="page-title">
 
-<p>
-Türkiye'nin 81 ilinden yazarlarımız
-</p>
+        <h2>✍️ Köşe Yazarları</h2>
+
+        <p>
+            Türkiye'nin 81 ilinden Digital Gündem yazarlarını buradan yönetebilirsiniz.
+        </p>
+
+    </div>
+
+
+    <div id="mesaj"></div>
+
+
+    <!-- ======================================
+         İSTATİSTİKLER
+    ======================================= -->
+
+    <div class="stats">
+
+        <div class="stat-card">
+
+            <h4>Toplam Yazar</h4>
+
+            <strong id="toplamYazar">
+                0
+            </strong>
+
+        </div>
+
+        <div class="stat-card">
+
+            <h4>Aktif Yazar</h4>
+
+            <strong id="aktifYazar">
+                0
+            </strong>
+
+        </div>
+
+        <div class="stat-card">
+
+            <h4>Bekleyen Yazar</h4>
+
+            <strong id="bekleyenYazar">
+                0
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- ======================================
+         YENİ YAZAR
+    ======================================= -->
+
+    <section class="form-card">
+
+        <h3>➕ Yeni Yazar Ekle</h3>
+
+        <form id="yazarForm">
+
+            <div class="form-grid">
+
+
+                <div class="form-group">
+
+                    <label>
+                        Ad Soyad
+                    </label>
+
+                    <input
+                        type="text"
+                        id="adSoyad"
+                        placeholder="Yazarın adı ve soyadı"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        İl
+                    </label>
+
+                    <select id="il" required>
+
+                        <option value="">
+                            İl seçiniz
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        İlçe
+                    </label>
+
+                    <input
+                        type="text"
+                        id="ilce"
+                        placeholder="İlçe"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        E-posta
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="ornek@email.com"
+                    >
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label>
+                        Fotoğraf URL
+                    </label>
+
+                    <input
+                        type="text"
+                        id="fotograf"
+                        placeholder="https://..."
+                    >
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label>
+                        Biyografi
+                    </label>
+
+                    <textarea
+                        id="biyografi"
+                        placeholder="Yazar hakkında kısa bilgi..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Durum
+                    </label>
+
+                    <select id="durum">
+
+                        <option value="aktif">
+                            Aktif
+                        </option>
+
+                        <option value="beklemede">
+                            Beklemede
+                        </option>
+
+                        <option value="pasif">
+                            Pasif
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="form-buttons">
+
+                <button
+                    type="submit"
+                    class="btn btn-success"
+                >
+                    💾 Yazarı Kaydet
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-warning"
+                    onclick="formTemizle()"
+                >
+                    Temizle
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+
+    <!-- ======================================
+         YAZAR LİSTESİ
+    ======================================= -->
+
+    <section class="yazarlar-card">
+
+        <div class="yazarlar-header">
+
+            <h3>
+                👥 Kayıtlı Yazarlar
+            </h3>
+
+            <input
+                type="search"
+                id="arama"
+                class="arama"
+                placeholder="Yazar, il veya ilçe ara..."
+            >
+
+        </div>
+
+
+        <div
+            id="yazarListesi"
+            class="yazar-grid"
+        >
+
+            <p>
+                Yazarlar yükleniyor...
+            </p>
+
+        </div>
+
+    </section>
+
 
 </div>
-
-
-<div id="yazarlar">
-
-<div class="yukleniyor">
-⏳ Yazarlar yükleniyor...
-</div>
-
-</div>
-
-</main>
 
 
 <script>
 
-const API =
-"https://functions-worker-js.vedataygun0206.workers.dev";
+/* =========================================
+   TÜRKİYE 81 İL
+========================================= */
+
+const iller = [
+
+"Adana",
+"Adıyaman",
+"Afyonkarahisar",
+"Ağrı",
+"Amasya",
+"Ankara",
+"Antalya",
+"Artvin",
+"Aydın",
+"Balıkesir",
+"Bilecik",
+"Bingöl",
+"Bitlis",
+"Bolu",
+"Burdur",
+"Bursa",
+"Çanakkale",
+"Çankırı",
+"Çorum",
+"Denizli",
+"Diyarbakır",
+"Edirne",
+"Elazığ",
+"Erzincan",
+"Erzurum",
+"Eskişehir",
+"Gaziantep",
+"Giresun",
+"Gümüşhane",
+"Hakkari",
+"Hatay",
+"Isparta",
+"Mersin",
+"İstanbul",
+"İzmir",
+"Kars",
+"Kastamonu",
+"Kayseri",
+"Kırklareli",
+"Kırşehir",
+"Kocaeli",
+"Konya",
+"Kütahya",
+"Malatya",
+"Manisa",
+"Kahramanmaraş",
+"Mardin",
+"Muğla",
+"Muş",
+"Nevşehir",
+"Niğde",
+"Ordu",
+"Rize",
+"Sakarya",
+"Samsun",
+"Siirt",
+"Sinop",
+"Sivas",
+"Tekirdağ",
+"Tokat",
+"Trabzon",
+"Tunceli",
+"Şanlıurfa",
+"Uşak",
+"Van",
+"Yalova",
+"Yozgat",
+"Zonguldak",
+"Aksaray",
+"Bayburt",
+"Karaman",
+"Kırıkkale",
+"Batman",
+"Şırnak",
+"Bartın",
+"Ardahan",
+"Iğdır",
+"Yalova",
+"Karabük",
+"Kilis",
+"Osmaniye",
+"Düzce"
+
+];
 
 
-async function yazarlarıGetir(){
+/* =========================================
+   İLLERİ SELECT'E DOLDUR
+========================================= */
 
-  const alan =
-    document.getElementById("yazarlar");
+const ilSelect =
+    document.getElementById("il");
 
-  try{
+iller.forEach(function(il) {
 
-    const cevap =
-      await fetch(
-        API + "/api/yazarlar"
-      );
+    const option =
+        document.createElement("option");
 
-    if(!cevap.ok){
+    option.value = il;
 
-      throw new Error(
-        "API HTTP " + cevap.status
-      );
+    option.textContent = il;
 
-    }
+    ilSelect.appendChild(option);
 
-    const veri =
-      await cevap.json();
+});
 
-    if(
-      !veri.success
-    ){
 
-      throw new Error(
-        veri.error ||
-        "Yazarlar alınamadı."
-      );
+/* =========================================
+   DEĞİŞKEN
+========================================= */
 
-    }
+let yazarlar = [];
 
-    const yazarlar =
-      veri.yazarlar || [];
 
-    /*
-      SADECE AKTİF YAZARLAR
-    */
+/* =========================================
+   MESAJ
+========================================= */
 
-    const aktifYazarlar =
-      yazarlar.filter(
-        yazar =>
-          String(
-            yazar.durum || ""
-          ).toLowerCase()
-          === "aktif"
-      );
+function mesajGoster(metin, tip) {
 
-    if(
-      aktifYazarlar.length === 0
-    ){
+    const mesaj =
+        document.getElementById("mesaj");
 
-      alan.innerHTML = `
+    mesaj.textContent = metin;
 
-        <div class="bos">
+    mesaj.className =
+        tip === "success"
+        ? "mesaj-success"
+        : "mesaj-error";
 
-          <h3>Henüz aktif yazar bulunmuyor.</h3>
+    setTimeout(function() {
 
-          <p>
-            81 il yazar ağı için
-            başvurular başladığında
-            burada yayınlanacaktır.
-          </p>
+        mesaj.className = "";
 
-        </div>
+        mesaj.style.display = "none";
 
-      `;
+    }, 4000);
 
-      return;
+}
 
-    }
 
-    /*
-      İLLERE GÖRE GRUPLA
-    */
+/* =========================================
+   YAZARLARI GETİR
+========================================= */
 
-    const iller = {};
+async function yazarlarGetir() {
 
-    aktifYazarlar.forEach(
-      yazar => {
+    const liste =
+        document.getElementById("yazarListesi");
 
-        const il =
-          yazar.il ||
-          "Diğer";
+    liste.innerHTML =
+        "<p>Yazarlar yükleniyor...</p>";
 
-        if(!iller[il]){
+    try {
 
-          iller[il] = [];
+        const cevap =
+            await fetch("/api/yazarlar", {
+                credentials: "include"
+            });
+
+        const sonuc =
+            await cevap.json();
+
+        if (!cevap.ok || sonuc.success === false) {
+
+            throw new Error(
+                sonuc.error ||
+                "Yazarlar alınamadı."
+            );
 
         }
 
-        iller[il].push(yazar);
+        yazarlar =
+            sonuc.yazarlar || [];
 
-      }
-    );
+        yazarListesiniGoster();
+
+        istatistikleriGuncelle();
+
+    } catch (hata) {
+
+        console.error(hata);
+
+        liste.innerHTML = `
+            <div>
+                ❌ Yazarlar yüklenemedi.<br><br>
+                ${hata.message}
+            </div>
+        `;
+
+    }
+
+}
 
 
-    /*
-      İLLERİ ALFABETİK SIRALA
-    */
+/* =========================================
+   LİSTELE
+========================================= */
 
-    const siraliIller =
-      Object.keys(iller).sort(
-        (a,b) =>
-          a.localeCompare(
-            b,
-            "tr"
-          )
-      );
+function yazarListesiniGoster() {
+
+    const liste =
+        document.getElementById("yazarListesi");
+
+    const arama =
+        document.getElementById("arama")
+        .value
+        .toLocaleLowerCase("tr-TR")
+        .trim();
 
 
-    let html = "";
+    const filtreli =
+        yazarlar.filter(function(yazar) {
+
+            const metin = [
+
+                yazar.ad_soyad,
+                yazar.il,
+                yazar.ilce,
+                yazar.biyografi
+
+            ]
+            .join(" ")
+            .toLocaleLowerCase("tr-TR");
+
+            return metin.includes(arama);
+
+        });
 
 
-    siraliIller.forEach(
-      il => {
+    if (filtreli.length === 0) {
 
-        html += `
+        liste.innerHTML = `
+            <div>
+                Henüz yazar bulunamadı.
+            </div>
+        `;
 
-          <section>
+        return;
 
-            <div class="il-baslik">
+    }
 
-              📍 ${escapeHTML(il)}
+
+    liste.innerHTML = "";
+
+
+    filtreli.forEach(function(yazar) {
+
+        const kart =
+            document.createElement("div");
+
+        kart.className =
+            "yazar-card";
+
+
+        let avatar = "✍️";
+
+        if (yazar.fotograf) {
+
+            avatar = `
+                <img
+                    src="${escapeHtml(yazar.fotograf)}"
+                    alt="${escapeHtml(yazar.ad_soyad)}"
+                    onerror="this.style.display='none'"
+                >
+            `;
+
+        }
+
+
+        let durumClass =
+            "badge-beklemede";
+
+        if (yazar.durum === "aktif") {
+
+            durumClass =
+                "badge-aktif";
+
+        }
+
+        if (yazar.durum === "pasif") {
+
+            durumClass =
+                "badge-pasif";
+
+        }
+
+
+        const durumMetni =
+            yazar.durum === "aktif"
+            ? "Aktif"
+            : yazar.durum === "pasif"
+            ? "Pasif"
+            : "Beklemede";
+
+
+        kart.innerHTML = `
+
+            <div class="yazar-avatar">
+
+                ${avatar}
 
             </div>
 
-            <div class="yazar-grid">
+
+            <h4>
+                ${escapeHtml(yazar.ad_soyad || "")}
+            </h4>
+
+
+            <div class="yazar-konum">
+
+                📍
+                ${escapeHtml(yazar.il || "")}
+
+                ${yazar.ilce
+                    ? " / " + escapeHtml(yazar.ilce)
+                    : ""
+                }
+
+            </div>
+
+
+            <div class="yazar-biyografi">
+
+                ${escapeHtml(
+                    yazar.biyografi ||
+                    "Biyografi bulunmuyor."
+                )}
+
+            </div>
+
+
+            <div class="yazar-durum">
+
+                <span class="badge ${durumClass}">
+
+                    ● ${durumMetni}
+
+                </span>
+
+            </div>
+
+
+            <div class="yazar-actions">
+
+                <button
+                    class="btn-success"
+                    onclick="durumDegistir(${yazar.id}, '${yazar.durum}')"
+                >
+                    ${yazar.durum === "aktif"
+                        ? "⏸ Pasif Yap"
+                        : "▶ Aktif Yap"
+                    }
+                </button>
+
+
+                <button
+                    class="btn-danger"
+                    onclick="yazarSil(${yazar.id}, '${escapeJs(yazar.ad_soyad)}')"
+                >
+                    🗑 Sil
+                </button>
+
+            </div>
 
         `;
 
 
-        iller[il].forEach(
-          yazar => {
+        liste.appendChild(kart);
 
-            let fotograf =
-              yazar.fotograf || "";
+    });
 
-            let fotoHTML = "";
+}
 
 
-            if(fotograf){
+/* =========================================
+   YAZAR EKLE
+========================================= */
 
-              fotoHTML = `
+document
+    .getElementById("yazarForm")
+    .addEventListener("submit", async function(event) {
 
-                <img
-                  class="yazar-foto"
-                  src="${escapeHTML(fotograf)}"
-                  alt="${escapeHTML(yazar.ad_soyad || "Yazar")}"
-                  loading="lazy"
-                >
+        event.preventDefault();
 
-              `;
 
-            }else{
+        const veri = {
 
-              const harf =
-                (yazar.ad_soyad || "Y")
-                .trim()
-                .charAt(0)
-                .toUpperCase();
+            ad_soyad:
+                document
+                .getElementById("adSoyad")
+                .value
+                .trim(),
 
-              fotoHTML = `
+            il:
+                document
+                .getElementById("il")
+                .value,
 
-                <div class="yazar-foto-yok">
+            ilce:
+                document
+                .getElementById("ilce")
+                .value
+                .trim(),
 
-                  ${escapeHTML(harf)}
+            fotograf:
+                document
+                .getElementById("fotograf")
+                .value
+                .trim(),
 
-                </div>
+            biyografi:
+                document
+                .getElementById("biyografi")
+                .value
+                .trim(),
 
-              `;
+            email:
+                document
+                .getElementById("email")
+                .value
+                .trim(),
+
+            durum:
+                document
+                .getElementById("durum")
+                .value,
+
+            tarih:
+                new Date()
+                .toLocaleDateString("tr-TR")
+
+        };
+
+
+        if (!veri.ad_soyad) {
+
+            mesajGoster(
+                "Yazar adı zorunludur.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        if (!veri.il) {
+
+            mesajGoster(
+                "Lütfen yazarın ilini seçin.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        try {
+
+            const cevap =
+                await fetch("/api/yazarlar", {
+
+                    method: "POST",
+
+                    credentials: "include",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(veri)
+
+                });
+
+
+            const sonuc =
+                await cevap.json();
+
+
+            if (!cevap.ok ||
+                sonuc.success === false) {
+
+                throw new Error(
+                    sonuc.error ||
+                    "Yazar kaydedilemedi."
+                );
 
             }
 
 
-            html += `
+            mesajGoster(
+                "✅ Yazar başarıyla kaydedildi.",
+                "success"
+            );
 
-              <article class="yazar-kart">
 
-                ${fotoHTML}
+            formTemizle();
 
-                <div class="yazar-adi">
+            await yazarlarGetir();
 
-                  ${escapeHTML(
-                    yazar.ad_soyad ||
-                    "İsimsiz Yazar"
-                  )}
 
-                </div>
+        } catch (hata) {
 
-                <div class="yazar-konum">
+            console.error(hata);
 
-                  ${escapeHTML(
-                    yazar.ilce ||
-                    ""
-                  )}
+            mesajGoster(
+                "❌ " + hata.message,
+                "error"
+            );
 
-                </div>
+        }
 
-                <div class="yazar-biyografi">
+    });
 
-                  ${escapeHTML(
-                    yazar.biyografi ||
-                    "Digital Gündem yazarı."
-                  )}
 
-                </div>
+/* =========================================
+   DURUM DEĞİŞTİR
+========================================= */
 
-                <div class="durum">
+async function durumDegistir(id, mevcutDurum) {
 
-                  <span class="aktif">
+    const yeniDurum =
+        mevcutDurum === "aktif"
+        ? "pasif"
+        : "aktif";
 
-                    ● Aktif Yazar
 
-                  </span>
+    try {
 
-                </div>
+        const cevap =
+            await fetch(
+                "/api/yazarlar/" + id,
+                {
 
-              </article>
+                    method: "PUT",
 
-            `;
+                    credentials: "include",
 
-          }
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            durum: yeniDurum
+                        })
+
+                }
+            );
+
+
+        const sonuc =
+            await cevap.json();
+
+
+        if (!cevap.ok ||
+            sonuc.success === false) {
+
+            throw new Error(
+                sonuc.error ||
+                "Durum değiştirilemedi."
+            );
+
+        }
+
+
+        mesajGoster(
+            "✅ Yazar durumu güncellendi.",
+            "success"
         );
 
 
-        html += `
-
-            </div>
-
-          </section>
-
-        `;
-
-      }
-    );
+        await yazarlarGetir();
 
 
-    alan.innerHTML = html;
+    } catch (hata) {
 
+        console.error(hata);
 
-  }catch(error){
+        mesajGoster(
+            "❌ " + hata.message,
+            "error"
+        );
 
-    console.error(
-      "Yazarlar API hatası:",
-      error
-    );
-
-    alan.innerHTML = `
-
-      <div class="hata">
-
-        ❌ Yazarlar yüklenirken
-        bir hata oluştu.
-
-        <br><br>
-
-        ${escapeHTML(
-          error.message
-        )}
-
-      </div>
-
-    `;
-
-  }
+    }
 
 }
 
 
-/*
-  HTML GÜVENLİĞİ
-*/
+/* =========================================
+   YAZAR SİL
+========================================= */
 
-function escapeHTML(metin){
+async function yazarSil(id, ad) {
 
-  return String(
-    metin ?? ""
-  )
-  .replace(
-    /&/g,
-    "&amp;"
-  )
-  .replace(
-    /</g,
-    "&lt;"
-  )
-  .replace(
-    />/g,
-    "&gt;"
-  )
-  .replace(
-    /"/g,
-    "&quot;"
-  )
-  .replace(
-    /'/g,
-    "&#039;"
-  );
+    if (!confirm(
+        '"' +
+        ad +
+        '" adlı yazarı silmek istediğinize emin misiniz?'
+    )) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const cevap =
+            await fetch(
+                "/api/yazarlar/" + id,
+                {
+
+                    method: "DELETE",
+
+                    credentials: "include"
+
+                }
+            );
+
+
+        const sonuc =
+            await cevap.json();
+
+
+        if (!cevap.ok ||
+            sonuc.success === false) {
+
+            throw new Error(
+                sonuc.error ||
+                "Yazar silinemedi."
+            );
+
+        }
+
+
+        mesajGoster(
+            "✅ Yazar silindi.",
+            "success"
+        );
+
+
+        await yazarlarGetir();
+
+
+    } catch (hata) {
+
+        console.error(hata);
+
+        mesajGoster(
+            "❌ " + hata.message,
+            "error"
+        );
+
+    }
 
 }
 
 
-/*
-  SAYFA AÇILINCA
-*/
+/* =========================================
+   FORM TEMİZLE
+========================================= */
 
-yazarlarıGetir();
+function formTemizle() {
+
+    document
+        .getElementById("yazarForm")
+        .reset();
+
+}
+
+
+/* =========================================
+   İSTATİSTİK
+========================================= */
+
+function istatistikleriGuncelle() {
+
+    const toplam =
+        yazarlar.length;
+
+
+    const aktif =
+        yazarlar.filter(function(yazar) {
+
+            return yazar.durum === "aktif";
+
+        }).length;
+
+
+    const bekleyen =
+        yazarlar.filter(function(yazar) {
+
+            return yazar.durum === "beklemede";
+
+        }).length;
+
+
+    document
+        .getElementById("toplamYazar")
+        .textContent = toplam;
+
+
+    document
+        .getElementById("aktifYazar")
+        .textContent = aktif;
+
+
+    document
+        .getElementById("bekleyenYazar")
+        .textContent = bekleyen;
+
+}
+
+
+/* =========================================
+   ARAMA
+========================================= */
+
+document
+    .getElementById("arama")
+    .addEventListener(
+        "input",
+        yazarListesiniGoster
+    );
+
+
+/* =========================================
+   GÜVENLİ HTML
+========================================= */
+
+function escapeHtml(value) {
+
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+function escapeJs(value) {
+
+    return String(value || "")
+        .replace(/\\/g, "\\\\")
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '\\"')
+        .replace(/\n/g, "\\n")
+        .replace(/\r/g, "");
+
+}
+
+
+/* =========================================
+   BAŞLAT
+========================================= */
+
+yazarlarGetir();
 
 </script>
+
 
 </body>
 </html>
