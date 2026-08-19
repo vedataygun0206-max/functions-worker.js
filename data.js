@@ -2,9 +2,9 @@ const haberler = [
 
 {
 id:1,
-baslik:"Digital Gündem Yayında",
+baslik:"Digital Gündem Yayına hazırlanıyor",
 kategori:"Gündem",
-ozet:"Türkiye'nin Dijital Rehberi yayına başladı.",
+ozet:"Türkiye'nin Digital Rehberi yayına hazırlanıyor.",
 resim:"https://picsum.photos/600/400?1"
 },
 
