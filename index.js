@@ -969,7 +969,117 @@ ${urls.join("")}
 
       }
     }
+// =====================================================
+// DÖVİZ KURLARI - TCMB
+// GET /api/kurlar
+// =====================================================
 
+if (
+  url.pathname === "/api/kurlar" &&
+  request.method === "GET"
+) {
+
+  try {
+
+    const response = await fetch(
+      "https://www.tcmb.gov.tr/kurlar/today.xml",
+      {
+        headers: {
+          "User-Agent": "DigitalGundem/1.0"
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `TCMB HTTP ${response.status}`
+      );
+    }
+
+    const xml = await response.text();
+
+    const currencies = [
+      {
+        code: "USD",
+        name: "ABD Doları"
+      },
+      {
+        code: "EUR",
+        name: "Euro"
+      },
+      {
+        code: "GBP",
+        name: "İngiliz Sterlini"
+      },
+      {
+        code: "CHF",
+        name: "İsviçre Frangı"
+      },
+      {
+        code: "SAR",
+        name: "Suudi Riyali"
+      }
+    ];
+
+    const sonuc = [];
+
+    for (const currency of currencies) {
+
+      const regex = new RegExp(
+        `<Currency[^>]*CurrencyCode="${currency.code}"[\\s\\S]*?<BanknoteBuying>(.*?)<\\/BanknoteBuying>[\\s\\S]*?<BanknoteSelling>(.*?)<\\/BanknoteSelling>[\\s\\S]*?<\\/Currency>`,
+        "i"
+      );
+
+      const match = xml.match(regex);
+
+      if (!match) {
+        continue;
+      }
+
+      sonuc.push({
+        code: currency.code,
+        name: currency.name,
+        alis: Number(
+          match[1].replace(",", ".")
+        ),
+        satis: Number(
+          match[2].replace(",", ".")
+        )
+      });
+
+    }
+
+    return Response.json(
+      {
+        success: true,
+        source: "TCMB",
+        updated_at: new Date().toISOString(),
+        currencies: sonuc
+      },
+      {
+        headers: {
+          "Cache-Control":
+            "public, max-age=300, s-maxage=300"
+        }
+      }
+    );
+
+  } catch (error) {
+
+    return Response.json(
+      {
+        success: false,
+        error: "Kur bilgileri alınamadı.",
+        detail: error.message
+      },
+      {
+        status: 500
+      }
+    );
+
+  }
+
+}
     // =========================================================
     // 🇹🇷 GÜNDEM
     // GET /api/gundem
