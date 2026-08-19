@@ -2768,22 +2768,150 @@ $("haberArama").addEventListener(
    GERÇEK API BAĞLANDIĞINDA BU FONKSİYON DEĞİŞECEK
 ===================================================== */
 
-function kurAlaniniHazirla(){
+async function kurlariGetir(){
 
-  const mesaj="Veri bekleniyor";
+  try{
 
-  $("dolar").textContent=mesaj;
-  $("euro").textContent=mesaj;
-  $("sterlin").textContent=mesaj;
-  $("altin").textContent=mesaj;
-  $("bist").textContent=mesaj;
-  $("bitcoin").textContent=mesaj;
-  $("havaMini").textContent="İstanbul";
+    const response = await fetch(
+      "/api/kurlar",
+      {
+        cache:"no-store",
+        headers:{
+          "Accept":"application/json"
+        }
+      }
+    );
 
-  $("dolarEkonomi").textContent="--";
-  $("euroEkonomi").textContent="--";
-  $("altinEkonomi").textContent="--";
-  $("bistEkonomi").textContent="--";
+    const data = await response.json();
+
+    if(!response.ok || !data.success){
+
+      throw new Error(
+        data?.error || "Kur verisi alınamadı."
+      );
+
+    }
+
+    const currencies = data.currencies || [];
+
+    function kurBul(code){
+      return currencies.find(
+        x => x.code === code
+      );
+    }
+
+    function yaz(id, deger){
+
+      const el = $(id);
+
+      if(el){
+        el.textContent = deger;
+      }
+
+    }
+
+    const usd = kurBul("USD");
+    const eur = kurBul("EUR");
+    const gbp = kurBul("GBP");
+
+    /* ANA KUR ALANI */
+
+    if(usd){
+
+      yaz(
+        "dolar",
+        `${Number(usd.satis).toFixed(4)} ₺`
+      );
+
+    }
+
+    if(eur){
+
+      yaz(
+        "euro",
+        `${Number(eur.satis).toFixed(4)} ₺`
+      );
+
+    }
+
+    if(gbp){
+
+      yaz(
+        "sterlin",
+        `${Number(gbp.satis).toFixed(4)} ₺`
+      );
+
+    }
+
+    /* EKONOMİ PANELİ */
+
+    if(usd){
+
+      yaz(
+        "dolarEkonomi",
+        Number(usd.satis).toFixed(4)
+      );
+
+    }
+
+    if(eur){
+
+      yaz(
+        "euroEkonomi",
+        Number(eur.satis).toFixed(4)
+      );
+
+    }
+
+    /* ALTIN / BIST / BITCOIN */
+
+    yaz("altin", "Veri bekleniyor");
+    yaz("bist", "Veri bekleniyor");
+    yaz("bitcoin", "Veri bekleniyor");
+
+    yaz("altinEkonomi", "--");
+    yaz("bistEkonomi", "--");
+
+    /* HAVA */
+
+    yaz("havaMini", "İstanbul");
+
+    console.log(
+      "Kur verileri güncellendi:",
+      data.updated_at
+    );
+
+  }catch(error){
+
+    console.error(
+      "Kur API hatası:",
+      error
+    );
+
+    yazKurHatasi();
+
+  }
+
+}
+
+
+/* KUR HATASI */
+
+function yazKurHatasi(){
+
+  [
+    "dolar",
+    "euro",
+    "sterlin"
+  ].forEach(id => {
+
+    const el = $(id);
+
+    if(el){
+      el.textContent = "Veri alınamadı";
+    }
+
+  });
 
 }
 
