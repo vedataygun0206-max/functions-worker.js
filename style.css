@@ -700,3 +700,122 @@ width:100%;
   }
 
 }
+/* =====================================================
+   PİYASA / KUR
+===================================================== */
+
+.ekonomi-panel{
+  padding:12px 0 5px;
+}
+
+.ekonomi-grid{
+  background:#fff;
+  border:1px solid #e5e7eb;
+  border-radius:18px;
+  padding:15px;
+  display:flex;
+  align-items:center;
+  gap:20px;
+  box-shadow:0 4px 15px #00000008;
+}
+
+.ekonomi-baslik{
+  min-width:150px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.ekonomi-baslik span{
+  width:42px;
+  height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#f3f4f6;
+  border-radius:12px;
+  font-size:22px;
+}
+
+.ekonomi-baslik strong{
+  display:block;
+  font-size:16px;
+}
+
+.ekonomi-baslik small{
+  display:block;
+  color:#777;
+  margin-top:3px;
+}
+
+#kurAlani{
+  flex:1;
+  min-width:0;
+}
+
+.kur-listesi{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:10px;
+}
+
+.kur-karti{
+  border-left:1px solid #eee;
+  padding-left:15px;
+}
+
+.kur-kodu{
+  font-size:12px;
+  color:#777;
+  font-weight:bold;
+}
+
+.kur-isim{
+  font-size:12px;
+  color:#555;
+  margin-top:2px;
+}
+
+.kur-deger{
+  margin-top:5px;
+  font-size:17px;
+  font-weight:900;
+}
+
+.kur-etiket{
+  color:#16a34a;
+  font-size:11px;
+  margin-left:4px;
+}
+
+.kur-yukleniyor{
+  color:#777;
+  font-size:14px;
+}
+
+.kur-hata{
+  color:#b91c1c;
+  font-size:14px;
+}
+
+@media(max-width:800px){
+
+  .ekonomi-grid{
+    display:block;
+  }
+
+  .ekonomi-baslik{
+    margin-bottom:15px;
+  }
+
+  .kur-listesi{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .kur-karti{
+    padding:10px;
+    border:1px solid #eee;
+    border-radius:10px;
+  }
+
+}
