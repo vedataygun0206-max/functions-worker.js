@@ -175,7 +175,108 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
     }
+// =====================================================
+// TCMB KURLARI
+// =====================================================
 
+async function kurlariGetir(){
+
+  const alan = $("kurAlani");
+
+  try{
+
+    const response = await fetch(
+      "/api/kurlar",
+      {
+        cache:"no-store",
+        headers:{
+          Accept:"application/json"
+        }
+      }
+    );
+
+    const data = await response.json();
+
+    if(!response.ok || !data.success){
+
+      throw new Error(
+        data?.error ||
+        "Kur bilgileri alınamadı."
+      );
+
+    }
+
+    const kurlar =
+      Array.isArray(data.currencies)
+      ? data.currencies
+      : [];
+
+    if(!kurlar.length){
+
+      throw new Error(
+        "Kur verisi bulunamadı."
+      );
+
+    }
+
+    alan.innerHTML = `
+
+      <div class="kur-listesi">
+
+        ${
+          kurlar.map(k => `
+
+            <div class="kur-karti">
+
+              <div class="kur-kodu">
+                ${escapeHTML(k.code)}
+              </div>
+
+              <div class="kur-isim">
+                ${escapeHTML(k.name)}
+              </div>
+
+              <div class="kur-deger">
+                ${Number(k.satis).toLocaleString(
+                  "tr-TR",
+                  {
+                    minimumFractionDigits:2,
+                    maximumFractionDigits:4
+                  }
+                )}
+                <span class="kur-etiket">
+                  TL
+                </span>
+              </div>
+
+            </div>
+
+          `).join("")
+
+        }
+
+      </div>
+
+    `;
+
+  }catch(error){
+
+    console.error(
+      "Kur API:",
+      error
+    );
+
+    alan.innerHTML = `
+
+      <div class="kur-hata">
+        ⚠️ Kur bilgileri şu anda alınamıyor.
+      </div>
+
+    `;
+
+  }
+
+}
     // ========================================
     // ARAMA
     // ========================================
