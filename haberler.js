@@ -2,7 +2,25 @@
 // DIGITAL GÜNDEM - D1 HABER SİSTEMİ
 // ========================================
 
-document.addEventListener("DOMContentLoaded", () => {
+window.addEventListener(
+  "DOMContentLoaded",
+  ()=>{
+
+    haberleriGetir();
+
+    videoHaberleriGetir();
+
+    firmalariGetir();
+
+    gundemGetir();
+
+    reklamGetir();
+
+    // Kur bilgileri ayrı yüklenir
+    kurlariGetir();
+
+  }
+);
 
     const haberListesi = document.getElementById("haberListesi");
     const manset = document.getElementById("mansetHaber");
