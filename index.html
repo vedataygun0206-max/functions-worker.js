@@ -2818,7 +2818,8 @@ async function kurlariGetir(){
     const usd = kurBul("USD");
     const eur = kurBul("EUR");
     const gbp = kurBul("GBP");
-
+    const chf = kurBul("CHF");
+    const sar = kurBul("SAR");
     /* ANA KUR ALANI */
 
     if(usd){
@@ -2847,7 +2848,23 @@ async function kurlariGetir(){
       );
 
     }
+    if(chf){
 
+  yaz(
+    "chf",
+    `${Number(chf.satis).toFixed(4)} ₺`
+  );
+
+}
+
+if(sar){
+
+  yaz(
+    "sar",
+    `${Number(sar.satis).toFixed(4)} ₺`
+  );
+
+}
     /* EKONOMİ PANELİ */
 
     if(usd){
