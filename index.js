@@ -970,12 +970,12 @@ ${urls.join("")}
       }
     }
     // =====================================================
-// ALTIN FİYATLARI
-// GET /api/altin
+// ALTIN API TEST
+// GET /api/altin-test
 // =====================================================
 
 if (
-  url.pathname === "/api/altin" &&
+  url.pathname === "/api/altin-test" &&
   request.method === "GET"
 ) {
 
@@ -985,54 +985,36 @@ if (
       "https://finans.truncgil.com/today.json",
       {
         headers: {
-          "User-Agent": "DigitalGundem/1.0",
-          "Accept": "application/json"
+          "User-Agent": "Mozilla/5.0",
+          "Accept": "*/*"
         }
       }
     );
 
-    if (!response.ok) {
-      throw new Error(
-        `Altın API hatası: ${response.status}`
-      );
-    }
+    const text = await response.text();
 
-    const data = await response.json();
-
-    const gram = data["gram-altin"];
-    const ceyrek = data["ceyrek-altin"];
-
-    return Response.json(
-      {
+    return new Response(
+      JSON.stringify({
         success: true,
-        source: "Truncgil",
-        updated_at: new Date().toISOString(),
-
-        gold: {
-          gram: gram || null,
-          ceyrek: ceyrek || null
-        }
-      },
+        status: response.status,
+        content_type:
+          response.headers.get("content-type"),
+        length: text.length,
+        preview: text.slice(0, 1000)
+      }),
       {
         headers: {
-          "Cache-Control":
-            "public, max-age=300, s-maxage=300"
+          "Content-Type": "application/json; charset=utf-8"
         }
       }
     );
 
   } catch (error) {
 
-    return Response.json(
-      {
-        success: false,
-        error: "Altın bilgileri alınamadı.",
-        detail: error.message
-      },
-      {
-        status: 500
-      }
-    );
+    return Response.json({
+      success: false,
+      error: error.message
+    });
 
   }
 
