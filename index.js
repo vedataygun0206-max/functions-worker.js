@@ -969,6 +969,74 @@ ${urls.join("")}
 
       }
     }
+    // =====================================================
+// ALTIN FİYATLARI
+// GET /api/altin
+// =====================================================
+
+if (
+  url.pathname === "/api/altin" &&
+  request.method === "GET"
+) {
+
+  try {
+
+    const response = await fetch(
+      "https://finans.truncgil.com/today.json",
+      {
+        headers: {
+          "User-Agent": "DigitalGundem/1.0",
+          "Accept": "application/json"
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `Altın API hatası: ${response.status}`
+      );
+    }
+
+    const data = await response.json();
+
+    const gram = data["gram-altin"];
+    const ceyrek = data["ceyrek-altin"];
+
+    return Response.json(
+      {
+        success: true,
+        source: "Truncgil",
+        updated_at: new Date().toISOString(),
+
+        gold: {
+          gram: gram || null,
+          ceyrek: ceyrek || null
+        }
+      },
+      {
+        headers: {
+          "Cache-Control":
+            "public, max-age=300, s-maxage=300"
+        }
+      }
+    );
+
+  } catch (error) {
+
+    return Response.json(
+      {
+        success: false,
+        error: "Altın bilgileri alınamadı.",
+        detail: error.message
+      },
+      {
+        status: 500
+      }
+    );
+
+  }
+
+}
 // =====================================================
 // DÖVİZ KURLARI - TCMB
 // GET /api/kurlar
