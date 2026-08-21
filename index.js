@@ -906,79 +906,9 @@ ${urls.join("")}
       }
     }
 
-    // =========================================================
-    // 🇹🇷 TÜRKİYE GÜNDEM
-    // GET /api/turkiye
-    // =========================================================
-if (
-  url.pathname === "/api/altin-test" &&
-  request.method === "GET"
-) {
-  return Response.json({
-    success: true,
-    test: "ALTIN API ÇALIŞIYOR"
-  });
-}
-    if (
-      url.pathname === "/api/turkiye" &&
-      request.method === "GET"
-    ) {
-
-      try {
-
-        const haberler =
-          await aaRSSGetir(
-            "https://www.aa.com.tr/tr/rss/default?cat=gundem",
-            "Türkiye"
-          );
-
-        return Response.json({
-
-          success: true,
-
-          kategori: "Türkiye",
-
-          kaynak:
-            "Anadolu Ajansı RSS",
-
-          toplam:
-            haberler.length,
-
-          haberler
-
-        }, {
-
-          headers: {
-            "Content-Type":
-              "application/json; charset=UTF-8",
-            "Cache-Control":
-              "public, max-age=300"
-          }
-
-        });
-
-      } catch (error) {
-
-        console.error(
-          "TÜRKİYE API HATASI:",
-          error
-        );
-
-        return Response.json({
-
-          success: false,
-
-          error:
-            error.message
-
-        }, {
-          status: 502
-        });
-
-      }
-    }
+    
     // =====================================================
-// ALTIN API TEST
+// ALTIN FİYATLARI
 // GET /api/altin-test
 // =====================================================
 
@@ -994,35 +924,83 @@ if (
       {
         headers: {
           "User-Agent": "Mozilla/5.0",
-          "Accept": "*/*"
+          "Accept": "application/json,text/plain,*/*"
         }
       }
     );
 
     const text = await response.text();
 
-    return new Response(
-      JSON.stringify({
-        success: true,
-        status: response.status,
-        content_type:
-          response.headers.get("content-type"),
-        length: text.length,
-        preview: text.slice(0, 1000)
-      }),
-      {
-        headers: {
-          "Content-Type": "application/json; charset=utf-8"
+    if (!response.ok) {
+
+      throw new Error(
+        `Altın kaynağı HTTP ${response.status}`
+      );
+
+    }
+
+    let data;
+
+    try {
+
+      data = JSON.parse(text);
+
+    } catch (e) {
+
+      return Response.json(
+        {
+          success: false,
+          error: "Altın kaynağı geçerli JSON döndürmedi.",
+          preview: text.slice(0, 300)
+        },
+        {
+          status: 502
         }
+      );
+
+    }
+
+    const gram =
+      data["gram-altin"] ||
+      data["gram_altin"] ||
+      null;
+
+    const ceyrek =
+      data["ceyrek-altin"] ||
+      data["ceyrek_altin"] ||
+      null;
+
+    return Response.json({
+
+      success: true,
+
+      source: "Truncgil",
+
+      updated_at:
+        new Date().toISOString(),
+
+      gold: {
+
+        gram: gram,
+
+        ceyrek: ceyrek
+
       }
-    );
+
+    });
 
   } catch (error) {
 
-    return Response.json({
-      success: false,
-      error: error.message
-    });
+    return Response.json(
+      {
+        success: false,
+        error: "Altın bilgileri alınamadı.",
+        detail: error.message
+      },
+      {
+        status: 500
+      }
+    );
 
   }
 
