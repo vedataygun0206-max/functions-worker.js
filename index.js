@@ -910,7 +910,15 @@ ${urls.join("")}
     // 🇹🇷 TÜRKİYE GÜNDEM
     // GET /api/turkiye
     // =========================================================
-
+if (
+  url.pathname === "/api/altin-test" &&
+  request.method === "GET"
+) {
+  return Response.json({
+    success: true,
+    test: "ALTIN API ÇALIŞIYOR"
+  });
+}
     if (
       url.pathname === "/api/turkiye" &&
       request.method === "GET"
