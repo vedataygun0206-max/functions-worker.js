@@ -2965,11 +2965,74 @@ window.addEventListener(
 
     // Döviz kurları
     kurlariGetir();
-    
+    // altın fiyatı
+   altinlariGetir(); 
 
   }
 );
+/* =====================================================
+   ALTIN API
+===================================================== */
 
+async function altinlariGetir(){
+
+  try{
+
+    const response = await fetch(
+      "/api/altin-test",
+      {
+        cache:"no-store",
+        headers:{
+          "Accept":"application/json"
+        }
+      }
+    );
+
+    const data = await response.json();
+
+    if(!response.ok || !data.success){
+      throw new Error(
+        data?.error || "Altın verisi alınamadı."
+      );
+    }
+
+    const gram = data.gold?.gram;
+    const ceyrek = data.gold?.ceyrek;
+
+    /* GRAM ALTIN */
+
+    const altin = document.getElementById("altin");
+
+    if(altin && gram){
+      altin.textContent =
+        gram.Satış + " ₺";
+    }
+
+    /* ÇEYREK ALTIN */
+
+    const ceyrekEl =
+      document.getElementById("ceyrek");
+
+    if(ceyrekEl && ceyrek){
+      ceyrekEl.textContent =
+        ceyrek.Satış + " ₺";
+    }
+
+    console.log(
+      "Altın güncellendi:",
+      data.updated_at
+    );
+
+  }catch(error){
+
+    console.error(
+      "Altın API hatası:",
+      error
+    );
+
+  }
+
+}
 </script>
 
 </body>
