@@ -536,6 +536,65 @@ if (
     }, { status: 500 });
   }
 }
+   // =========================================================
+// GET /api/video?id=1
+// Tek video
+// =========================================================
+
+if (
+  url.pathname === "/api/video" &&
+  request.method === "GET"
+) {
+  try {
+    const id = Number(url.searchParams.get("id"));
+
+    if (!id) {
+      return Response.json({
+        success: false,
+        error: "Video ID belirtilmedi."
+      }, { status: 400 });
+    }
+
+    const video = await env.DB
+      .prepare(`
+        SELECT
+          id,
+          baslik,
+          ozet,
+          video_url,
+          kapak_resmi,
+          kategori,
+          tarih,
+          durum,
+          manset,
+          izlenme,
+          created_at
+        FROM video_haberler
+        WHERE id = ?
+        LIMIT 1
+      `)
+      .bind(id)
+      .first();
+
+    if (!video) {
+      return Response.json({
+        success: false,
+        error: "Video bulunamadı."
+      }, { status: 404 });
+    }
+
+    return Response.json({
+      success: true,
+      video
+    });
+
+  } catch (error) {
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+  }
+} 
     // =========================================================
 // HABERLER API - TAM CRUD
 // =========================================================
