@@ -582,6 +582,64 @@ if (
     }, { status: 500 });
   }
 }
+    // ---------------------------------------------------------
+// GET /api/reklam?id=1
+// Tek reklam
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/reklam" &&
+  request.method === "GET"
+) {
+  try {
+    const id = Number(url.searchParams.get("id"));
+
+    if (!id) {
+      return Response.json({
+        success: false,
+        error: "Reklam ID belirtilmedi."
+      }, { status: 400 });
+    }
+
+    const reklam = await env.DB
+      .prepare(`
+        SELECT
+          id,
+          firma_adi,
+          resim,
+          link,
+          konum,
+          baslangic,
+          bitis,
+          durum,
+          olusturma_tarihi
+        FROM reklamlar
+        WHERE id = ?
+        LIMIT 1
+      `)
+      .bind(id)
+      .first();
+
+    if (!reklam) {
+      return Response.json({
+        success: false,
+        error: "Reklam bulunamadı."
+      }, { status: 404 });
+    }
+
+    return Response.json({
+      success: true,
+      reklam
+    });
+
+  } catch (error) {
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+  }
+}
+    
    // =========================================================
 // GET /api/video?id=1
 // Tek video
