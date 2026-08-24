@@ -664,6 +664,100 @@ if (
     }, { status: 500 });
   }
 }  
+// =========================================================
+// PUT /api/video?id=3
+// Video güncelle
+// =========================================================
+
+if (
+  url.pathname === "/api/video" &&
+  request.method === "PUT"
+) {
+  try {
+    const id = Number(url.searchParams.get("id"));
+
+    if (!id) {
+      return Response.json({
+        success: false,
+        error: "Video ID belirtilmedi."
+      }, { status: 400 });
+    }
+
+    const body = await request.json();
+
+    const baslik = String(body.baslik || "").trim();
+    const video_url = String(body.video_url || "").trim();
+    const ozet = String(body.ozet || "").trim();
+    const kapak_resmi = String(body.kapak_resmi || "").trim();
+    const kategori = String(body.kategori || "Gündem").trim();
+    const durum = body.durum === "taslak" ? "taslak" : "yayinda";
+    const manset = body.manset ? 1 : 0;
+    const tarih = body.tarih || new Date().toISOString();
+
+    if (!baslik || !video_url) {
+      return Response.json({
+        success: false,
+        error: "Başlık ve video URL zorunludur."
+      }, { status: 400 });
+    }
+
+    const mevcut = await env.DB
+      .prepare(`
+        SELECT id
+        FROM video_haberler
+        WHERE id = ?
+      `)
+      .bind(id)
+      .first();
+
+    if (!mevcut) {
+      return Response.json({
+        success: false,
+        error: "Video bulunamadı."
+      }, { status: 404 });
+    }
+
+    await env.DB
+      .prepare(`
+        UPDATE video_haberler
+        SET
+          baslik = ?,
+          ozet = ?,
+          video_url = ?,
+          kapak_resmi = ?,
+          kategori = ?,
+          tarih = ?,
+          durum = ?,
+          manset = ?
+        WHERE id = ?
+      `)
+      .bind(
+        baslik,
+        ozet,
+        video_url,
+        kapak_resmi,
+        kategori,
+        tarih,
+        durum,
+        manset,
+        id
+      )
+      .run();
+
+    return Response.json({
+      success: true,
+      message: "Video haber güncellendi.",
+      id
+    });
+
+  } catch (error) {
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+  }
+}
+    
     // =========================================================
 // HABERLER API - TAM CRUD
 // =========================================================
