@@ -595,6 +595,75 @@ if (
     }, { status: 500 });
   }
 } 
+  // =========================================================
+// POST /api/video
+// Yeni video haber
+// =========================================================
+
+if (
+  url.pathname === "/api/video" &&
+  request.method === "POST"
+) {
+  try {
+    const body = await request.json();
+
+    const baslik = String(body.baslik || "").trim();
+    const video_url = String(body.video_url || "").trim();
+    const ozet = String(body.ozet || "").trim();
+    const kapak_resmi = String(body.kapak_resmi || "").trim();
+    const kategori = String(body.kategori || "Gündem").trim();
+    const durum = body.durum === "taslak" ? "taslak" : "yayinda";
+    const manset = body.manset ? 1 : 0;
+    const tarih = body.tarih || new Date().toISOString();
+
+    if (!baslik || !video_url) {
+      return Response.json({
+        success: false,
+        error: "Başlık ve video URL zorunludur."
+      }, { status: 400 });
+    }
+
+    const result = await env.DB
+      .prepare(`
+        INSERT INTO video_haberler
+        (
+          baslik,
+          ozet,
+          video_url,
+          kapak_resmi,
+          kategori,
+          tarih,
+          durum,
+          manset,
+          izlenme
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)
+      `)
+      .bind(
+        baslik,
+        ozet,
+        video_url,
+        kapak_resmi,
+        kategori,
+        tarih,
+        durum,
+        manset
+      )
+      .run();
+
+    return Response.json({
+      success: true,
+      message: "Video haber başarıyla eklendi.",
+      id: result.meta?.last_row_id || null
+    }, { status: 201 });
+
+  } catch (error) {
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+  }
+}  
     // =========================================================
 // HABERLER API - TAM CRUD
 // =========================================================
