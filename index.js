@@ -925,6 +925,54 @@ if (
     }, { status: 500 });
   }
 }  
+   // ---------------------------------------------------------
+// DELETE /api/reklam?id=7
+// Reklam sil
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/reklam" &&
+  request.method === "DELETE"
+) {
+  try {
+    const id = Number(url.searchParams.get("id"));
+
+    if (!id) {
+      return Response.json({
+        success: false,
+        error: "Reklam ID belirtilmedi."
+      }, { status: 400 });
+    }
+
+    const result = await env.DB
+      .prepare(`
+        DELETE FROM reklamlar
+        WHERE id = ?
+      `)
+      .bind(id)
+      .run();
+
+    if (!result.meta?.changes) {
+      return Response.json({
+        success: false,
+        error: "Reklam bulunamadı."
+      }, { status: 404 });
+    }
+
+    return Response.json({
+      success: true,
+      message: "Reklam silindi.",
+      id
+    });
+
+  } catch (error) {
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+  }
+} 
+    
 // =========================================================
 // PUT /api/video?id=3
 // Video güncelle
