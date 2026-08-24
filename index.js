@@ -100,7 +100,628 @@ export default {
 
       return haberler;
     }
+    // =========================================================
+// HABERLER API - TAM CRUD
+// =========================================================
 
+// ---------------------------------------------------------
+// GET /api/haberler
+// Haber listesi
+// ---------------------------------------------------------
+if (
+  url.pathname === "/api/haberler" &&
+  request.method === "GET"
+) {
+  try {
+
+    const limit = Math.min(
+      Number(url.searchParams.get("limit") || 50),
+      100
+    );
+
+    const offset = Math.max(
+      Number(url.searchParams.get("offset") || 0),
+      0
+    );
+
+    const durum =
+      url.searchParams.get("durum");
+
+    let sql = `
+      SELECT
+        id,
+        baslik,
+        ozet,
+        icerik,
+        kategori,
+        resim,
+        tarih,
+        durum,
+        manset,
+        okunma
+      FROM haberler
+    `;
+
+    const params = [];
+
+    if (durum) {
+      sql += ` WHERE durum = ? `;
+      params.push(durum);
+    }
+
+    sql += `
+      ORDER BY datetime(tarih) DESC, id DESC
+      LIMIT ? OFFSET ?
+    `;
+
+    params.push(limit, offset);
+
+    const result =
+      await env.DB
+        .prepare(sql)
+        .bind(...params)
+        .all();
+
+    return Response.json({
+      success: true,
+      toplam: result.results.length,
+      haberler: result.results
+    });
+
+  } catch (error) {
+
+    console.error(
+      "HABERLER GET HATASI:",
+      error
+    );
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, {
+      status: 500
+    });
+  }
+}
+
+
+// ---------------------------------------------------------
+// GET /api/haber?id=1
+// Tek haber
+// ---------------------------------------------------------
+if (
+  url.pathname === "/api/haber" &&
+  request.method === "GET"
+) {
+  try {
+
+    const id =
+      Number(url.searchParams.get("id"));
+
+    if (!id) {
+      return Response.json({
+        success: false,
+        error: "Haber ID belirtilmedi."
+      }, {
+        status: 400
+      });
+    }
+
+    const haber =
+      await env.DB
+        .prepare(`
+          SELECT
+            id,
+            baslik,
+            ozet,
+            icerik,
+            kategori,
+            resim,
+            tarih,
+            durum,
+            manset,
+            okunma
+          FROM haberler
+          WHERE id = ?
+          LIMIT 1
+        `)
+        .bind(id)
+        .first();
+
+    if (!haber) {
+      return Response.json({
+        success: false,
+        error: "Haber bulunamadı."
+      }, {
+        status: 404
+      });
+    }
+
+    return Response.json({
+      success: true,
+      haber
+    });
+
+  } catch (error) {
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, {
+      status: 500
+    });
+  }
+}
+
+
+// ---------------------------------------------------------
+// POST /api/haber
+// Yeni haber
+// ---------------------------------------------------------
+if (
+  url.pathname === "/api/haber" &&
+  request.method === "POST"
+) {
+  try {
+
+    const body =
+      await request.json();
+
+    const baslik =
+      String(body.baslik || "").trim();
+
+    const kategori =
+      String(body.kategori || "").trim();
+
+    const ozet =
+      String(body.ozet || "").trim();
+
+    const icerik =
+      String(body.icerik || "").trim();
+
+    const resim =
+      String(body.resim || "").trim();
+
+    const durum =
+      body.durum === "taslak"
+        ? "taslak"
+        : "yayinda";
+
+    const manset =
+      body.manset ? 1 : 0;
+
+    const tarih =
+      body.tarih ||
+      new Date().toISOString();
+
+    if (!baslik) {
+      return Response.json({
+        success: false,
+        error: "Haber başlığı zorunludur."
+      }, {
+        status: 400
+      });
+    }
+
+    if (!kategori) {
+      return Response.json({
+        success: false,
+        error: "Kategori zorunludur."
+      }, {
+        status: 400
+      });
+    }
+
+    const result =
+      await env.DB
+        .prepare(`
+          INSERT INTO haberler
+          (
+            baslik,
+            ozet,
+            icerik,
+            kategori,
+            resim,
+            tarih,
+            durum,
+            manset,
+            okunma
+          )
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)
+        `)
+        .bind(
+          baslik,
+          ozet,
+          icerik,
+          kategori,
+          resim,
+          tarih,
+          durum,
+          manset
+        )
+        .run();
+
+    return Response.json({
+      success: true,
+      message: "Haber başarıyla eklendi.",
+      id: result.meta?.last_row_id || null
+    }, {
+      status: 201
+    });
+
+  } catch (error) {
+
+    console.error(
+      "HABER POST HATASI:",
+      error
+    );
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, {
+      status: 500
+    });
+  }
+}
+
+
+// ---------------------------------------------------------
+// PUT /api/haber?id=1
+// Haber güncelle
+// ---------------------------------------------------------
+if (
+  url.pathname === "/api/haber" &&
+  request.method === "PUT"
+) {
+  try {
+
+    const id =
+      Number(url.searchParams.get("id"));
+
+    if (!id) {
+      return Response.json({
+        success: false,
+        error: "Haber ID belirtilmedi."
+      }, {
+        status: 400
+      });
+    }
+
+    const mevcut =
+      await env.DB
+        .prepare(`
+          SELECT id
+          FROM haberler
+          WHERE id = ?
+          LIMIT 1
+        `)
+        .bind(id)
+        .first();
+
+    if (!mevcut) {
+      return Response.json({
+        success: false,
+        error: "Haber bulunamadı."
+      }, {
+        status: 404
+      });
+    }
+
+    const body =
+      await request.json();
+
+    const baslik =
+      String(body.baslik || "").trim();
+
+    const kategori =
+      String(body.kategori || "").trim();
+
+    const ozet =
+      String(body.ozet || "").trim();
+
+    const icerik =
+      String(body.icerik || "").trim();
+
+    const resim =
+      String(body.resim || "").trim();
+
+    const durum =
+      body.durum === "taslak"
+        ? "taslak"
+        : "yayinda";
+
+    const manset =
+      body.manset ? 1 : 0;
+
+    const tarih =
+      body.tarih ||
+      new Date().toISOString();
+
+    if (!baslik || !kategori) {
+      return Response.json({
+        success: false,
+        error: "Başlık ve kategori zorunludur."
+      }, {
+        status: 400
+      });
+    }
+
+    await env.DB
+      .prepare(`
+        UPDATE haberler
+        SET
+          baslik = ?,
+          ozet = ?,
+          icerik = ?,
+          kategori = ?,
+          resim = ?,
+          tarih = ?,
+          durum = ?,
+          manset = ?
+        WHERE id = ?
+      `)
+      .bind(
+        baslik,
+        ozet,
+        icerik,
+        kategori,
+        resim,
+        tarih,
+        durum,
+        manset,
+        id
+      )
+      .run();
+
+    return Response.json({
+      success: true,
+      message: "Haber güncellendi.",
+      id
+    });
+
+  } catch (error) {
+
+    console.error(
+      "HABER PUT HATASI:",
+      error
+    );
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, {
+      status: 500
+    });
+  }
+}
+
+
+// ---------------------------------------------------------
+// DELETE /api/haber?id=1
+// Haber sil
+// ---------------------------------------------------------
+if (
+  url.pathname === "/api/haber" &&
+  request.method === "DELETE"
+) {
+  try {
+
+    const id =
+      Number(url.searchParams.get("id"));
+
+    if (!id) {
+      return Response.json({
+        success: false,
+        error: "Haber ID belirtilmedi."
+      }, {
+        status: 400
+      });
+    }
+
+    const result =
+      await env.DB
+        .prepare(`
+          DELETE FROM haberler
+          WHERE id = ?
+        `)
+        .bind(id)
+        .run();
+
+    if (!result.meta?.changes) {
+      return Response.json({
+        success: false,
+        error: "Haber bulunamadı."
+      }, {
+        status: 404
+      });
+    }
+
+    return Response.json({
+      success: true,
+      message: "Haber silindi.",
+      id
+    });
+
+  } catch (error) {
+
+    console.error(
+      "HABER DELETE HATASI:",
+      error
+    );
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, {
+      status: 500
+    });
+  }
+}
+
+
+// ---------------------------------------------------------
+// POST /api/haber-okunma?id=1
+// Okunma sayısını artır
+// ---------------------------------------------------------
+if (
+  url.pathname === "/api/haber-okunma" &&
+  request.method === "POST"
+) {
+  try {
+
+    const id =
+      Number(url.searchParams.get("id"));
+
+    if (!id) {
+      return Response.json({
+        success: false,
+        error: "Haber ID belirtilmedi."
+      }, {
+        status: 400
+      });
+    }
+
+    const result =
+      await env.DB
+        .prepare(`
+          UPDATE haberler
+          SET okunma = COALESCE(okunma, 0) + 1
+          WHERE id = ?
+        `)
+        .bind(id)
+        .run();
+
+    if (!result.meta?.changes) {
+      return Response.json({
+        success: false,
+        error: "Haber bulunamadı."
+      }, {
+        status: 404
+      });
+    }
+
+    const haber =
+      await env.DB
+        .prepare(`
+          SELECT id, okunma
+          FROM haberler
+          WHERE id = ?
+        `)
+        .bind(id)
+        .first();
+
+    return Response.json({
+      success: true,
+      id,
+      okunma: haber?.okunma || 0
+    });
+
+  } catch (error) {
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, {
+      status: 500
+    });
+  }
+}
+
+
+// ---------------------------------------------------------
+// GET /api/haber-istatistik
+// Haber istatistikleri
+// ---------------------------------------------------------
+if (
+  url.pathname === "/api/haber-istatistik" &&
+  request.method === "GET"
+) {
+  try {
+
+    const toplam =
+      await env.DB
+        .prepare(`
+          SELECT COUNT(*) AS toplam
+          FROM haberler
+        `)
+        .first();
+
+    const yayinlanan =
+      await env.DB
+        .prepare(`
+          SELECT COUNT(*) AS toplam
+          FROM haberler
+          WHERE durum = 'yayinda'
+        `)
+        .first();
+
+    const taslak =
+      await env.DB
+        .prepare(`
+          SELECT COUNT(*) AS toplam
+          FROM haberler
+          WHERE durum = 'taslak'
+        `)
+        .first();
+
+    const okunma =
+      await env.DB
+        .prepare(`
+          SELECT COALESCE(
+            SUM(okunma), 0
+          ) AS toplam
+          FROM haberler
+        `)
+        .first();
+
+    const enCokOkunan =
+      await env.DB
+        .prepare(`
+          SELECT
+            id,
+            baslik,
+            okunma
+          FROM haberler
+          ORDER BY okunma DESC, id DESC
+          LIMIT 10
+        `)
+        .all();
+
+    return Response.json({
+      success: true,
+
+      toplam_haber:
+        toplam?.toplam || 0,
+
+      yayinlanan_haber:
+        yayinlanan?.toplam || 0,
+
+      taslak_haber:
+        taslak?.toplam || 0,
+
+      toplam_okunma:
+        okunma?.toplam || 0,
+
+      en_cok_okunan:
+        enCokOkunan.results || []
+    });
+
+  } catch (error) {
+
+    console.error(
+      "HABER İSTATİSTİK HATASI:",
+      error
+    );
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, {
+      status: 500
+    });
+  }
+}
     // =========================================================
     // 🔧 SİSTEM GENEL SAĞLIK TESTİ
     // GET /api/sistem-test
