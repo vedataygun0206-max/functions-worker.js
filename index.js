@@ -757,7 +757,63 @@ if (
     }, { status: 500 });
   }
 }
-    
+   // =========================================================
+// POST /api/video-izlenme?id=3
+// Video izlenme artır
+// =========================================================
+
+if (
+  url.pathname === "/api/video-izlenme" &&
+  request.method === "POST"
+) {
+  try {
+    const id = Number(url.searchParams.get("id"));
+
+    if (!id) {
+      return Response.json({
+        success: false,
+        error: "Video ID belirtilmedi."
+      }, { status: 400 });
+    }
+
+    const result = await env.DB
+      .prepare(`
+        UPDATE video_haberler
+        SET izlenme = COALESCE(izlenme, 0) + 1
+        WHERE id = ?
+      `)
+      .bind(id)
+      .run();
+
+    if (!result.meta?.changes) {
+      return Response.json({
+        success: false,
+        error: "Video bulunamadı."
+      }, { status: 404 });
+    }
+
+    const video = await env.DB
+      .prepare(`
+        SELECT id, izlenme
+        FROM video_haberler
+        WHERE id = ?
+      `)
+      .bind(id)
+      .first();
+
+    return Response.json({
+      success: true,
+      id,
+      izlenme: video?.izlenme || 0
+    });
+
+  } catch (error) {
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+  }
+} 
     // =========================================================
 // HABERLER API - TAM CRUD
 // =========================================================
