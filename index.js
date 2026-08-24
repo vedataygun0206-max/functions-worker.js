@@ -536,6 +536,52 @@ if (
     }, { status: 500 });
   }
 }
+    // =========================================================
+// REKLAMLAR API
+// =========================================================
+
+// ---------------------------------------------------------
+// GET /api/reklamlar
+// Reklam listesi
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/reklamlar" &&
+  request.method === "GET"
+) {
+  try {
+    const result = await env.DB
+      .prepare(`
+        SELECT
+          id,
+          firma_adi,
+          resim,
+          link,
+          konum,
+          baslangic,
+          bitis,
+          durum,
+          olusturma_tarihi
+        FROM reklamlar
+        ORDER BY id DESC
+      `)
+      .all();
+
+    return Response.json({
+      success: true,
+      toplam: result.results.length,
+      reklamlar: result.results
+    });
+
+  } catch (error) {
+    console.error("REKLAM LISTE HATASI:", error);
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+  }
+}
    // =========================================================
 // GET /api/video?id=1
 // Tek video
