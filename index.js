@@ -835,6 +835,96 @@ if (
     }, { status: 500 });
   }
 }  
+  // ---------------------------------------------------------
+// PUT /api/reklam?id=7
+// Reklam güncelle
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/reklam" &&
+  request.method === "PUT"
+) {
+  try {
+    const id = Number(url.searchParams.get("id"));
+
+    if (!id) {
+      return Response.json({
+        success: false,
+        error: "Reklam ID belirtilmedi."
+      }, { status: 400 });
+    }
+
+    const body = await request.json();
+
+    const firma_adi = String(body.firma_adi || "").trim();
+    const resim = String(body.resim || "").trim();
+    const link = String(body.link || "").trim();
+    const konum = String(body.konum || "anasayfa").trim();
+    const baslangic = String(body.baslangic || "").trim();
+    const bitis = String(body.bitis || "").trim();
+    const durum = String(body.durum || "aktif").trim();
+
+    if (!firma_adi || !baslangic || !bitis) {
+      return Response.json({
+        success: false,
+        error: "Firma adı, başlangıç ve bitiş tarihi zorunludur."
+      }, { status: 400 });
+    }
+
+    const mevcut = await env.DB
+      .prepare(`
+        SELECT id
+        FROM reklamlar
+        WHERE id = ?
+      `)
+      .bind(id)
+      .first();
+
+    if (!mevcut) {
+      return Response.json({
+        success: false,
+        error: "Reklam bulunamadı."
+      }, { status: 404 });
+    }
+
+    await env.DB
+      .prepare(`
+        UPDATE reklamlar
+        SET
+          firma_adi = ?,
+          resim = ?,
+          link = ?,
+          konum = ?,
+          baslangic = ?,
+          bitis = ?,
+          durum = ?
+        WHERE id = ?
+      `)
+      .bind(
+        firma_adi,
+        resim,
+        link,
+        konum,
+        baslangic,
+        bitis,
+        durum,
+        id
+      )
+      .run();
+
+    return Response.json({
+      success: true,
+      message: "Reklam güncellendi.",
+      id
+    });
+
+  } catch (error) {
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+  }
+}  
 // =========================================================
 // PUT /api/video?id=3
 // Video güncelle
