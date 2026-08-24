@@ -639,6 +639,73 @@ if (
     }, { status: 500 });
   }
 }
+    // ---------------------------------------------------------
+// POST /api/reklam
+// Yeni reklam
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/reklam" &&
+  request.method === "POST"
+) {
+  try {
+    const body = await request.json();
+
+    const firma_adi = String(body.firma_adi || "").trim();
+    const resim = String(body.resim || "").trim();
+    const link = String(body.link || "").trim();
+    const konum = String(body.konum || "anasayfa").trim();
+    const baslangic = String(body.baslangic || "").trim();
+    const bitis = String(body.bitis || "").trim();
+    const durum = String(body.durum || "aktif").trim();
+
+    if (!firma_adi || !baslangic || !bitis) {
+      return Response.json({
+        success: false,
+        error: "Firma adı, başlangıç ve bitiş tarihi zorunludur."
+      }, { status: 400 });
+    }
+
+    const result = await env.DB
+      .prepare(`
+        INSERT INTO reklamlar
+        (
+          firma_adi,
+          resim,
+          link,
+          konum,
+          baslangic,
+          bitis,
+          durum
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `)
+      .bind(
+        firma_adi,
+        resim,
+        link,
+        konum,
+        baslangic,
+        bitis,
+        durum
+      )
+      .run();
+
+    return Response.json({
+      success: true,
+      message: "Reklam başarıyla eklendi.",
+      id: result.meta?.last_row_id || null
+    }, { status: 201 });
+
+  } catch (error) {
+    console.error("REKLAM POST HATASI:", error);
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+  }
+}
     
    // =========================================================
 // GET /api/video?id=1
