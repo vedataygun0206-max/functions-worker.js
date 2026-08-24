@@ -815,6 +815,53 @@ if (
   }
 } 
     // =========================================================
+// DELETE /api/video?id=3
+// Video sil
+// =========================================================
+
+if (
+  url.pathname === "/api/video" &&
+  request.method === "DELETE"
+) {
+  try {
+    const id = Number(url.searchParams.get("id"));
+
+    if (!id) {
+      return Response.json({
+        success: false,
+        error: "Video ID belirtilmedi."
+      }, { status: 400 });
+    }
+
+    const result = await env.DB
+      .prepare(`
+        DELETE FROM video_haberler
+        WHERE id = ?
+      `)
+      .bind(id)
+      .run();
+
+    if (!result.meta?.changes) {
+      return Response.json({
+        success: false,
+        error: "Video bulunamadı."
+      }, { status: 404 });
+    }
+
+    return Response.json({
+      success: true,
+      message: "Video haber silindi.",
+      id
+    });
+
+  } catch (error) {
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+  }
+}
+    // =========================================================
 // HABERLER API - TAM CRUD
 // =========================================================
 
