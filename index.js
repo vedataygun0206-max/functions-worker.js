@@ -978,6 +978,81 @@ if (
   }
 }
 // ---------------------------------------------------------
+// POST /api/yazar
+// Yeni yazar
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/yazar" &&
+  request.method === "POST"
+) {
+  try {
+    const body = await request.json();
+
+    const ad_soyad = String(body.ad_soyad || "").trim();
+
+    if (!ad_soyad) {
+      return Response.json({
+        success: false,
+        error: "Ad soyad zorunludur."
+      }, { status: 400 });
+    }
+
+    const il = String(body.il || "").trim();
+    const ilce = String(body.ilce || "").trim();
+    const fotograf = String(body.fotograf || "").trim();
+    const biyografi = String(body.biyografi || "").trim();
+    const email = String(body.email || "").trim();
+    const durum = String(body.durum || "beklemede").trim();
+    const tarih = String(
+      body.tarih ||
+      new Date().toISOString().slice(0, 10)
+    ).trim();
+
+    const result = await env.DB
+      .prepare(`
+        INSERT INTO yazarlar
+        (
+          ad_soyad,
+          il,
+          ilce,
+          fotograf,
+          biyografi,
+          email,
+          durum,
+          tarih
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `)
+      .bind(
+        ad_soyad,
+        il,
+        ilce,
+        fotograf,
+        biyografi,
+        email,
+        durum,
+        tarih
+      )
+      .run();
+
+    return Response.json({
+      success: true,
+      message: "Yazar başarıyla eklendi.",
+      id: result.meta?.last_row_id || null
+    }, { status: 201 });
+
+  } catch (error) {
+    console.error("YAZAR POST HATASI:", error);
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+  }
+}
+    
+// ---------------------------------------------------------
 // GET /api/firma?id=1
 // Tek firma
 // ---------------------------------------------------------
