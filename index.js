@@ -759,6 +759,71 @@ if (
     }, { status: 500 });
   }
 } 
+// ---------------------------------------------------------
+// GET /api/firma?id=1
+// Tek firma
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/firma" &&
+  request.method === "GET"
+) {
+  try {
+    const id = Number(url.searchParams.get("id"));
+
+    if (!id) {
+      return Response.json({
+        success: false,
+        error: "Firma ID belirtilmedi."
+      }, { status: 400 });
+    }
+
+    const firma = await env.DB
+      .prepare(`
+        SELECT
+          id,
+          firma_adi,
+          kategori,
+          il,
+          ilce,
+          mahalle,
+          adres,
+          telefon,
+          whatsapp,
+          email,
+          website,
+          aciklama,
+          logo,
+          durum,
+          tarih,
+          created_at
+        FROM firmalar
+        WHERE id = ?
+        LIMIT 1
+      `)
+      .bind(id)
+      .first();
+
+    if (!firma) {
+      return Response.json({
+        success: false,
+        error: "Firma bulunamadı."
+      }, { status: 404 });
+    }
+
+    return Response.json({
+      success: true,
+      firma
+    });
+
+  } catch (error) {
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+  }
+}
+    
    // =========================================================
 // GET /api/video?id=1
 // Tek video
