@@ -1051,6 +1051,103 @@ if (
     }, { status: 500 });
   }
 }
+  // ---------------------------------------------------------
+// PUT /api/yazar?id=4
+// Yazar güncelle
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/yazar" &&
+  request.method === "PUT"
+) {
+  try {
+    const id = Number(url.searchParams.get("id"));
+
+    if (!id) {
+      return Response.json({
+        success: false,
+        error: "Yazar ID belirtilmedi."
+      }, { status: 400 });
+    }
+
+    const body = await request.json();
+
+    const ad_soyad = String(body.ad_soyad || "").trim();
+
+    if (!ad_soyad) {
+      return Response.json({
+        success: false,
+        error: "Ad soyad zorunludur."
+      }, { status: 400 });
+    }
+
+    const mevcut = await env.DB
+      .prepare(`
+        SELECT id
+        FROM yazarlar
+        WHERE id = ?
+      `)
+      .bind(id)
+      .first();
+
+    if (!mevcut) {
+      return Response.json({
+        success: false,
+        error: "Yazar bulunamadı."
+      }, { status: 404 });
+    }
+
+    const il = String(body.il || "").trim();
+    const ilce = String(body.ilce || "").trim();
+    const fotograf = String(body.fotograf || "").trim();
+    const biyografi = String(body.biyografi || "").trim();
+    const email = String(body.email || "").trim();
+    const durum = String(body.durum || "beklemede").trim();
+    const tarih = String(
+      body.tarih ||
+      new Date().toISOString().slice(0, 10)
+    ).trim();
+
+    await env.DB
+      .prepare(`
+        UPDATE yazarlar
+        SET
+          ad_soyad = ?,
+          il = ?,
+          ilce = ?,
+          fotograf = ?,
+          biyografi = ?,
+          email = ?,
+          durum = ?,
+          tarih = ?
+        WHERE id = ?
+      `)
+      .bind(
+        ad_soyad,
+        il,
+        ilce,
+        fotograf,
+        biyografi,
+        email,
+        durum,
+        tarih,
+        id
+      )
+      .run();
+
+    return Response.json({
+      success: true,
+      message: "Yazar güncellendi.",
+      id
+    });
+
+  } catch (error) {
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+  }
+}  
     
 // ---------------------------------------------------------
 // GET /api/firma?id=1
