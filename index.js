@@ -920,6 +920,58 @@ if (
     }, { status: 500 });
   }
 } 
+    // =========================================================
+// YAZAR YAZILARI API
+// =========================================================
+
+// ---------------------------------------------------------
+// GET /api/yazar-yazilari
+// Yazar yazıları listesi
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/yazar-yazilari" &&
+  request.method === "GET"
+) {
+  try {
+    const result = await env.DB
+      .prepare(`
+        SELECT
+          yy.id,
+          yy.yazar_id,
+          yy.baslik,
+          yy.icerik,
+          yy.il,
+          yy.ilce,
+          yy.resim,
+          yy.durum,
+          yy.red_nedeni,
+          yy.editor_notu,
+          yy.tarih,
+          yy.yayin_tarihi,
+          y.ad_soyad AS yazar_adi
+        FROM yazar_yazilari yy
+        LEFT JOIN yazarlar y
+          ON y.id = yy.yazar_id
+        ORDER BY yy.id DESC
+      `)
+      .all();
+
+    return Response.json({
+      success: true,
+      toplam: result.results.length,
+      yazilar: result.results
+    });
+
+  } catch (error) {
+    console.error("YAZAR YAZILARI LİSTE HATASI:", error);
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+  }
+}
     // ---------------------------------------------------------
 // GET /api/yazar?id=1
 // Tek yazar
