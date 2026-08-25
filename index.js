@@ -972,6 +972,70 @@ if (
     }, { status: 500 });
   }
 }
+// ---------------------------------------------------------
+// GET /api/yazar-yazisi?id=1
+// Tek yazar yazısı
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/yazar-yazisi" &&
+  request.method === "GET"
+) {
+  try {
+    const id = Number(url.searchParams.get("id"));
+
+    if (!id) {
+      return Response.json({
+        success: false,
+        error: "Yazı ID belirtilmedi."
+      }, { status: 400 });
+    }
+
+    const yazi = await env.DB
+      .prepare(`
+        SELECT
+          yy.id,
+          yy.yazar_id,
+          yy.baslik,
+          yy.icerik,
+          yy.il,
+          yy.ilce,
+          yy.resim,
+          yy.durum,
+          yy.red_nedeni,
+          yy.editor_notu,
+          yy.tarih,
+          yy.yayin_tarihi,
+          y.ad_soyad AS yazar_adi
+        FROM yazar_yazilari yy
+        LEFT JOIN yazarlar y
+          ON y.id = yy.yazar_id
+        WHERE yy.id = ?
+        LIMIT 1
+      `)
+      .bind(id)
+      .first();
+
+    if (!yazi) {
+      return Response.json({
+        success: false,
+        error: "Yazar yazısı bulunamadı."
+      }, { status: 404 });
+    }
+
+    return Response.json({
+      success: true,
+      yazi
+    });
+
+  } catch (error) {
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+  }
+}
+    
     // ---------------------------------------------------------
 // GET /api/yazar?id=1
 // Tek yazar
