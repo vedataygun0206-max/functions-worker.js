@@ -706,7 +706,59 @@ if (
     }, { status: 500 });
   }
 }
-    
+   // =========================================================
+// FİRMALAR API
+// =========================================================
+
+// ---------------------------------------------------------
+// GET /api/firmalar
+// Firma listesi
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/firmalar" &&
+  request.method === "GET"
+) {
+  try {
+    const result = await env.DB
+      .prepare(`
+        SELECT
+          id,
+          firma_adi,
+          kategori,
+          il,
+          ilce,
+          mahalle,
+          adres,
+          telefon,
+          whatsapp,
+          email,
+          website,
+          aciklama,
+          logo,
+          durum,
+          tarih,
+          created_at
+        FROM firmalar
+        ORDER BY id DESC
+      `)
+      .all();
+
+    return Response.json({
+      success: true,
+      toplam: result.results.length,
+      firmalar: result.results
+    });
+
+  } catch (error) {
+    console.error("FİRMA LİSTE HATASI:", error);
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+  }
+} 
    // =========================================================
 // GET /api/video?id=1
 // Tek video
