@@ -920,7 +920,63 @@ if (
     }, { status: 500 });
   }
 } 
-    
+    // ---------------------------------------------------------
+// GET /api/yazar?id=1
+// Tek yazar
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/yazar" &&
+  request.method === "GET"
+) {
+  try {
+    const id = Number(url.searchParams.get("id"));
+
+    if (!id) {
+      return Response.json({
+        success: false,
+        error: "Yazar ID belirtilmedi."
+      }, { status: 400 });
+    }
+
+    const yazar = await env.DB
+      .prepare(`
+        SELECT
+          id,
+          ad_soyad,
+          il,
+          ilce,
+          fotograf,
+          biyografi,
+          email,
+          durum,
+          tarih
+        FROM yazarlar
+        WHERE id = ?
+        LIMIT 1
+      `)
+      .bind(id)
+      .first();
+
+    if (!yazar) {
+      return Response.json({
+        success: false,
+        error: "Yazar bulunamadı."
+      }, { status: 404 });
+    }
+
+    return Response.json({
+      success: true,
+      yazar
+    });
+
+  } catch (error) {
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+  }
+}
 // ---------------------------------------------------------
 // GET /api/firma?id=1
 // Tek firma
