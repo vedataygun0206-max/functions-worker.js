@@ -706,6 +706,121 @@ if (
     }, { status: 500 });
   }
 }
+    // ---------------------------------------------------------
+// PUT /api/firma?id=2
+// Firma güncelle
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/firma" &&
+  request.method === "PUT"
+) {
+  try {
+    const id = Number(url.searchParams.get("id"));
+
+    if (!id) {
+      return Response.json({
+        success: false,
+        error: "Firma ID belirtilmedi."
+      }, { status: 400 });
+    }
+
+    const body = await request.json();
+
+    const firma_adi = String(body.firma_adi || "").trim();
+
+    if (!firma_adi) {
+      return Response.json({
+        success: false,
+        error: "Firma adı zorunludur."
+      }, { status: 400 });
+    }
+
+    const mevcut = await env.DB
+      .prepare(`
+        SELECT id
+        FROM firmalar
+        WHERE id = ?
+      `)
+      .bind(id)
+      .first();
+
+    if (!mevcut) {
+      return Response.json({
+        success: false,
+        error: "Firma bulunamadı."
+      }, { status: 404 });
+    }
+
+    const kategori = String(body.kategori || "Diğer").trim();
+    const il = String(body.il || "").trim();
+    const ilce = String(body.ilce || "").trim();
+    const mahalle = String(body.mahalle || "").trim();
+    const adres = String(body.adres || "").trim();
+    const telefon = String(body.telefon || "").trim();
+    const whatsapp = String(body.whatsapp || "").trim();
+    const email = String(body.email || "").trim();
+    const website = String(body.website || "").trim();
+    const aciklama = String(body.aciklama || "").trim();
+    const logo = String(body.logo || "").trim();
+    const durum = String(body.durum || "yayinda").trim();
+    const tarih = String(
+      body.tarih ||
+      new Date().toISOString().slice(0, 10)
+    ).trim();
+
+    await env.DB
+      .prepare(`
+        UPDATE firmalar
+        SET
+          firma_adi = ?,
+          kategori = ?,
+          il = ?,
+          ilce = ?,
+          mahalle = ?,
+          adres = ?,
+          telefon = ?,
+          whatsapp = ?,
+          email = ?,
+          website = ?,
+          aciklama = ?,
+          logo = ?,
+          durum = ?,
+          tarih = ?
+        WHERE id = ?
+      `)
+      .bind(
+        firma_adi,
+        kategori,
+        il,
+        ilce,
+        mahalle,
+        adres,
+        telefon,
+        whatsapp,
+        email,
+        website,
+        aciklama,
+        logo,
+        durum,
+        tarih,
+        id
+      )
+      .run();
+
+    return Response.json({
+      success: true,
+      message: "Firma güncellendi.",
+      id
+    });
+
+  } catch (error) {
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+  }
+}
    // =========================================================
 // FİRMALAR API
 // =========================================================
