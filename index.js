@@ -874,6 +874,53 @@ if (
     }, { status: 500 });
   }
 } 
+   // =========================================================
+// YAZARLAR API
+// =========================================================
+
+// ---------------------------------------------------------
+// GET /api/yazarlar
+// Yazar listesi
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/yazarlar" &&
+  request.method === "GET"
+) {
+  try {
+    const result = await env.DB
+      .prepare(`
+        SELECT
+          id,
+          ad_soyad,
+          il,
+          ilce,
+          fotograf,
+          biyografi,
+          email,
+          durum,
+          tarih
+        FROM yazarlar
+        ORDER BY id DESC
+      `)
+      .all();
+
+    return Response.json({
+      success: true,
+      toplam: result.results.length,
+      yazarlar: result.results
+    });
+
+  } catch (error) {
+    console.error("YAZAR LİSTE HATASI:", error);
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+  }
+} 
+    
 // ---------------------------------------------------------
 // GET /api/firma?id=1
 // Tek firma
