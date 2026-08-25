@@ -823,7 +823,98 @@ if (
     }, { status: 500 });
   }
 }
-    
+    // ---------------------------------------------------------
+// POST /api/firma
+// Yeni firma
+// ---------------------------------------------------------
+
+if (
+  url.pathname === "/api/firma" &&
+  request.method === "POST"
+) {
+  try {
+    const body = await request.json();
+
+    const firma_adi = String(body.firma_adi || "").trim();
+
+    if (!firma_adi) {
+      return Response.json({
+        success: false,
+        error: "Firma adı zorunludur."
+      }, { status: 400 });
+    }
+
+    const kategori = String(body.kategori || "Diğer").trim();
+    const il = String(body.il || "").trim();
+    const ilce = String(body.ilce || "").trim();
+    const mahalle = String(body.mahalle || "").trim();
+    const adres = String(body.adres || "").trim();
+    const telefon = String(body.telefon || "").trim();
+    const whatsapp = String(body.whatsapp || "").trim();
+    const email = String(body.email || "").trim();
+    const website = String(body.website || "").trim();
+    const aciklama = String(body.aciklama || "").trim();
+    const logo = String(body.logo || "").trim();
+    const durum = String(body.durum || "yayinda").trim();
+    const tarih = String(
+      body.tarih ||
+      new Date().toISOString().slice(0, 10)
+    ).trim();
+
+    const result = await env.DB
+      .prepare(`
+        INSERT INTO firmalar
+        (
+          firma_adi,
+          kategori,
+          il,
+          ilce,
+          mahalle,
+          adres,
+          telefon,
+          whatsapp,
+          email,
+          website,
+          aciklama,
+          logo,
+          durum,
+          tarih
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `)
+      .bind(
+        firma_adi,
+        kategori,
+        il,
+        ilce,
+        mahalle,
+        adres,
+        telefon,
+        whatsapp,
+        email,
+        website,
+        aciklama,
+        logo,
+        durum,
+        tarih
+      )
+      .run();
+
+    return Response.json({
+      success: true,
+      message: "Firma başarıyla eklendi.",
+      id: result.meta?.last_row_id || null
+    }, { status: 201 });
+
+  } catch (error) {
+    console.error("FİRMA POST HATASI:", error);
+
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+  }
+}
    // =========================================================
 // GET /api/video?id=1
 // Tek video
